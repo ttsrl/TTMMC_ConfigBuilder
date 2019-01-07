@@ -26,8 +26,16 @@ namespace TTMMC_ConfigBuilder
 
         private void button1_Click(object sender, EventArgs e)
         {
-            NameTxt = textBox1.Text;
-            this.DialogResult = DialogResult.OK;
+            if (textBox1.Text != "")
+            {
+                NameTxt = textBox1.Text;
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Inserisci tutti i dati richiesti", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            
         }
 
         private void button2_Click(object sender, EventArgs e)

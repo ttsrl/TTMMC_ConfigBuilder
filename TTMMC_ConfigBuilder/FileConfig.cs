@@ -51,9 +51,14 @@ namespace TTMMC_ConfigBuilder
             db = db_;
         }
 
-        public bool AddMachine(int id, FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image)
+        public void RemoveDatabase()
         {
-            if (id > 0 && type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) && !string.IsNullOrEmpty(image))
+            db = null;
+        }
+
+        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image)
+        {
+            if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) && !string.IsNullOrEmpty(image))
             {
                 var protExist = protocols.Exists(x => x.Name == protocol.Name);
                 var typeExist = machineTypes.Exists(x => x.Name == type.Name);
@@ -61,7 +66,7 @@ namespace TTMMC_ConfigBuilder
                 {
                     var m = new FileConfigMachine
                     {
-                        Id = id,
+                        Id = machines.Count,
                         Type = type,
                         Protocol = protocol,
                         Address = address,
@@ -77,6 +82,79 @@ namespace TTMMC_ConfigBuilder
             return false;
         }
 
+        public bool RemoveMachine(string name)
+        {
+            foreach (var m in machines)
+            {
+                if (m.ReferenceName == name)
+                {
+                    machines.Remove(m);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool RemoveMachine(int index)
+        {
+            if (index < machines.Count)
+            {
+                machines.RemoveAt(index);
+                return true;
+            }
+            return false;
+        }
+
+        public FileConfigMachineType GetMachineType(string name)
+        {
+            foreach(var t in machineTypes)
+            {
+                if (t.Name == name)
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        public FileConfigMachineType GetMachineType(int index)
+        {
+            return (index < machineTypes.Count) ? machineTypes[index] : null;
+        }
+
+        public FileConfigProtocol GetProtocol(string name)
+        {
+            foreach (var p in protocols)
+            {
+                if (p.Name == name)
+                {
+                    return p;
+                }
+            }
+            return null;
+        }
+
+        public FileConfigProtocol GetProtocol(int index)
+        {
+            return (index < protocols.Count) ? protocols[index] : null;
+        }
+
+        public FileConfigMachine GetMachine(string name)
+        {
+            foreach (var m in machines)
+            {
+                if (m.ReferenceName == name)
+                {
+                    return m;
+                }
+            }
+            return null;
+        }
+
+        public FileConfigMachine GetMachine(int index)
+        {
+            return (index < machines.Count) ? machines[index] : null;
+        }
     }
 
     public class FileConfigDB
@@ -98,6 +176,7 @@ namespace TTMMC_ConfigBuilder
         public string Address { get; set; }
         public string Port { get; set; }
         public string Image { get; set; }
+        public Dictionary<string, List<FileConfigDataAddressToReadItem>> DatasAddressToRead { get; set; }
     }
 
     public class FileConfigProtocol
@@ -108,5 +187,11 @@ namespace TTMMC_ConfigBuilder
     public class FileConfigMachineType
     {
         public string Name { get; set; }
+    }
+
+    public class FileConfigDataAddressToReadItem
+    {
+        public string Description { get; set; }
+        public string Address { get; set; }
     }
 }

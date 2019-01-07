@@ -10,34 +10,30 @@ using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
 {
-    public partial class NewDB : Form
+    public partial class NewMachineDataItem : Form
     {
-        public string IP;
-        public string DB;
-        public string Username;
-        public string Password;
-        public bool RequestSecurityInfo;
 
-        public NewDB()
+        public string Description;
+        public string Address;
+
+        public NewMachineDataItem()
         {
             InitializeComponent();
         }
 
-        private void NewDB_Load(object sender, EventArgs e)
+        private void NewMachineDataItem_Load(object sender, EventArgs e)
         {
-
+            textBox1.Text = Description;
+            textBox2.Text = Address;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "")
+            if (textBox1.Text != "" && textBox2.Text != "")
             {
-                IP = textBox1.Text;
-                DB = textBox2.Text;
-                Username = textBox3.Text;
-                Password = textBox4.Text;
-                RequestSecurityInfo = checkBox1.Checked;
-                DialogResult = DialogResult.OK;
+                Description = textBox1.Text;
+                Address = textBox2.Text;
+                this.DialogResult = DialogResult.OK;
             }
             else
             {
@@ -48,7 +44,7 @@ namespace TTMMC_ConfigBuilder
 
         private void button2_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
+            this.DialogResult = DialogResult.Cancel;
         }
     }
 }

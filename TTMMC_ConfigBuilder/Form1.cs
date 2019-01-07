@@ -14,7 +14,8 @@ namespace TTMMC_ConfigBuilder
 {
     public partial class Form1 : Form
     {
-        FileConfig file_;
+        public static FileConfig file_;
+        private bool ShowMenuStrip;
 
         public Form1()
         {
@@ -76,7 +77,13 @@ namespace TTMMC_ConfigBuilder
 
         private void MacchinaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            var frm = new NewMachine();
+            if(frm.ShowDialog() == DialogResult.OK)
+            {
+                file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, frm.Address, frm.Port, frm.Image);
+                listBox1.Items.Add(frm.MachineName);
+                tsslNElem.Text = (int.Parse(tsslNElem.Text) + 1).ToString();
+            }
         }
 
 
@@ -123,19 +130,74 @@ namespace TTMMC_ConfigBuilder
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string curItem = listBox1.SelectedItem.ToString();
-            if (curItem == "Database")
+            string curItem = listBox1.SelectedItem?.ToString();
+            if (curItem != null)
             {
-                ipLbl.Text = file_.DB.IP;
-                dbLbl.Text = file_.DB.Database;
-                usernameLbl.Text = file_.DB.Username;
-                passwordLbl.Text = "**********";
-                reqinfoLbl.Text = file_.DB.PersisteSecurityInfo.ToString();
-                databaseDetails.Visible = true;
+                if (curItem == "Database")
+                {
+                    ipLbl.Text = file_.DB.IP;
+                    dbLbl.Text = file_.DB.Database;
+                    usernameLbl.Text = file_.DB.Username;
+                    passwordLbl.Text = "**********";
+                    reqinfoLbl.Text = file_.DB.PersisteSecurityInfo.ToString();
+                    databaseDetails.Visible = true;
+                    machineDetails.Visible = false;
+                }
+                else
+                {
+                    var machine = file_.GetMachine(curItem);
+                    lblId.Text = machine.Id.ToString();
+                    lblNm.Text = machine.ReferenceName;
+                    lblDesc.Text = machine.Description;
+                    lblType.Text = machine.Type.Name;
+                    lblProtocol.Text = machine.Protocol.Name;
+                    lblAddress.Text = machine.Address;
+                    lblPort.Text = machine.Port;
+                    lblImg.Text = machine.Image;
+                    databaseDetails.Visible = false;
+                    machineDetails.Visible = true;
+                }
+            }
+            else
+            {
+                databaseDetails.Visible = false;
                 machineDetails.Visible = false;
             }
+            
         }
 
+        private void listBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            listBox1.SelectedIndex = listBox1.IndexFromPoint(e.Location);
+            if (listBox1.SelectedIndex != -1)
+            {
+                if(e.Button == MouseButtons.Right)
+                {
+                    listBox1.ContextMenuStrip = menuStripList;
+                }
+                else
+                {
+                    listBox1.ContextMenuStrip = null;
+                }
+            }
+            else
+            {
+                listBox1.ContextMenuStrip = null;
+            }
 
+        }
+
+        private void eliminaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedItem.ToString() != "Database")
+                file_.RemoveMachine(listBox1.SelectedItem.ToString());
+            else
+            {
+                file_.RemoveDatabase();
+                databaseToolStripMenuItem.Enabled = true;
+            }
+            tsslNElem.Text = (int.Parse(tsslNElem.Text) - 1).ToString();
+            listBox1.Items.Remove(listBox1.SelectedItem.ToString());
+        }
     }
 }
