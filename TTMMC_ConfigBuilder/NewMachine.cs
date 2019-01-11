@@ -65,18 +65,12 @@ namespace TTMMC_ConfigBuilder
 
         private void button3_Click(object sender, EventArgs e)
         {
-            //treeView1.BeginUpdate();
-            //treeView1.Nodes.Add("Parent");
-            //treeView1.Nodes[0].Nodes.Add("Child 1");
-            //treeView1.Nodes[0].Nodes.Add("Child 2");
-            //treeView1.Nodes[0].Nodes[1].Nodes.Add("Grandchild");
-            //treeView1.Nodes[0].Nodes[1].Nodes[0].Nodes.Add("Great Grandchild");
-            //treeView1.EndUpdate();
             var frm = new name();
             if(frm.ShowDialog() == DialogResult.OK)
             {
                 var node = treeView1.Nodes.Add(frm.NameTxt);
                 treeView1.SelectedNode = node;
+                button5_Click(sender, new EventArgs());
             }
         }
 
@@ -93,9 +87,9 @@ namespace TTMMC_ConfigBuilder
                         treeView1.BeginUpdate();
                         var index = node.Nodes.Count;
                         node.Nodes.Add(index.ToString());
-                        node.Nodes[index].Nodes.Add("Description");
+                        node.Nodes[index].Nodes.Add("Description: " + frm.Description);
                         node.Nodes[index].Nodes[0].ToolTipText = frm.Description;
-                        node.Nodes[index].Nodes.Add("Address");
+                        node.Nodes[index].Nodes.Add("Address: " + frm.Address);
                         node.Nodes[index].Nodes[1].ToolTipText = frm.Address;
                         treeView1.EndUpdate();
                     }

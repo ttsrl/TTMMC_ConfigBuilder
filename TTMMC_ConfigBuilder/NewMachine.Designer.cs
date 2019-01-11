@@ -206,7 +206,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(555, 327);
+            this.button1.Location = new System.Drawing.Point(555, 371);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 28);
             this.button1.TabIndex = 16;
@@ -217,7 +217,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button2.Location = new System.Drawing.Point(19, 327);
+            this.button2.Location = new System.Drawing.Point(19, 371);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(100, 28);
             this.button2.TabIndex = 17;
@@ -237,7 +237,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(565, 281);
+            this.button3.Location = new System.Drawing.Point(565, 328);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(44, 25);
             this.button3.TabIndex = 20;
@@ -247,7 +247,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(503, 281);
+            this.button4.Location = new System.Drawing.Point(503, 328);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(44, 25);
             this.button4.TabIndex = 21;
@@ -259,12 +259,12 @@
             // 
             this.treeView1.Location = new System.Drawing.Point(343, 51);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(312, 224);
+            this.treeView1.Size = new System.Drawing.Size(312, 271);
             this.treeView1.TabIndex = 22;
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(611, 281);
+            this.button5.Location = new System.Drawing.Point(611, 328);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(44, 25);
             this.button5.TabIndex = 23;
@@ -277,7 +277,7 @@
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(679, 367);
+            this.ClientSize = new System.Drawing.Size(679, 411);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.button4);
