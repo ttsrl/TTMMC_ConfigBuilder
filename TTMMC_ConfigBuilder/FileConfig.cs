@@ -56,7 +56,7 @@ namespace TTMMC_ConfigBuilder
             db = null;
         }
 
-        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image)
+        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressToReadItem>> datasAddressToRead)
         {
             if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) && !string.IsNullOrEmpty(image))
             {
@@ -73,7 +73,8 @@ namespace TTMMC_ConfigBuilder
                         Description = descr,
                         Port = port,
                         ReferenceName = name,
-                        Image = image
+                        Image = image,
+                        DatasAddressToRead = datasAddressToRead
                     };
                     machines.Add(m);
                     return true;
@@ -176,7 +177,7 @@ namespace TTMMC_ConfigBuilder
         public string Address { get; set; }
         public string Port { get; set; }
         public string Image { get; set; }
-        public Dictionary<string, List<FileConfigDataAddressToReadItem>> DatasAddressToRead { get; set; }
+        public Dictionary<string, List<DataAddressToReadItem>> DatasAddressToRead { get; set; }
     }
 
     public class FileConfigProtocol
@@ -187,11 +188,5 @@ namespace TTMMC_ConfigBuilder
     public class FileConfigMachineType
     {
         public string Name { get; set; }
-    }
-
-    public class FileConfigDataAddressToReadItem
-    {
-        public string Description { get; set; }
-        public string Address { get; set; }
     }
 }

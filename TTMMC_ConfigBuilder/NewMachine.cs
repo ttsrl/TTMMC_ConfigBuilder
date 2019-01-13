@@ -19,6 +19,7 @@ namespace TTMMC_ConfigBuilder
         public string Address;
         public string Port;
         public string Image;
+        public Dictionary<string, List<DataAddressToReadItem>> DatasAddressToRead;
 
         public NewMachine()
         {
@@ -36,11 +37,13 @@ namespace TTMMC_ConfigBuilder
             {
                 comboBox2.Items.Add(p.Name);
             }
+
+            DatasAddressToRead = new Dictionary<string, List<DataAddressToReadItem>>();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "" && textBox5.Text != "" && comboBox1.Text != "" && comboBox2.Text != "")
+            if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "" && comboBox1.Text != "" && comboBox2.Text != "")
             {
                 MachineName = textBox1.Text;
                 Description = textBox2.Text;
@@ -48,7 +51,7 @@ namespace TTMMC_ConfigBuilder
                 Protocol = Form1.file_.GetProtocol(comboBox2.SelectedItem.ToString());
                 Address = textBox3.Text;
                 Port = textBox4.Text;
-                Image = textBox5.Text;
+                Image = (textBox5.Text == "") ? null : textBox5.Text;
                 DialogResult = DialogResult.OK;
             }
             else
@@ -68,9 +71,19 @@ namespace TTMMC_ConfigBuilder
             var frm = new name();
             if(frm.ShowDialog() == DialogResult.OK)
             {
-                var node = treeView1.Nodes.Add(frm.NameTxt);
-                treeView1.SelectedNode = node;
-                button5_Click(sender, new EventArgs());
+                var nm = frm.NameTxt;
+                var exist = DatasAddressToRead.ContainsKey(nm);
+                if (!exist)
+                {
+                    var node = treeView1.Nodes.Add(frm.NameTxt);
+                    treeView1.SelectedNode = node;
+                    DatasAddressToRead.Add(nm, new List<DataAddressToReadItem>());
+                    button5_Click(sender, new EventArgs());
+                }
+                else
+                {
+                    MessageBox.Show("Nome elemento già presente nella lista", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
@@ -92,6 +105,8 @@ namespace TTMMC_ConfigBuilder
                         node.Nodes[index].Nodes.Add("Address: " + frm.Address);
                         node.Nodes[index].Nodes[1].ToolTipText = frm.Address;
                         treeView1.EndUpdate();
+                        var itemList = DatasAddressToRead[node.Text];
+                        itemList.Add(new DataAddressToReadItem { Address = frm.Address, Description = frm.Description });
                     }
                 }
             }
@@ -103,12 +118,30 @@ namespace TTMMC_ConfigBuilder
             if (node != null)
             {
                 var lvl = node.Level;
-                if (lvl == 2)
+                if (lvl == 2 | lvl == 1)
                 {
-                    treeView1.Nodes.Remove(node.Parent);
+                    var subitem = (lvl == 2) ? node.Parent : node;
+                    if (subitem.Parent.Nodes.Count == 1)
+                    {
+                        DatasAddressToRead.Remove(subitem.Parent.Text);
+                        treeView1.Nodes.Remove(subitem.Parent);
+                    }
+                    else
+                    {
+                        var subItPar = subitem.Parent;
+                        var it = DatasAddressToRead[subItPar.Text];
+                        it.RemoveAt(int.Parse(subitem.Text));
+                        treeView1.Nodes.Remove(subitem);
+                        //rename
+                        for(var i = 0; i < subItPar.Nodes.Count; i++)
+                        {
+                            subItPar.Nodes[i].Text = i.ToString();
+                        }
+                    }
                 }
-                else
+                else //lvl 0
                 {
+                    DatasAddressToRead.Remove(node.Text);
                     treeView1.Nodes.Remove(node);
                 }
             }

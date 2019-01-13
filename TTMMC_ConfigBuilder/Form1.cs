@@ -80,7 +80,10 @@ namespace TTMMC_ConfigBuilder
             var frm = new NewMachine();
             if(frm.ShowDialog() == DialogResult.OK)
             {
-                file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, frm.Address, frm.Port, frm.Image);
+                var adrss = frm.Address;
+                adrss = adrss.Replace("opc.tcp://", "");
+                var data = frm.DatasAddressToRead;
+                file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead);
                 listBox1.Items.Add(frm.MachineName);
                 tsslNElem.Text = (int.Parse(tsslNElem.Text) + 1).ToString();
             }
@@ -110,8 +113,9 @@ namespace TTMMC_ConfigBuilder
                          ReferenceName = it.ReferenceName,
                          Port = it.Port,
                          Protocol = it.Protocol.Name,
-                         Type = it.Type.Name,
-                         Image = it.Image
+                         Type = it.Type.Name, 
+                         Image = it.Image,
+                         DatasAddressToRead = it.DatasAddressToRead
                     };
                     machines.Add(nm);
                 }
