@@ -10,32 +10,33 @@ using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
 {
-    public partial class name : Form
+    public partial class inputTxt : Form
     {
-        public string NameTxt;
+        public string Value;
+        public string LblTxt;
 
-        public name()
+        public inputTxt()
         {
             InitializeComponent();
         }
 
         private void name_Load(object sender, EventArgs e)
         {
-            textBox1.Text = NameTxt;
+            label1.Text = LblTxt ?? "Nome:";
+            textBox1.Text = Value;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (textBox1.Text != "")
             {
-                NameTxt = textBox1.Text;
+                Value = textBox1.Text;
                 this.DialogResult = DialogResult.OK;
             }
             else
             {
                 MessageBox.Show("Inserisci tutti i dati richiesti", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            
         }
 
         private void button2_Click(object sender, EventArgs e)

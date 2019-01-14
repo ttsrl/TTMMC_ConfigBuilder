@@ -15,7 +15,6 @@ namespace TTMMC_ConfigBuilder
     public partial class Form1 : Form
     {
         public static FileConfig file_;
-        private bool ShowMenuStrip;
 
         public Form1()
         {
@@ -24,11 +23,11 @@ namespace TTMMC_ConfigBuilder
 
         private void NuovoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fnm = new name();
-            fnm.NameTxt = "appsettings";
+            var fnm = new inputTxt();
+            fnm.Value = "appsettings";
             if(fnm.ShowDialog() == DialogResult.OK)
             {
-                file_ = new FileConfig(fnm.NameTxt);
+                file_ = new FileConfig(fnm.Value);
                 nuovoToolStripMenuItem.Enabled = false;
                 aggiungiToolStripMenuItem.Enabled = true;
                 apriToolStripMenuItem.Enabled = false;
@@ -43,23 +42,23 @@ namespace TTMMC_ConfigBuilder
 
         }
 
-
         private void ProtocolloToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var frm = new name();
+            var frm = new inputTxt();
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                file_.AddProtocol(frm.NameTxt);
+                file_.AddProtocol(frm.Value);
                 tsslNProt.Text = (int.Parse(tsslNProt.Text) + 1).ToString();
             }
         }
 
         private void TipologiaMacchinaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var frm = new name();
+            var frm = new inputTxt();
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                file_.AddMachineType(frm.NameTxt);
+                file_.AddMachineType(frm.Value);
+                tsslNTypes.Text = (int.Parse(tsslNTypes.Text) + 1).ToString();
             }
         }
 
@@ -82,10 +81,16 @@ namespace TTMMC_ConfigBuilder
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var data = frm.DatasAddressToRead;
-                file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead);
-                listBox1.Items.Add(frm.MachineName);
-                tsslNElem.Text = (int.Parse(tsslNElem.Text) + 1).ToString();
+                var r = file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead);
+                if (r)
+                {
+                    listBox1.Items.Add(frm.MachineName);
+                    tsslNElem.Text = (int.Parse(tsslNElem.Text) + 1).ToString();
+                }
+                else
+                {
+                    MessageBox.Show("Impossibile aggiungere la macchina", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
@@ -150,16 +155,20 @@ namespace TTMMC_ConfigBuilder
                 else
                 {
                     var machine = file_.GetMachine(curItem);
-                    lblId.Text = machine.Id.ToString();
-                    lblNm.Text = machine.ReferenceName;
-                    lblDesc.Text = machine.Description;
-                    lblType.Text = machine.Type.Name;
-                    lblProtocol.Text = machine.Protocol.Name;
-                    lblAddress.Text = machine.Address;
-                    lblPort.Text = machine.Port;
-                    lblImg.Text = machine.Image;
-                    databaseDetails.Visible = false;
-                    machineDetails.Visible = true;
+                    if (machine is FileConfigMachine)
+                    {
+                        lblId.Text = machine.Id.ToString();
+                        lblNm.Text = machine.ReferenceName;
+                        lblDesc.Text = machine.Description;
+                        lblType.Text = machine.Type.Name;
+                        lblProtocol.Text = machine.Protocol.Name;
+                        lblAddress.Text = machine.Address;
+                        lblPort.Text = machine.Port;
+                        lblImg.Text = machine.Image;
+                        lblCountDatasRead.Text = machine.DatasAddressToRead.Count.ToString();
+                        databaseDetails.Visible = false;
+                        machineDetails.Visible = true;
+                    }
                 }
             }
             else
@@ -202,6 +211,86 @@ namespace TTMMC_ConfigBuilder
             }
             tsslNElem.Text = (int.Parse(tsslNElem.Text) - 1).ToString();
             listBox1.Items.Remove(listBox1.SelectedItem.ToString());
+        }
+
+        private void edit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var nm = ((LinkLabel)sender).Name ?? "";
+            var machine = file_.GetMachine(listBox1.SelectedItem?.ToString());
+            if (!string.IsNullOrEmpty(nm) && machine is FileConfigMachine)
+            {
+                var frmInputTxt = new inputTxt();
+                var frmSelect = new inputSelect();
+                if (nm == "editName")
+                {
+                    frmInputTxt.LblTxt = "Nome:";
+                    frmInputTxt.Value = machine.ReferenceName;
+                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    {
+                        machine.ReferenceName = frmInputTxt.Value;
+                        listBox1.Items[listBox1.SelectedIndex] = frmInputTxt.Value;
+                    }
+                }
+                else if(nm == "editDesc")
+                {
+                    frmInputTxt.LblTxt = "Descrizione:";
+                    frmInputTxt.Value = machine.Description;
+                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    {
+                        machine.Description = frmInputTxt.Value;
+                    }
+                }
+                else if (nm == "editType")
+                {
+                    frmSelect.LblTxt = "Tipologia:";
+                    frmSelect.List = file_.MachineTypes.Select(it => it.Name).ToList();
+                    frmSelect.Value = machine.Type.Name;
+                    if (frmSelect.ShowDialog() == DialogResult.OK)
+                    {
+                        machine.Type = file_.GetMachineType(frmSelect.Value);
+                    }
+                }
+                else if (nm == "editProtocol")
+                {
+                    frmSelect.LblTxt = "Protocollo:";
+                    frmSelect.List = file_.Protocols.Select(it => it.Name).ToList();
+                    frmSelect.Value = machine.Protocol.Name;
+                    if (frmSelect.ShowDialog() == DialogResult.OK)
+                    {
+                        machine.Protocol = file_.GetProtocol(frmSelect.Value);
+                    }
+                }
+                else if (nm == "editAddress")
+                {
+                    frmInputTxt.LblTxt = "Indirizzo:";
+                    frmInputTxt.Value = machine.Address;
+                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    {
+                        machine.Address = frmInputTxt.Value;
+                    }
+                }
+                else if (nm == "editPort")
+                {
+                    frmInputTxt.LblTxt = "Porta:";
+                    frmInputTxt.Value = machine.Port;
+                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    {
+                        machine.Port = frmInputTxt.Value;
+                    }
+                }
+                else if (nm == "editImg")
+                {
+                    frmInputTxt.LblTxt = "Porta:";
+                    frmInputTxt.Value = machine.Image;
+                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    {
+                        machine.Image = frmInputTxt.Value;
+                    }
+                }
+                //refresh
+                listBox1_SelectedIndexChanged(listBox1.SelectedItem, new EventArgs());
+            }
+            
         }
     }
 }

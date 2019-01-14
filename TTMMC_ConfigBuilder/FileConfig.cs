@@ -58,7 +58,7 @@ namespace TTMMC_ConfigBuilder
 
         public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressToReadItem>> datasAddressToRead)
         {
-            if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) && !string.IsNullOrEmpty(image))
+            if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) && datasAddressToRead is Dictionary<string, List<DataAddressToReadItem>>)
             {
                 var protExist = protocols.Exists(x => x.Name == protocol.Name);
                 var typeExist = machineTypes.Exists(x => x.Name == type.Name);

@@ -27,7 +27,9 @@ namespace TTMMC_ConfigBuilder
 
     public class DataAddressToReadItem
     {
+        private string dataType { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
+        public string DataType { get => dataType; set => dataType = value?.ToLower(); }
     }
 }

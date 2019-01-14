@@ -71,12 +71,18 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModelJson.cs" />
-    <Compile Include="name.cs">
+    <Compile Include="inputSelect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="name.Designer.cs">
-      <DependentUpon>name.cs</DependentUpon>
+    <Compile Include="inputSelect.Designer.cs">
+      <DependentUpon>inputSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModelJson.cs" />
+    <Compile Include="inputTxt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputTxt.Designer.cs">
+      <DependentUpon>inputTxt.cs</DependentUpon>
     </Compile>
     <Compile Include="NewDB.cs">
       <SubType>Form</SubType>
@@ -101,8 +107,11 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="name.resx">
-      <DependentUpon>name.cs</DependentUpon>
+    <EmbeddedResource Include="inputSelect.resx">
+      <DependentUpon>inputSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputTxt.resx">
+      <DependentUpon>inputTxt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NewDB.resx">
       <DependentUpon>NewDB.cs</DependentUpon>

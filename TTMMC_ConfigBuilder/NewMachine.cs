@@ -12,6 +12,8 @@ namespace TTMMC_ConfigBuilder
 {
     public partial class NewMachine : Form
     {
+        private string _nmEditLbl;
+
         public string MachineName;
         public string Description;
         public FileConfigMachineType Type;
@@ -20,7 +22,7 @@ namespace TTMMC_ConfigBuilder
         public string Port;
         public string Image;
         public Dictionary<string, List<DataAddressToReadItem>> DatasAddressToRead;
-
+        
         public NewMachine()
         {
             InitializeComponent();
@@ -68,14 +70,14 @@ namespace TTMMC_ConfigBuilder
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var frm = new name();
+            var frm = new inputTxt();
             if(frm.ShowDialog() == DialogResult.OK)
             {
-                var nm = frm.NameTxt;
+                var nm = frm.Value;
                 var exist = DatasAddressToRead.ContainsKey(nm);
                 if (!exist)
                 {
-                    var node = treeView1.Nodes.Add(frm.NameTxt);
+                    var node = treeView1.Nodes.Add(frm.Value);
                     treeView1.SelectedNode = node;
                     DatasAddressToRead.Add(nm, new List<DataAddressToReadItem>());
                     button5_Click(sender, new EventArgs());
@@ -143,6 +145,77 @@ namespace TTMMC_ConfigBuilder
                 {
                     DatasAddressToRead.Remove(node.Text);
                     treeView1.Nodes.Remove(node);
+                }
+            }
+        }
+
+        private void treeView1_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            var elm = ((TreeView)sender).SelectedNode;
+            if (elm is TreeNode)
+            {
+                if (elm.Level == 1 || elm.Level == 2)
+                {
+                    e.CancelEdit = true;
+                }else if (elm.Level == 0)
+                {
+                    _nmEditLbl = elm.Text;
+                }
+            }
+        }
+
+        private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            var elm = e.Node;
+            if (elm is TreeNode)
+            {
+                if(elm.Level == 0)
+                {
+                    var exist = DatasAddressToRead.ContainsKey(_nmEditLbl);
+                    if(exist)
+                    {
+                        var it = DatasAddressToRead[_nmEditLbl];
+                        DatasAddressToRead.Remove(_nmEditLbl);
+                        DatasAddressToRead.Add(e.Label, it);
+                    }
+                    else
+                    {
+                        e.CancelEdit = true;
+                        MessageBox.Show("Impossibile rinominare l' elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+        }
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            var elm = e.Node;
+            if (elm is TreeNode)
+            {
+                if (elm.Level == 0)
+                {
+                    var exist = DatasAddressToRead.ContainsKey(elm.Text);
+                    if (exist)
+                    {
+                        var frm = new inputTxt();
+                        frm.LblTxt = "Nome:";
+                        frm.Value = elm.Text;
+                        if (frm.ShowDialog() == DialogResult.OK)
+                        {
+                            var it = DatasAddressToRead[elm.Text];
+                            DatasAddressToRead.Remove(elm.Text);
+                            DatasAddressToRead.Add(frm.Value, it);
+                            elm.Text = frm.Value;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Impossibile trovare l' elemento selezionato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else if (elm.Level == 2)
+                {
+
                 }
             }
         }
