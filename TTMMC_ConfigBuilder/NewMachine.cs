@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static TTMMC_ConfigBuilder.Form1;
 
 namespace TTMMC_ConfigBuilder
 {
@@ -21,7 +22,7 @@ namespace TTMMC_ConfigBuilder
         public string Address;
         public string Port;
         public string Image;
-        public Dictionary<string, List<DataAddressToReadItem>> DatasAddressToRead;
+        public Dictionary<string, List<DataAddressItem>> DatasAddressToRead;
         
         public NewMachine()
         {
@@ -40,7 +41,7 @@ namespace TTMMC_ConfigBuilder
                 comboBox2.Items.Add(p.Name);
             }
 
-            DatasAddressToRead = new Dictionary<string, List<DataAddressToReadItem>>();
+            DatasAddressToRead = new Dictionary<string, List<DataAddressItem>>();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -79,7 +80,7 @@ namespace TTMMC_ConfigBuilder
                 {
                     var node = treeView1.Nodes.Add(frm.Value);
                     treeView1.SelectedNode = node;
-                    DatasAddressToRead.Add(nm, new List<DataAddressToReadItem>());
+                    DatasAddressToRead.Add(nm, new List<DataAddressItem>());
                     button5_Click(sender, new EventArgs());
                 }
                 else
@@ -102,13 +103,15 @@ namespace TTMMC_ConfigBuilder
                         treeView1.BeginUpdate();
                         var index = node.Nodes.Count;
                         node.Nodes.Add(index.ToString());
-                        node.Nodes[index].Nodes.Add("Description: " + frm.Description);
-                        node.Nodes[index].Nodes[0].ToolTipText = frm.Description;
                         node.Nodes[index].Nodes.Add("Address: " + frm.Address);
-                        node.Nodes[index].Nodes[1].ToolTipText = frm.Address;
+                        node.Nodes[index].Nodes[0].ToolTipText = frm.Address;
+                        node.Nodes[index].Nodes.Add("Description: " + frm.Description);
+                        node.Nodes[index].Nodes[1].ToolTipText = frm.Description;
+                        node.Nodes[index].Nodes.Add("DataType: " + frm.DataType);
+                        node.Nodes[index].Nodes[2].ToolTipText = frm.DataType;
                         treeView1.EndUpdate();
                         var itemList = DatasAddressToRead[node.Text];
-                        itemList.Add(new DataAddressToReadItem { Address = frm.Address, Description = frm.Description });
+                        itemList.Add(new DataAddressItem(frm.Address, frm.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), frm.DataType))));
                     }
                 }
             }
@@ -167,7 +170,7 @@ namespace TTMMC_ConfigBuilder
         private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             var elm = e.Node;
-            if (elm is TreeNode)
+            if (elm is TreeNode && !string.IsNullOrEmpty(e.Label))
             {
                 if(elm.Level == 0)
                 {
@@ -215,9 +218,59 @@ namespace TTMMC_ConfigBuilder
                 }
                 else if (elm.Level == 2)
                 {
-
+                    var exist = DatasAddressToRead.ContainsKey(elm.Parent.Parent.Text);
+                    if (exist)
+                    {
+                        var item = DatasAddressToRead[elm.Parent.Parent.Text][int.Parse(elm.Parent.Text)];
+                        var indx = elm.Parent.Nodes.IndexOf(elm);
+                        if (indx == 0 || indx == 1)
+                        {
+                            var frm = new inputTxt();
+                            frm.LblTxt = (indx == 0) ? "Indirizzo:" : "Descrizione:";
+                            frm.Value = (indx == 0) ? item.Address : item.Description;
+                            if (frm.ShowDialog() == DialogResult.OK)
+                            {
+                                if (indx == 0)
+                                {
+                                    item.Address = frm.Value;
+                                    elm.Text = "Address: " + frm.Value;
+                                }
+                                else
+                                {
+                                    item.Description = frm.Value;
+                                    elm.Text = "Description: " + frm.Value;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var frm = new inputSelect();
+                            frm.LblTxt = "Tipo:";
+                            frm.Value = item.DataType.ToUpper();
+                            frm.List = Enum.GetValues(typeof(DataTypes)).Cast<DataTypes>().Select(v => v.ToString()).ToList();
+                            if(frm.ShowDialog() == DialogResult.OK)
+                            {
+                                item.DataType = frm.Value;
+                                elm.Text = "DataType: " + frm.Value;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Impossibile trovare l' elemento selezionato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            object obj = treeView1.SelectedNode;
+            if (obj != null)
+            {
+                treeView1_NodeMouseDoubleClick(obj, new TreeNodeMouseClickEventArgs(treeView1.SelectedNode, MouseButtons.Left,2,1,1));
+            }
+            
         }
     }
 }

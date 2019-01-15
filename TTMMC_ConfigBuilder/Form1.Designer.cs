@@ -50,6 +50,11 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.databaseDetails = new System.Windows.Forms.GroupBox();
+            this.editSecInfo = new System.Windows.Forms.LinkLabel();
+            this.editPass = new System.Windows.Forms.LinkLabel();
+            this.editUsrn = new System.Windows.Forms.LinkLabel();
+            this.editDb = new System.Windows.Forms.LinkLabel();
+            this.editHost = new System.Windows.Forms.LinkLabel();
             this.reqinfoLbl = new System.Windows.Forms.Label();
             this.passwordLbl = new System.Windows.Forms.Label();
             this.usernameLbl = new System.Windows.Forms.Label();
@@ -65,7 +70,14 @@
             this.tsslNElem = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslNProt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslNTypes = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.machineDetails = new System.Windows.Forms.GroupBox();
+            this.editDatasRead = new System.Windows.Forms.LinkLabel();
+            this.lblCountDatasRead = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.editImg = new System.Windows.Forms.LinkLabel();
             this.editPort = new System.Windows.Forms.LinkLabel();
             this.editAddress = new System.Windows.Forms.LinkLabel();
@@ -93,11 +105,8 @@
             this.modificaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.eliminaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.lblCountDatasRead = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsslNTypes = new System.Windows.Forms.ToolStripStatusLabel();
+            this.saver = new System.ComponentModel.BackgroundWorker();
+            this.import = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.databaseDetails.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -114,7 +123,7 @@
             this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(686, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -152,6 +161,7 @@
             this.chiudiStripMenuItem2.Name = "chiudiStripMenuItem2";
             this.chiudiStripMenuItem2.Size = new System.Drawing.Size(113, 22);
             this.chiudiStripMenuItem2.Text = "Chiudi";
+            this.chiudiStripMenuItem2.Click += new System.EventHandler(this.chiudiStripMenuItem2_Click);
             // 
             // toolStripSeparator1
             // 
@@ -176,6 +186,7 @@
             this.esciToolStripMenuItem.Name = "esciToolStripMenuItem";
             this.esciToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.esciToolStripMenuItem.Text = "Esci";
+            this.esciToolStripMenuItem.Click += new System.EventHandler(this.esciToolStripMenuItem_Click);
             // 
             // aggiungiToolStripMenuItem
             // 
@@ -246,7 +257,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 54);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(251, 381);
+            this.listBox1.Size = new System.Drawing.Size(251, 329);
             this.listBox1.TabIndex = 1;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
@@ -262,6 +273,11 @@
             // 
             // databaseDetails
             // 
+            this.databaseDetails.Controls.Add(this.editSecInfo);
+            this.databaseDetails.Controls.Add(this.editPass);
+            this.databaseDetails.Controls.Add(this.editUsrn);
+            this.databaseDetails.Controls.Add(this.editDb);
+            this.databaseDetails.Controls.Add(this.editHost);
             this.databaseDetails.Controls.Add(this.reqinfoLbl);
             this.databaseDetails.Controls.Add(this.passwordLbl);
             this.databaseDetails.Controls.Add(this.usernameLbl);
@@ -274,54 +290,109 @@
             this.databaseDetails.Controls.Add(this.label4);
             this.databaseDetails.Location = new System.Drawing.Point(278, 48);
             this.databaseDetails.Name = "databaseDetails";
-            this.databaseDetails.Size = new System.Drawing.Size(507, 158);
+            this.databaseDetails.Size = new System.Drawing.Size(395, 158);
             this.databaseDetails.TabIndex = 3;
             this.databaseDetails.TabStop = false;
             this.databaseDetails.Text = "  Dettagli Database  ";
             this.databaseDetails.Visible = false;
             // 
+            // editSecInfo
+            // 
+            this.editSecInfo.AutoSize = true;
+            this.editSecInfo.Location = new System.Drawing.Point(299, 125);
+            this.editSecInfo.Name = "editSecInfo";
+            this.editSecInfo.Size = new System.Drawing.Size(47, 13);
+            this.editSecInfo.TabIndex = 22;
+            this.editSecInfo.TabStop = true;
+            this.editSecInfo.Text = "Modifica";
+            this.editSecInfo.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editSecInfo.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.editDatabase_LinkClicked);
+            // 
+            // editPass
+            // 
+            this.editPass.AutoSize = true;
+            this.editPass.Location = new System.Drawing.Point(299, 101);
+            this.editPass.Name = "editPass";
+            this.editPass.Size = new System.Drawing.Size(47, 13);
+            this.editPass.TabIndex = 21;
+            this.editPass.TabStop = true;
+            this.editPass.Text = "Modifica";
+            this.editPass.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editPass.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.editDatabase_LinkClicked);
+            // 
+            // editUsrn
+            // 
+            this.editUsrn.AutoSize = true;
+            this.editUsrn.Location = new System.Drawing.Point(299, 77);
+            this.editUsrn.Name = "editUsrn";
+            this.editUsrn.Size = new System.Drawing.Size(47, 13);
+            this.editUsrn.TabIndex = 20;
+            this.editUsrn.TabStop = true;
+            this.editUsrn.Text = "Modifica";
+            this.editUsrn.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editUsrn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.editDatabase_LinkClicked);
+            // 
+            // editDb
+            // 
+            this.editDb.AutoSize = true;
+            this.editDb.Location = new System.Drawing.Point(299, 53);
+            this.editDb.Name = "editDb";
+            this.editDb.Size = new System.Drawing.Size(47, 13);
+            this.editDb.TabIndex = 19;
+            this.editDb.TabStop = true;
+            this.editDb.Text = "Modifica";
+            this.editDb.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editDb.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.editDatabase_LinkClicked);
+            // 
+            // editHost
+            // 
+            this.editHost.AutoSize = true;
+            this.editHost.Location = new System.Drawing.Point(299, 29);
+            this.editHost.Name = "editHost";
+            this.editHost.Size = new System.Drawing.Size(47, 13);
+            this.editHost.TabIndex = 18;
+            this.editHost.TabStop = true;
+            this.editHost.Text = "Modifica";
+            this.editHost.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editHost.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.editDatabase_LinkClicked);
+            // 
             // reqinfoLbl
             // 
-            this.reqinfoLbl.AutoSize = true;
             this.reqinfoLbl.Location = new System.Drawing.Point(114, 125);
             this.reqinfoLbl.Name = "reqinfoLbl";
-            this.reqinfoLbl.Size = new System.Drawing.Size(32, 13);
+            this.reqinfoLbl.Size = new System.Drawing.Size(180, 13);
             this.reqinfoLbl.TabIndex = 9;
             this.reqinfoLbl.Text = "Host:";
             // 
             // passwordLbl
             // 
-            this.passwordLbl.AutoSize = true;
             this.passwordLbl.Location = new System.Drawing.Point(114, 101);
             this.passwordLbl.Name = "passwordLbl";
-            this.passwordLbl.Size = new System.Drawing.Size(32, 13);
+            this.passwordLbl.Size = new System.Drawing.Size(180, 13);
             this.passwordLbl.TabIndex = 8;
             this.passwordLbl.Text = "Host:";
             // 
             // usernameLbl
             // 
-            this.usernameLbl.AutoSize = true;
             this.usernameLbl.Location = new System.Drawing.Point(114, 77);
             this.usernameLbl.Name = "usernameLbl";
-            this.usernameLbl.Size = new System.Drawing.Size(32, 13);
+            this.usernameLbl.Size = new System.Drawing.Size(180, 13);
             this.usernameLbl.TabIndex = 7;
             this.usernameLbl.Text = "Host:";
             // 
             // dbLbl
             // 
-            this.dbLbl.AutoSize = true;
             this.dbLbl.Location = new System.Drawing.Point(114, 53);
             this.dbLbl.Name = "dbLbl";
-            this.dbLbl.Size = new System.Drawing.Size(32, 13);
+            this.dbLbl.Size = new System.Drawing.Size(180, 13);
             this.dbLbl.TabIndex = 6;
             this.dbLbl.Text = "Host:";
             // 
             // ipLbl
             // 
-            this.ipLbl.AutoSize = true;
             this.ipLbl.Location = new System.Drawing.Point(114, 29);
             this.ipLbl.Name = "ipLbl";
-            this.ipLbl.Size = new System.Drawing.Size(32, 13);
+            this.ipLbl.Size = new System.Drawing.Size(180, 13);
             this.ipLbl.TabIndex = 5;
             this.ipLbl.Text = "Host:";
             // 
@@ -379,10 +450,12 @@
             this.toolStripStatusLabel3,
             this.tsslNProt,
             this.toolStripStatusLabel2,
-            this.tsslNTypes});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 450);
+            this.tsslNTypes,
+            this.toolStripStatusLabel4,
+            this.toolStripProgressBar1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 396);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(686, 22);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -410,9 +483,36 @@
             this.tsslNProt.Size = new System.Drawing.Size(13, 17);
             this.tsslNProt.Text = "0";
             // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(63, 17);
+            this.toolStripStatusLabel2.Text = "Topologie:";
+            // 
+            // tsslNTypes
+            // 
+            this.tsslNTypes.Name = "tsslNTypes";
+            this.tsslNTypes.Size = new System.Drawing.Size(13, 17);
+            this.tsslNTypes.Text = "0";
+            // 
+            // toolStripStatusLabel4
+            // 
+            this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
+            this.toolStripStatusLabel4.Size = new System.Drawing.Size(71, 17);
+            this.toolStripStatusLabel4.Text = "Salvataggio:";
+            this.toolStripStatusLabel4.Visible = false;
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar1.Step = 1;
+            this.toolStripProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.toolStripProgressBar1.Visible = false;
+            // 
             // machineDetails
             // 
-            this.machineDetails.Controls.Add(this.linkLabel1);
+            this.machineDetails.Controls.Add(this.editDatasRead);
             this.machineDetails.Controls.Add(this.lblCountDatasRead);
             this.machineDetails.Controls.Add(this.label16);
             this.machineDetails.Controls.Add(this.editImg);
@@ -440,11 +540,42 @@
             this.machineDetails.Controls.Add(this.label2);
             this.machineDetails.Location = new System.Drawing.Point(278, 48);
             this.machineDetails.Name = "machineDetails";
-            this.machineDetails.Size = new System.Drawing.Size(507, 387);
+            this.machineDetails.Size = new System.Drawing.Size(395, 336);
             this.machineDetails.TabIndex = 5;
             this.machineDetails.TabStop = false;
             this.machineDetails.Text = "  Dettagli Macchina  ";
             this.machineDetails.Visible = false;
+            // 
+            // editDatasRead
+            // 
+            this.editDatasRead.AutoSize = true;
+            this.editDatasRead.Location = new System.Drawing.Point(299, 222);
+            this.editDatasRead.Name = "editDatasRead";
+            this.editDatasRead.Size = new System.Drawing.Size(47, 13);
+            this.editDatasRead.TabIndex = 26;
+            this.editDatasRead.TabStop = true;
+            this.editDatasRead.Text = "Modifica";
+            this.editDatasRead.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editDatasRead.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblCountDatasRead
+            // 
+            this.lblCountDatasRead.Location = new System.Drawing.Point(114, 222);
+            this.lblCountDatasRead.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCountDatasRead.Name = "lblCountDatasRead";
+            this.lblCountDatasRead.Size = new System.Drawing.Size(180, 13);
+            this.lblCountDatasRead.TabIndex = 25;
+            this.lblCountDatasRead.Text = "Nome:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(27, 222);
+            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(65, 13);
+            this.label16.TabIndex = 24;
+            this.label16.Text = "Dati Lettura:";
             // 
             // editImg
             // 
@@ -710,53 +841,25 @@
             this.eliminaToolStripMenuItem.Text = "Elimina";
             this.eliminaToolStripMenuItem.Click += new System.EventHandler(this.eliminaToolStripMenuItem_Click);
             // 
-            // linkLabel1
+            // saver
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(299, 222);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(47, 13);
-            this.linkLabel1.TabIndex = 26;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Modifica";
-            this.linkLabel1.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.saver.WorkerReportsProgress = true;
+            this.saver.DoWork += new System.ComponentModel.DoWorkEventHandler(this.saver_DoWork);
+            this.saver.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.saver_RunWorkerCompleted);
             // 
-            // lblCountDatasRead
+            // import
             // 
-            this.lblCountDatasRead.Location = new System.Drawing.Point(114, 222);
-            this.lblCountDatasRead.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblCountDatasRead.Name = "lblCountDatasRead";
-            this.lblCountDatasRead.Size = new System.Drawing.Size(180, 13);
-            this.lblCountDatasRead.TabIndex = 25;
-            this.lblCountDatasRead.Text = "Nome:";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(27, 222);
-            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(65, 13);
-            this.label16.TabIndex = 24;
-            this.label16.Text = "Dati Lettura:";
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(63, 17);
-            this.toolStripStatusLabel2.Text = "Topologie:";
-            // 
-            // tsslNTypes
-            // 
-            this.tsslNTypes.Name = "tsslNTypes";
-            this.tsslNTypes.Size = new System.Drawing.Size(13, 17);
-            this.tsslNTypes.Text = "0";
+            this.import.AddExtension = false;
+            this.import.DefaultExt = "json";
+            this.import.FileName = "appsettings.json";
+            this.import.Filter = "|*.json";
+            this.import.Title = "Seleziona il file config";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 472);
+            this.ClientSize = new System.Drawing.Size(686, 418);
             this.Controls.Add(this.machineDetails);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.databaseDetails);
@@ -848,11 +951,20 @@
         private System.Windows.Forms.LinkLabel editType;
         private System.Windows.Forms.LinkLabel editDesc;
         private System.Windows.Forms.LinkLabel editName;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel editDatasRead;
         private System.Windows.Forms.Label lblCountDatasRead;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel tsslNTypes;
+        private System.ComponentModel.BackgroundWorker saver;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.OpenFileDialog import;
+        private System.Windows.Forms.LinkLabel editSecInfo;
+        private System.Windows.Forms.LinkLabel editPass;
+        private System.Windows.Forms.LinkLabel editUsrn;
+        private System.Windows.Forms.LinkLabel editDb;
+        private System.Windows.Forms.LinkLabel editHost;
     }
 }
 

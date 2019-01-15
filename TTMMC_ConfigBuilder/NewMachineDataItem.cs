@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using static TTMMC_ConfigBuilder.Form1;
 
 namespace TTMMC_ConfigBuilder
 {
@@ -15,6 +11,7 @@ namespace TTMMC_ConfigBuilder
 
         public string Description;
         public string Address;
+        public string DataType;
 
         public NewMachineDataItem()
         {
@@ -25,14 +22,16 @@ namespace TTMMC_ConfigBuilder
         {
             textBox1.Text = Description;
             textBox2.Text = Address;
+            comboBox1.DataSource = Enum.GetValues(typeof(DataTypes)).Cast<DataTypes>().Select(v => v.ToString()).ToList();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && textBox2.Text != "")
+            if (textBox1.Text != "" && textBox2.Text != "" && comboBox1.Text != "")
             {
                 Description = textBox1.Text;
                 Address = textBox2.Text;
+                DataType = comboBox1.Text;
                 this.DialogResult = DialogResult.OK;
             }
             else

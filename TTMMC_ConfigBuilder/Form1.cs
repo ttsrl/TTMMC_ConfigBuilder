@@ -1,13 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
@@ -15,6 +11,17 @@ namespace TTMMC_ConfigBuilder
     public partial class Form1 : Form
     {
         public static FileConfig file_;
+
+        public enum DataTypes
+        {
+            INT,
+            UINT,
+            DINT,
+            UDINT,
+            REAL,
+            DOUBLE,
+            STRING
+        }
 
         public Form1()
         {
@@ -39,7 +46,44 @@ namespace TTMMC_ConfigBuilder
 
         private void ApriToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            var inp = import.ShowDialog();
+            if(inp == DialogResult.OK)
+            {
+                var file = new StreamReader(import.FileName);
+                var read = file.ReadToEnd();
+                if(!string.IsNullOrEmpty(read))
+                {
+                    var json = JsonConvert.DeserializeObject<ModelJson>(read);
+                    file_ = new FileConfig(import.SafeFileName);
+                    //load data
+                    if (json.ConnectionStrings.ContainsKey("DefaultConnection"))
+                    {
+                        file_.AddDatabase(json.ConnectionStrings["DefaultConnection"]);
+                    }
+                    foreach (var m in json.Machines)
+                    {
+                        var machineType = file_.GetMachineType(m.Value.Type) ?? new FileConfigMachineType { Name = m.Value.Type };
+                        var machineProtocol = file_.GetProtocol(m.Value.Protocol) ?? new FileConfigProtocol { Name = m.Value.Protocol };
+                        if (machineType is FileConfigMachineType && machineProtocol is FileConfigProtocol)
+                        {
+                            file_.AddMachineType(m.Value.Type);
+                            file_.AddProtocol(m.Value.Protocol);
+                            var l = m.Value.DatasAddressToRead.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
+                            file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l);
+                        }
+                    }
+                    reloadListBox1();
+                    nuovoToolStripMenuItem.Enabled = false;
+                    aggiungiToolStripMenuItem.Enabled = true;
+                    apriToolStripMenuItem.Enabled = false;
+                    esportaToolStripMenuItem.Enabled = true;
+                    chiudiStripMenuItem2.Enabled = true;
+                    listBox1.Enabled = true;
+                    tsslNElem.Text = (file_.Machines.Count + ((file_.DB is FileConfigDB) ? 1 : 0)).ToString();
+                    tsslNProt.Text = file_.Protocols.Count.ToString();
+                    tsslNTypes.Text = file_.MachineTypes.Count.ToString();
+                }
+            }
         }
 
         private void ProtocolloToolStripMenuItem_Click(object sender, EventArgs e)
@@ -101,38 +145,10 @@ namespace TTMMC_ConfigBuilder
             var fs = export.ShowDialog();
             if(fs == DialogResult.OK)
             {
-                var db = new Dictionary<string, string>();
-                if(file_.DB is FileConfigDB)
-                {
-                    var cns = "Data Source=" + file_.DB.IP + ";Initial Catalog=" + file_.DB.Database + ";Persist Security Info=" + file_.DB.PersisteSecurityInfo.ToString() + ";User ID=" + file_.DB.Username + ";Password=" + file_.DB.Password;
-                    db.Add("DefaultConnection", cns);
-                }
-                var machines = new List<MachineJSON>();
-                foreach (var it in file_.Machines)
-                {
-                    var nm = new MachineJSON
-                    {
-                         Id = it.Id,
-                         Address = it.Address,
-                         Description = it.Description,
-                         ReferenceName = it.ReferenceName,
-                         Port = it.Port,
-                         Protocol = it.Protocol.Name,
-                         Type = it.Type.Name, 
-                         Image = it.Image,
-                         DatasAddressToRead = it.DatasAddressToRead
-                    };
-                    machines.Add(nm);
-                }
-                var model = new ModelJson
-                {
-                    ConnectionStrings = db,
-                    Machines = machines
-                };
-                var json = JsonConvert.SerializeObject(model);
-                var stw = new StreamWriter(export.FileName);
-                stw.Write(json);
-                stw.Close();
+                toolStripStatusLabel4.Visible = true;
+                toolStripProgressBar1.Visible = true;
+                this.Enabled = false;
+                saver.RunWorkerAsync();
             }
         }
 
@@ -216,81 +232,254 @@ namespace TTMMC_ConfigBuilder
         private void edit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var nm = ((LinkLabel)sender).Name ?? "";
-            var machine = file_.GetMachine(listBox1.SelectedItem?.ToString());
-            if (!string.IsNullOrEmpty(nm) && machine is FileConfigMachine)
+            if (!string.IsNullOrEmpty(nm))
             {
-                var frmInputTxt = new inputTxt();
-                var frmSelect = new inputSelect();
-                if (nm == "editName")
+                var machine = (file_ is FileConfig) ? file_.GetMachine(listBox1.SelectedItem?.ToString()) : null;
+                if (machine is FileConfigMachine)
                 {
-                    frmInputTxt.LblTxt = "Nome:";
-                    frmInputTxt.Value = machine.ReferenceName;
-                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    var frmInputTxt = new inputTxt();
+                    var frmSelect = new inputSelect();
+                    var frmTreview = new inputTreeView();
+                    if (nm == "editName")
                     {
-                        machine.ReferenceName = frmInputTxt.Value;
-                        listBox1.Items[listBox1.SelectedIndex] = frmInputTxt.Value;
+                        frmInputTxt.LblTxt = "Nome:";
+                        frmInputTxt.Value = machine.ReferenceName;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.ReferenceName = frmInputTxt.Value;
+                            listBox1.Items[listBox1.SelectedIndex] = frmInputTxt.Value;
+                        }
                     }
-                }
-                else if(nm == "editDesc")
-                {
-                    frmInputTxt.LblTxt = "Descrizione:";
-                    frmInputTxt.Value = machine.Description;
-                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    else if (nm == "editDesc")
                     {
-                        machine.Description = frmInputTxt.Value;
+                        frmInputTxt.LblTxt = "Descrizione:";
+                        frmInputTxt.Value = machine.Description;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.Description = frmInputTxt.Value;
+                        }
                     }
-                }
-                else if (nm == "editType")
-                {
-                    frmSelect.LblTxt = "Tipologia:";
-                    frmSelect.List = file_.MachineTypes.Select(it => it.Name).ToList();
-                    frmSelect.Value = machine.Type.Name;
-                    if (frmSelect.ShowDialog() == DialogResult.OK)
+                    else if (nm == "editType")
                     {
-                        machine.Type = file_.GetMachineType(frmSelect.Value);
+                        frmSelect.LblTxt = "Tipologia:";
+                        frmSelect.List = file_.MachineTypes.Select(it => it.Name).ToList();
+                        frmSelect.Value = machine.Type.Name;
+                        if (frmSelect.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.Type = file_.GetMachineType(frmSelect.Value);
+                        }
                     }
-                }
-                else if (nm == "editProtocol")
-                {
-                    frmSelect.LblTxt = "Protocollo:";
-                    frmSelect.List = file_.Protocols.Select(it => it.Name).ToList();
-                    frmSelect.Value = machine.Protocol.Name;
-                    if (frmSelect.ShowDialog() == DialogResult.OK)
+                    else if (nm == "editProtocol")
                     {
-                        machine.Protocol = file_.GetProtocol(frmSelect.Value);
+                        frmSelect.LblTxt = "Protocollo:";
+                        frmSelect.List = file_.Protocols.Select(it => it.Name).ToList();
+                        frmSelect.Value = machine.Protocol.Name;
+                        if (frmSelect.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.Protocol = file_.GetProtocol(frmSelect.Value);
+                        }
                     }
-                }
-                else if (nm == "editAddress")
-                {
-                    frmInputTxt.LblTxt = "Indirizzo:";
-                    frmInputTxt.Value = machine.Address;
-                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    else if (nm == "editAddress")
                     {
-                        machine.Address = frmInputTxt.Value;
+                        frmInputTxt.LblTxt = "Indirizzo:";
+                        frmInputTxt.Value = machine.Address;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.Address = frmInputTxt.Value;
+                        }
                     }
-                }
-                else if (nm == "editPort")
-                {
-                    frmInputTxt.LblTxt = "Porta:";
-                    frmInputTxt.Value = machine.Port;
-                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    else if (nm == "editPort")
                     {
-                        machine.Port = frmInputTxt.Value;
+                        frmInputTxt.LblTxt = "Porta:";
+                        frmInputTxt.Value = machine.Port;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.Port = frmInputTxt.Value;
+                        }
                     }
-                }
-                else if (nm == "editImg")
-                {
-                    frmInputTxt.LblTxt = "Porta:";
-                    frmInputTxt.Value = machine.Image;
-                    if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                    else if (nm == "editImg")
                     {
-                        machine.Image = frmInputTxt.Value;
+                        frmInputTxt.LblTxt = "Porta:";
+                        frmInputTxt.Value = machine.Image;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.Image = frmInputTxt.Value;
+                        }
                     }
+                    else if (nm == "editDatasRead")
+                    {
+                        //copia
+                        var newDatasToRead = new Dictionary<string, List<DataAddressItem>>();
+                        foreach (var it in machine.DatasAddressToRead)
+                        {
+                            var list = new List<DataAddressItem>();
+                            foreach (var itl in it.Value)
+                            {
+                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())));
+                                list.Add(dr);
+                            }
+                            newDatasToRead.Add(it.Key, list);
+                        }
+                        frmTreview.datasAddressToRead = newDatasToRead;
+                        if (frmTreview.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.DatasAddressToRead = frmTreview.datasAddressToRead;
+                        }
+                    }
+                    //refresh
+                    listBox1_SelectedIndexChanged(listBox1.SelectedItem, new EventArgs());
                 }
-                //refresh
-                listBox1_SelectedIndexChanged(listBox1.SelectedItem, new EventArgs());
             }
             
         }
+
+        private void editDatabase_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var nm = ((LinkLabel)sender).Name ?? "";
+            if (!string.IsNullOrEmpty(nm))
+            {
+                if (file_ is FileConfig && file_.DB is FileConfigDB)
+                {
+                    var frm = new inputTxt();
+                    var frmS = new inputSelect();
+                    if (nm == "editHost")
+                    {
+                        frm.LblTxt = "Host:";
+                        frm.Value = file_.DB.IP;
+                        if (frm.ShowDialog() == DialogResult.OK)
+                        {
+                            file_.DB.IP = frm.Value;
+                        }
+                    }
+                    else if (nm == "editDb")
+                    {
+                        frm.LblTxt = "Database:";
+                        frm.Value = file_.DB.Database;
+                        if (frm.ShowDialog() == DialogResult.OK)
+                        {
+                            file_.DB.Database = frm.Value;
+                        }
+                    }
+                    else if (nm == "editUsrn")
+                    {
+                        frm.LblTxt = "Username:";
+                        frm.Value = file_.DB.Username;
+                        if (frm.ShowDialog() == DialogResult.OK)
+                        {
+                            file_.DB.Username = frm.Value;
+                        }
+                    }
+                    else if (nm == "editPass")
+                    {
+                        frm.LblTxt = "Password:";
+                        frm.Value = file_.DB.Password;
+                        if (frm.ShowDialog() == DialogResult.OK)
+                        {
+                            file_.DB.Password = frm.Value;
+                        }
+                    }
+                    else if (nm == "editSecInfo")
+                    {
+                        var l = new List<string>();
+                        l.Add("True");
+                        l.Add("False");
+                        frmS.LblTxt = "Security Info:";
+                        frmS.List = l;
+                        frmS.Value = file_.DB.PersisteSecurityInfo.ToString();
+                        if (frmS.ShowDialog() == DialogResult.OK)
+                        {
+                            file_.DB.PersisteSecurityInfo = Boolean.Parse(frmS.Value);
+                        }
+                    }
+                    //refresh
+                    listBox1_SelectedIndexChanged(listBox1.SelectedItem, new EventArgs());
+                }
+            }
+        }
+
+        private void saver_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            var db = new Dictionary<string, string>();
+            if (file_.DB is FileConfigDB)
+            {
+                var cns = "Data Source=" + file_.DB.IP + ";Initial Catalog=" + file_.DB.Database + ";Persist Security Info=" + file_.DB.PersisteSecurityInfo.ToString() + ";User ID=" + file_.DB.Username + ";Password=" + file_.DB.Password;
+                db.Add("DefaultConnection", cns);
+            }
+            var machines = new Dictionary<string, MachineJSON>();
+            var c = 0;
+            foreach (var it in file_.Machines)
+            {
+                var nm = new MachineJSON
+                {
+                    Id = it.Id,
+                    Address = it.Address,
+                    Description = it.Description,
+                    ReferenceName = it.ReferenceName,
+                    Port = it.Port,
+                    Protocol = it.Protocol.Name,
+                    Type = it.Type.Name,
+                    Image = it.Image,
+                    DatasAddressToRead = it.DatasAddressToRead.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s))
+                };
+                machines.Add(c.ToString(), nm);
+                c++;
+            }
+            var model = new ModelJson
+            {
+                ConnectionStrings = db,
+                Machines = machines
+            };
+            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
+            var stw = new StreamWriter(export.FileName);
+            stw.Write(json);
+            stw.Close();
+        }
+
+        private void saver_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            this.Enabled = true;
+            toolStripStatusLabel4.Visible = false;
+            toolStripProgressBar1.Visible = false;
+            MessageBox.Show("File Esportato correttamente!", "Fine", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void reloadListBox1()
+        {
+            var list = new List<string>();
+            if (file_ is FileConfig)
+            {
+                if (file_.DB is FileConfigDB)
+                {
+                    list.Add("Database");
+                }
+                list.AddRange(file_.Machines.Select(x => x.ReferenceName));
+            }
+            listBox1.ClearSelected();
+            listBox1.Items.Clear();
+            listBox1.Items.AddRange(list.ToArray());
+        }
+
+        private void esciToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void chiudiStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            file_ = null;
+            tsslNElem.Text = "0";
+            tsslNProt.Text = "0";
+            tsslNTypes.Text = "0";
+            reloadListBox1();
+            nuovoToolStripMenuItem.Enabled = true;
+            aggiungiToolStripMenuItem.Enabled = false;
+            apriToolStripMenuItem.Enabled = true;
+            esportaToolStripMenuItem.Enabled = false;
+            chiudiStripMenuItem2.Enabled = false;
+            listBox1.Enabled = false;
+            machineDetails.Visible = false;
+            databaseDetails.Visible = false;
+        }
+
     }
 }

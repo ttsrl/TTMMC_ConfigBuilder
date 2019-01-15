@@ -12,8 +12,9 @@ namespace TTMMC_ConfigBuilder
         private List<FileConfigMachineType> machineTypes = new List<FileConfigMachineType>();
         private List<FileConfigMachine> machines = new List<FileConfigMachine>();
         private FileConfigDB db;
+        private string _name;
 
-        public string Name { get; set; }
+        public string Name { get => _name; set => _name = value.Replace(".json", ""); }
         public List<FileConfigProtocol> Protocols { get => protocols; }
         public List<FileConfigMachineType> MachineTypes { get => machineTypes; }
         public List<FileConfigMachine> Machines { get => machines; }
@@ -51,14 +52,53 @@ namespace TTMMC_ConfigBuilder
             db = db_;
         }
 
+        public void AddDatabase(string connectionString)
+        {
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                var db_ = new FileConfigDB();
+                char[] char1 = new char[] { ';' };
+                char[] char2 = new char[] { '=' };
+                var split = connectionString.Split(char1);
+                foreach (var str in split)
+                {
+                    var val = str.Split(char2);
+                    if (val[0] == "Data Source")
+                    {
+                        db_.IP = val[1];
+                    }
+                    else if (val [0] == "Initial Catalog")
+                    {
+                        db_.Database = val[1];
+                    }
+                    else if (val[0] == "Persist Security Info")
+                    {
+                        db_.PersisteSecurityInfo = Boolean.Parse(val[1]);
+                    }
+                    else if (val[0] == "User ID")
+                    {
+                        db_.Username = val[1];
+                    }
+                    else if (val[0] == "Password")
+                    {
+                        db_.Password = val[1];
+                    }
+                }
+                if (!string.IsNullOrEmpty(db_.IP) && !string.IsNullOrEmpty(db_.Database) && !string.IsNullOrEmpty(db_.Username) && !string.IsNullOrEmpty(db_.Password))
+                {
+                    db = db_;
+                }
+            }
+        }
+
         public void RemoveDatabase()
         {
             db = null;
         }
 
-        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressToReadItem>> datasAddressToRead)
+        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressItem>> datasAddressToRead)
         {
-            if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) && datasAddressToRead is Dictionary<string, List<DataAddressToReadItem>>)
+            if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) && datasAddressToRead is Dictionary<string, List<DataAddressItem>>)
             {
                 var protExist = protocols.Exists(x => x.Name == protocol.Name);
                 var typeExist = machineTypes.Exists(x => x.Name == type.Name);
@@ -177,7 +217,7 @@ namespace TTMMC_ConfigBuilder
         public string Address { get; set; }
         public string Port { get; set; }
         public string Image { get; set; }
-        public Dictionary<string, List<DataAddressToReadItem>> DatasAddressToRead { get; set; }
+        public Dictionary<string, List<DataAddressItem>> DatasAddressToRead { get; set; }
     }
 
     public class FileConfigProtocol
