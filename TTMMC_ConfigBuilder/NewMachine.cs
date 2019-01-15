@@ -31,17 +31,22 @@ namespace TTMMC_ConfigBuilder
 
         private void NewMachine_Load(object sender, EventArgs e)
         {
-            foreach (var t in Form1.file_.MachineTypes)
+            if (file_ is FileConfig)
             {
-                comboBox1.Items.Add(t.Name);
-            }
+                foreach (var t in Form1.file_.MachineTypes)
+                {
+                    comboBox1.Items.Add(t.Name);
+                }
 
-            foreach (var p in Form1.file_.Protocols)
-            {
-                comboBox2.Items.Add(p.Name);
-            }
+                foreach (var p in Form1.file_.Protocols)
+                {
+                    comboBox2.Items.Add(p.Name);
+                }
 
-            DatasAddressToRead = new Dictionary<string, List<DataAddressItem>>();
+                lblId.Text = (file_.Machines.Count + 1).ToString();
+
+                DatasAddressToRead = new Dictionary<string, List<DataAddressItem>>();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)

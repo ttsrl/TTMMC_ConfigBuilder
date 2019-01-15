@@ -205,33 +205,33 @@
             // protocolloToolStripMenuItem
             // 
             this.protocolloToolStripMenuItem.Name = "protocolloToolStripMenuItem";
-            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.protocolloToolStripMenuItem.Text = "Protocollo";
             this.protocolloToolStripMenuItem.Click += new System.EventHandler(this.ProtocolloToolStripMenuItem_Click);
             // 
             // tipologiaMacchinaToolStripMenuItem
             // 
             this.tipologiaMacchinaToolStripMenuItem.Name = "tipologiaMacchinaToolStripMenuItem";
-            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.tipologiaMacchinaToolStripMenuItem.Text = "Tipologia Macchina";
             this.tipologiaMacchinaToolStripMenuItem.Click += new System.EventHandler(this.TipologiaMacchinaToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(176, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // databaseToolStripMenuItem
             // 
             this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
-            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.databaseToolStripMenuItem.Text = "Database";
             this.databaseToolStripMenuItem.Click += new System.EventHandler(this.DatabaseToolStripMenuItem_Click);
             // 
             // macchinaToolStripMenuItem
             // 
             this.macchinaToolStripMenuItem.Name = "macchinaToolStripMenuItem";
-            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.macchinaToolStripMenuItem.Text = "Macchina";
             this.macchinaToolStripMenuItem.Click += new System.EventHandler(this.MacchinaToolStripMenuItem_Click);
             // 

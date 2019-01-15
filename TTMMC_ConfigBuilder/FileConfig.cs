@@ -106,7 +106,7 @@ namespace TTMMC_ConfigBuilder
                 {
                     var m = new FileConfigMachine
                     {
-                        Id = machines.Count,
+                        Id = machines.Count + 1,
                         Type = type,
                         Protocol = protocol,
                         Address = address,
