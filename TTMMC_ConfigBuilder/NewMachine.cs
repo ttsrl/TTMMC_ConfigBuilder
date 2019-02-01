@@ -23,7 +23,8 @@ namespace TTMMC_ConfigBuilder
         public string Port;
         public string Image;
         public Dictionary<string, List<DataAddressItem>> DatasAddressToRead;
-        
+        public Dictionary<string, List<DataAddressItem>> DatasAddressToWrite;
+
         public NewMachine()
         {
             InitializeComponent();

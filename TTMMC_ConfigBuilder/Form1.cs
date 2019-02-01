@@ -69,7 +69,8 @@ namespace TTMMC_ConfigBuilder
                             file_.AddMachineType(m.Value.Type);
                             file_.AddProtocol(m.Value.Protocol);
                             var l = m.Value.DatasAddressToRead.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
-                            file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l);
+                            var w = m.Value.DatasAddressToWrite.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
+                            file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w);
                         }
                     }
                     reloadListBox1();
@@ -125,7 +126,7 @@ namespace TTMMC_ConfigBuilder
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var r = file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead);
+                var r = file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead, frm.DatasAddressToWrite);
                 if (r)
                 {
                     listBox1.Items.Add(frm.MachineName);
@@ -182,6 +183,7 @@ namespace TTMMC_ConfigBuilder
                         lblPort.Text = machine.Port;
                         lblImg.Text = machine.Image;
                         lblCountDatasRead.Text = machine.DatasAddressToRead.Count.ToString();
+                        lblCountDatasWrite.Text = machine.DatasAddressToWrite.Count.ToString();
                         databaseDetails.Visible = false;
                         machineDetails.Visible = true;
                     }
@@ -320,10 +322,30 @@ namespace TTMMC_ConfigBuilder
                             }
                             newDatasToRead.Add(it.Key, list);
                         }
-                        frmTreview.datasAddressToRead = newDatasToRead;
+                        frmTreview.datasAddress = newDatasToRead;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
                         {
-                            machine.DatasAddressToRead = frmTreview.datasAddressToRead;
+                            machine.DatasAddressToRead = frmTreview.datasAddress;
+                        }
+                    }
+                    else if (nm == "editDatasWrite")
+                    {
+                        //copia
+                        var newDatasToWrite = new Dictionary<string, List<DataAddressItem>>();
+                        foreach (var it in machine.DatasAddressToWrite)
+                        {
+                            var list = new List<DataAddressItem>();
+                            foreach (var itl in it.Value)
+                            {
+                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())));
+                                list.Add(dr);
+                            }
+                            newDatasToWrite.Add(it.Key, list);
+                        }
+                        frmTreview.datasAddress = newDatasToWrite;
+                        if (frmTreview.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.DatasAddressToWrite = frmTreview.datasAddress;
                         }
                     }
                     //refresh

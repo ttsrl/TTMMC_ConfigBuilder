@@ -76,6 +76,9 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.machineDetails = new System.Windows.Forms.GroupBox();
+            this.editDatasWrite = new System.Windows.Forms.LinkLabel();
+            this.lblCountDatasWrite = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.editDatasRead = new System.Windows.Forms.LinkLabel();
             this.lblCountDatasRead = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
@@ -205,33 +208,33 @@
             // protocolloToolStripMenuItem
             // 
             this.protocolloToolStripMenuItem.Name = "protocolloToolStripMenuItem";
-            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.protocolloToolStripMenuItem.Text = "Protocollo";
             this.protocolloToolStripMenuItem.Click += new System.EventHandler(this.ProtocolloToolStripMenuItem_Click);
             // 
             // tipologiaMacchinaToolStripMenuItem
             // 
             this.tipologiaMacchinaToolStripMenuItem.Name = "tipologiaMacchinaToolStripMenuItem";
-            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.tipologiaMacchinaToolStripMenuItem.Text = "Tipologia Macchina";
             this.tipologiaMacchinaToolStripMenuItem.Click += new System.EventHandler(this.TipologiaMacchinaToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(176, 6);
             // 
             // databaseToolStripMenuItem
             // 
             this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
-            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.databaseToolStripMenuItem.Text = "Database";
             this.databaseToolStripMenuItem.Click += new System.EventHandler(this.DatabaseToolStripMenuItem_Click);
             // 
             // macchinaToolStripMenuItem
             // 
             this.macchinaToolStripMenuItem.Name = "macchinaToolStripMenuItem";
-            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.macchinaToolStripMenuItem.Text = "Macchina";
             this.macchinaToolStripMenuItem.Click += new System.EventHandler(this.MacchinaToolStripMenuItem_Click);
             // 
@@ -513,6 +516,9 @@
             // 
             // machineDetails
             // 
+            this.machineDetails.Controls.Add(this.editDatasWrite);
+            this.machineDetails.Controls.Add(this.lblCountDatasWrite);
+            this.machineDetails.Controls.Add(this.label17);
             this.machineDetails.Controls.Add(this.editDatasRead);
             this.machineDetails.Controls.Add(this.lblCountDatasRead);
             this.machineDetails.Controls.Add(this.label16);
@@ -546,6 +552,37 @@
             this.machineDetails.TabStop = false;
             this.machineDetails.Text = "  Dettagli Macchina  ";
             this.machineDetails.Visible = false;
+            // 
+            // editDatasWrite
+            // 
+            this.editDatasWrite.AutoSize = true;
+            this.editDatasWrite.Location = new System.Drawing.Point(299, 246);
+            this.editDatasWrite.Name = "editDatasWrite";
+            this.editDatasWrite.Size = new System.Drawing.Size(47, 13);
+            this.editDatasWrite.TabIndex = 29;
+            this.editDatasWrite.TabStop = true;
+            this.editDatasWrite.Text = "Modifica";
+            this.editDatasWrite.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editDatasWrite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblCountDatasWrite
+            // 
+            this.lblCountDatasWrite.Location = new System.Drawing.Point(114, 246);
+            this.lblCountDatasWrite.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCountDatasWrite.Name = "lblCountDatasWrite";
+            this.lblCountDatasWrite.Size = new System.Drawing.Size(180, 13);
+            this.lblCountDatasWrite.TabIndex = 28;
+            this.lblCountDatasWrite.Text = "Nome:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(27, 246);
+            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(71, 13);
+            this.label17.TabIndex = 27;
+            this.label17.Text = "Dati Scrittura:";
             // 
             // editDatasRead
             // 
@@ -967,6 +1004,9 @@
         private System.Windows.Forms.LinkLabel editUsrn;
         private System.Windows.Forms.LinkLabel editDb;
         private System.Windows.Forms.LinkLabel editHost;
+        private System.Windows.Forms.LinkLabel editDatasWrite;
+        private System.Windows.Forms.Label lblCountDatasWrite;
+        private System.Windows.Forms.Label label17;
     }
 }
 

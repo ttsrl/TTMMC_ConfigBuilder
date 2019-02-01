@@ -20,6 +20,7 @@ namespace TTMMC_ConfigBuilder
         public string Port { get; set; }
         public string Image { get; set; }
         public Dictionary<string, Dictionary<string, DataAddressItem>> DatasAddressToRead { get; set; }
+        public Dictionary<string, Dictionary<string, DataAddressItem>> DatasAddressToWrite { get; set; }
     }
 
     public class DataAddressItem

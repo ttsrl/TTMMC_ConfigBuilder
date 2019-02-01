@@ -15,7 +15,7 @@ namespace TTMMC_ConfigBuilder
     {
 
         private string _nmEditLbl;
-        public Dictionary<string, List<DataAddressItem>> datasAddressToRead = new Dictionary<string, List<DataAddressItem>>();
+        public Dictionary<string, List<DataAddressItem>> datasAddress = new Dictionary<string, List<DataAddressItem>>();
 
         public inputTreeView()
         {
@@ -26,7 +26,7 @@ namespace TTMMC_ConfigBuilder
         {
             treeView1.BeginUpdate();
             var nodes = new List<TreeNode>();
-            foreach (var it in datasAddressToRead)
+            foreach (var it in datasAddress)
             {
                 var snodes = new List<TreeNode>();
                 var c = 0;
@@ -61,12 +61,12 @@ namespace TTMMC_ConfigBuilder
             {
                 if (elm.Level == 0)
                 {
-                    var exist = datasAddressToRead.ContainsKey(_nmEditLbl);
+                    var exist = datasAddress.ContainsKey(_nmEditLbl);
                     if (exist)
                     {
-                        var it = datasAddressToRead[_nmEditLbl];
-                        datasAddressToRead.Remove(_nmEditLbl);
-                        datasAddressToRead.Add(e.Label, it);
+                        var it = datasAddress[_nmEditLbl];
+                        datasAddress.Remove(_nmEditLbl);
+                        datasAddress.Add(e.Label, it);
                     }
                     else
                     {
@@ -100,7 +100,7 @@ namespace TTMMC_ConfigBuilder
             {
                 if (elm.Level == 0)
                 {
-                    var exist = datasAddressToRead.ContainsKey(elm.Text);
+                    var exist = datasAddress.ContainsKey(elm.Text);
                     if (exist)
                     {
                         var frm = new inputTxt();
@@ -108,9 +108,9 @@ namespace TTMMC_ConfigBuilder
                         frm.Value = elm.Text;
                         if (frm.ShowDialog() == DialogResult.OK)
                         {
-                            var it = datasAddressToRead[elm.Text];
-                            datasAddressToRead.Remove(elm.Text);
-                            datasAddressToRead.Add(frm.Value, it);
+                            var it = datasAddress[elm.Text];
+                            datasAddress.Remove(elm.Text);
+                            datasAddress.Add(frm.Value, it);
                             elm.Text = frm.Value;
                         }
                     }
@@ -121,10 +121,10 @@ namespace TTMMC_ConfigBuilder
                 }
                 else if (elm.Level == 2)
                 {
-                    var exist = datasAddressToRead.ContainsKey(elm.Parent.Parent.Text);
+                    var exist = datasAddress.ContainsKey(elm.Parent.Parent.Text);
                     if (exist)
                     {
-                        var item = datasAddressToRead[elm.Parent.Parent.Text][int.Parse(elm.Parent.Text)];
+                        var item = datasAddress[elm.Parent.Parent.Text][int.Parse(elm.Parent.Text)];
                         var indx = elm.Parent.Nodes.IndexOf(elm);
                         if (indx == 0 || indx == 1)
                         {
@@ -177,12 +177,12 @@ namespace TTMMC_ConfigBuilder
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 var nm = frm.Value;
-                var exist = datasAddressToRead.ContainsKey(nm);
+                var exist = datasAddress.ContainsKey(nm);
                 if (!exist)
                 {
                     var node = treeView1.Nodes.Add(frm.Value);
                     treeView1.SelectedNode = node;
-                    datasAddressToRead.Add(nm, new List<DataAddressItem>());
+                    datasAddress.Add(nm, new List<DataAddressItem>());
                     button5_Click(sender, new EventArgs());
                 }
                 else
@@ -203,13 +203,13 @@ namespace TTMMC_ConfigBuilder
                     var subitem = (lvl == 2) ? node.Parent : node;
                     if (subitem.Parent.Nodes.Count == 1)
                     {
-                        datasAddressToRead.Remove(subitem.Parent.Text);
+                        datasAddress.Remove(subitem.Parent.Text);
                         treeView1.Nodes.Remove(subitem.Parent);
                     }
                     else
                     {
                         var subItPar = subitem.Parent;
-                        var it = datasAddressToRead[subItPar.Text];
+                        var it = datasAddress[subItPar.Text];
                         it.RemoveAt(int.Parse(subitem.Text));
                         treeView1.Nodes.Remove(subitem);
                         //rename
@@ -221,7 +221,7 @@ namespace TTMMC_ConfigBuilder
                 }
                 else //lvl 0
                 {
-                    datasAddressToRead.Remove(node.Text);
+                    datasAddress.Remove(node.Text);
                     treeView1.Nodes.Remove(node);
                 }
             }
@@ -247,7 +247,7 @@ namespace TTMMC_ConfigBuilder
                         node.Nodes[index].Nodes.Add("DataType: " + frm.DataType);
                         node.Nodes[index].Nodes[2].ToolTipText = frm.DataType;
                         treeView1.EndUpdate();
-                        var itemList = datasAddressToRead[node.Text];
+                        var itemList = datasAddress[node.Text];
                         itemList.Add(new DataAddressItem(frm.Address, frm.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), frm.DataType))));
                     }
                 }
