@@ -30,6 +30,7 @@ namespace TTMMC_ConfigBuilder
         public string Address { get; set; }
         public string DataType { get => dataType; set => dataType = value?.ToLower(); }
 
+
         public DataAddressItem(string address, string description, DataTypes datatype)
         {
             Address = address;

@@ -67,6 +67,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="inputKey.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputKey.Designer.cs">
+      <DependentUpon>inputKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="inputTreeView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,6 +119,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="inputKey.resx">
+      <DependentUpon>inputKey.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="inputTreeView.resx">
       <DependentUpon>inputTreeView.cs</DependentUpon>
     </EmbeddedResource>

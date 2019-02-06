@@ -16,6 +16,7 @@ namespace TTMMC_ConfigBuilder
 
         private string _nmEditLbl;
         public Dictionary<string, List<DataAddressItem>> datasAddress = new Dictionary<string, List<DataAddressItem>>();
+        public bool DatasRead = false;
 
         public inputTreeView()
         {
@@ -54,29 +55,6 @@ namespace TTMMC_ConfigBuilder
             treeView1.EndUpdate();
         }
 
-        private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
-        {
-            var elm = e.Node;
-            if (elm is TreeNode && !string.IsNullOrEmpty(e.Label))
-            {
-                if (elm.Level == 0)
-                {
-                    var exist = datasAddress.ContainsKey(_nmEditLbl);
-                    if (exist)
-                    {
-                        var it = datasAddress[_nmEditLbl];
-                        datasAddress.Remove(_nmEditLbl);
-                        datasAddress.Add(e.Label, it);
-                    }
-                    else
-                    {
-                        e.CancelEdit = true;
-                        MessageBox.Show("Impossibile rinominare l' elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-            }
-        }
-
         private void treeView1_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             var elm = ((TreeView)sender).SelectedNode;
@@ -89,6 +67,51 @@ namespace TTMMC_ConfigBuilder
                 else if (elm.Level == 0)
                 {
                     _nmEditLbl = elm.Text;
+                }
+            }
+        }
+
+
+        private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            e.CancelEdit = true;
+            var elm = e.Node;
+            if (elm is TreeNode && !string.IsNullOrEmpty(e.Label))
+            {
+                if (elm.Level == 0)
+                {
+                    var exist = datasAddress.ContainsKey(_nmEditLbl);
+                    if (exist)
+                    {
+                        var existk = datasAddress.ContainsKey(e.Label) || datasAddress.ContainsKey("[" + e.Label + "]") || datasAddress.ContainsKey("{" + e.Label + "}");
+                        if (!existk)
+                        {
+                            var isNotmapped = (e.Label.Substring(0, 1) == "[" && e.Label.Substring(e.Label.Length - 1, 1) == "]");
+                            var isReferenceKey = (e.Label.Substring(0, 1) == "{" && e.Label.Substring(e.Label.Length - 1, 1) == "}");
+                            var val = (!isNotmapped && !isReferenceKey) ? e.Label.Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "") : e.Label;
+                            var existRef = (isReferenceKey) ? ((datasAddress.Keys.Where(k => k.Contains("{")).Count() > 0) ? true : false) : false;
+                            if (!existRef)
+                            {
+                                elm.ForeColor = (isNotmapped) ? Color.Red : ((isReferenceKey) ? Color.Blue : Color.Black);
+                                var it = datasAddress[_nmEditLbl];
+                                datasAddress.Remove(_nmEditLbl);
+                                datasAddress.Add(val, it);
+                                elm.Text = val;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Un'altra ReferenceKey è già presente", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Nome elemento già presente nella lista", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Oggetto non trovato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
         }
@@ -108,10 +131,31 @@ namespace TTMMC_ConfigBuilder
                         frm.Value = elm.Text;
                         if (frm.ShowDialog() == DialogResult.OK)
                         {
-                            var it = datasAddress[elm.Text];
-                            datasAddress.Remove(elm.Text);
-                            datasAddress.Add(frm.Value, it);
-                            elm.Text = frm.Value;
+
+                            var existk = datasAddress.ContainsKey(frm.Value) || datasAddress.ContainsKey("[" + frm.Value + "]") || datasAddress.ContainsKey("{" + frm.Value + "}");
+                            if (!existk && frm.Value != elm.Text)
+                            {
+                                var isNotmapped = (frm.Value.Substring(0, 1) == "[" && frm.Value.Substring(frm.Value.Length - 1, 1) == "]");
+                                var isReferenceKey = (frm.Value.Substring(0, 1) == "{" && frm.Value.Substring(frm.Value.Length - 1, 1) == "}");
+                                var val = (!isNotmapped && !isReferenceKey) ? frm.Value.Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "") : frm.Value;
+                                var existRef = (isReferenceKey) ? ((datasAddress.Keys.Where(k => k.Contains("{")).Count() > 0) ? true : false) : false;
+                                if (!existRef)
+                                {
+                                    elm.ForeColor = (isNotmapped) ? Color.Red : ((isReferenceKey) ? Color.Blue : Color.Black);
+                                    var it = datasAddress[elm.Text];
+                                    datasAddress.Remove(elm.Text);
+                                    datasAddress.Add(frm.Value, it);
+                                    elm.Text = val;
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Un'altra ReferenceKey è già presente", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                }
+                            }
+                            else if (existk && frm.Value != elm.Text)
+                            {
+                                MessageBox.Show("Nome elemento già presente nella lista", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
                         }
                     }
                     else
@@ -166,28 +210,40 @@ namespace TTMMC_ConfigBuilder
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-        }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var frm = new inputTxt();
+            var frm = new inputKey();
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                var nm = frm.Value;
-                var exist = datasAddress.ContainsKey(nm);
-                if (!exist)
+                if (!frm.Value.Contains("[") && !frm.Value.Contains("]") && !frm.Value.Contains("{") && !frm.Value.Contains("}"))
                 {
-                    var node = treeView1.Nodes.Add(frm.Value);
-                    treeView1.SelectedNode = node;
-                    datasAddress.Add(nm, new List<DataAddressItem>());
-                    button5_Click(sender, new EventArgs());
+                    var exist = datasAddress.ContainsKey(frm.Value) || datasAddress.ContainsKey("[" + frm.Value + "]") || datasAddress.ContainsKey("{" + frm.Value + "}");
+                    if (!exist)
+                    {
+                        var key = (frm.KeyModality == inputKey.Modality.NotMapped) ? "[" + frm.Value + "]" : ((frm.KeyModality == inputKey.Modality.ReferenceKey) ? "{" + frm.Value + "}" : frm.Value);
+                        var existRef = (frm.KeyModality == inputKey.Modality.ReferenceKey) ? ((datasAddress.Keys.Where(k => k.Contains("{")).Count() > 0) ? true : false) : false;
+                        if (!existRef)
+                        {
+                            var node = treeView1.Nodes.Add(key);
+                            node.ForeColor = (frm.KeyModality == inputKey.Modality.NotMapped) ? Color.Red : ((frm.KeyModality == inputKey.Modality.ReferenceKey) ? Color.Blue : Color.Black);
+                            treeView1.SelectedNode = node;
+                            datasAddress.Add(key, new List<DataAddressItem>());
+                            button5_Click(sender, new EventArgs());
+                        }
+                        else
+                        {
+                            MessageBox.Show("Un'altra ReferenceKey è già presente", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Nome elemento già presente nella lista", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Nome elemento già presente nella lista", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Nome della key non valido", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -221,8 +277,15 @@ namespace TTMMC_ConfigBuilder
                 }
                 else //lvl 0
                 {
-                    datasAddress.Remove(node.Text);
-                    treeView1.Nodes.Remove(node);
+                    var res = datasAddress.Remove(node.Text);
+                    if (res)
+                    {
+                        treeView1.Nodes.Remove(node);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Impossibile cancellare questo elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
         }
@@ -261,6 +324,11 @@ namespace TTMMC_ConfigBuilder
             {
                 treeView1_NodeMouseDoubleClick(obj, new TreeNodeMouseClickEventArgs(treeView1.SelectedNode, MouseButtons.Left, 2, 1, 1));
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
 
         private void button1_Click(object sender, EventArgs e)

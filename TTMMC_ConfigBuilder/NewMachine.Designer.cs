@@ -304,6 +304,7 @@
             this.button7.TabIndex = 31;
             this.button7.Text = "Edit";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button8
             // 
@@ -314,6 +315,7 @@
             this.button8.TabIndex = 30;
             this.button8.Text = "+ SKey";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // treeView2
             // 
@@ -323,6 +325,9 @@
             this.treeView2.Name = "treeView2";
             this.treeView2.Size = new System.Drawing.Size(265, 262);
             this.treeView2.TabIndex = 29;
+            this.treeView2.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView2_BeforeLabelEdit);
+            this.treeView2.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView2_AfterLabelEdit);
+            this.treeView2.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView2_NodeMouseDoubleClick);
             // 
             // button9
             // 
@@ -333,6 +338,7 @@
             this.button9.TabIndex = 28;
             this.button9.Text = "-";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // button10
             // 
@@ -343,6 +349,7 @@
             this.button10.TabIndex = 27;
             this.button10.Text = "+ Key";
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // label11
             // 
