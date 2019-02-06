@@ -148,14 +148,14 @@
             // nuovoToolStripMenuItem
             // 
             this.nuovoToolStripMenuItem.Name = "nuovoToolStripMenuItem";
-            this.nuovoToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.nuovoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nuovoToolStripMenuItem.Text = "Nuovo";
             this.nuovoToolStripMenuItem.Click += new System.EventHandler(this.NuovoToolStripMenuItem_Click);
             // 
             // apriToolStripMenuItem
             // 
             this.apriToolStripMenuItem.Name = "apriToolStripMenuItem";
-            this.apriToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.apriToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.apriToolStripMenuItem.Text = "Apri";
             this.apriToolStripMenuItem.Click += new System.EventHandler(this.ApriToolStripMenuItem_Click);
             // 
@@ -163,32 +163,32 @@
             // 
             this.chiudiStripMenuItem2.Enabled = false;
             this.chiudiStripMenuItem2.Name = "chiudiStripMenuItem2";
-            this.chiudiStripMenuItem2.Size = new System.Drawing.Size(113, 22);
+            this.chiudiStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.chiudiStripMenuItem2.Text = "Chiudi";
             this.chiudiStripMenuItem2.Click += new System.EventHandler(this.chiudiStripMenuItem2_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(110, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // esportaToolStripMenuItem
             // 
             this.esportaToolStripMenuItem.Enabled = false;
             this.esportaToolStripMenuItem.Name = "esportaToolStripMenuItem";
-            this.esportaToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.esportaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.esportaToolStripMenuItem.Text = "Esporta";
             this.esportaToolStripMenuItem.Click += new System.EventHandler(this.esportaToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(110, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // esciToolStripMenuItem
             // 
             this.esciToolStripMenuItem.Name = "esciToolStripMenuItem";
-            this.esciToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.esciToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.esciToolStripMenuItem.Text = "Esci";
             this.esciToolStripMenuItem.Click += new System.EventHandler(this.esciToolStripMenuItem_Click);
             // 

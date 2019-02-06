@@ -51,7 +51,8 @@ namespace TTMMC_ConfigBuilder
             {
                 var file = new StreamReader(import.FileName);
                 var read = file.ReadToEnd();
-                if(!string.IsNullOrEmpty(read))
+                file.Close();
+                if (!string.IsNullOrEmpty(read))
                 {
                     var json = JsonConvert.DeserializeObject<ModelJson>(read);
                     file_ = new FileConfig(import.SafeFileName);
@@ -68,9 +69,16 @@ namespace TTMMC_ConfigBuilder
                         {
                             file_.AddMachineType(m.Value.Type);
                             file_.AddProtocol(m.Value.Protocol);
-                            var l = m.Value.DatasAddressToRead.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
-                            var w = m.Value.DatasAddressToWrite.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
-                            file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w);
+                            var l = m.Value.DatasAddressToRead?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
+                            var w = m.Value.DatasAddressToWrite?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
+                            if (w == null || l == null)
+                            {
+                                MessageBox.Show("Impossibile caricare un elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            else
+                            {
+                                file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w);
+                            }
                         }
                     }
                     reloadListBox1();
@@ -441,7 +449,8 @@ namespace TTMMC_ConfigBuilder
                     Protocol = it.Protocol.Name,
                     Type = it.Type.Name,
                     Image = it.Image,
-                    DatasAddressToRead = it.DatasAddressToRead.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s))
+                    DatasAddressToRead = it.DatasAddressToRead.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s)),
+                    DatasAddressToWrite = it.DatasAddressToWrite.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s))
                 };
                 machines.Add(c.ToString(), nm);
                 c++;
