@@ -41,7 +41,10 @@ namespace TTMMC_ConfigBuilder
                     snodes.Add(node);
                     c++;
                 }
+                var isNotmapped = (it.Key.Substring(0, 1) == "[" && it.Key.Substring(it.Key.Length - 1, 1) == "]");
+                var isReferenceKey = (it.Key.Substring(0, 1) == "{" && it.Key.Substring(it.Key.Length - 1, 1) == "}");
                 var nodeg = new TreeNode(it.Key, snodes.ToArray());
+                nodeg.ForeColor = (isNotmapped) ? Color.Red : ((isReferenceKey) ? Color.Blue : Color.Black);
                 nodes.Add(nodeg);
             }
             treeView1.Nodes.AddRange(nodes.ToArray());
