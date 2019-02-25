@@ -12,6 +12,7 @@ namespace TTMMC_ConfigBuilder
         public string Description;
         public string Address;
         public string DataType;
+        public int Scaling;
 
         public NewMachineDataItem()
         {
@@ -23,15 +24,17 @@ namespace TTMMC_ConfigBuilder
             textBox1.Text = Description;
             textBox2.Text = Address;
             comboBox1.DataSource = Enum.GetValues(typeof(DataTypes)).Cast<DataTypes>().Select(v => v.ToString()).ToList();
+            comboBox2.SelectedIndex = 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && textBox2.Text != "" && comboBox1.Text != "")
+            if (textBox1.Text != "" && textBox2.Text != "" && comboBox1.Text != "" && comboBox2.Text != "")
             {
                 Description = textBox1.Text;
                 Address = textBox2.Text;
                 DataType = comboBox1.Text;
+                Scaling = comboBox2.SelectedIndex;
                 this.DialogResult = DialogResult.OK;
             }
             else

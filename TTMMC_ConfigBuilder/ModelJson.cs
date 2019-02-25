@@ -26,16 +26,18 @@ namespace TTMMC_ConfigBuilder
     public class DataAddressItem
     {
         private string dataType { get; set; }
+        private int _scaling = 0;
         public string Description { get; set; }
         public string Address { get; set; }
         public string DataType { get => dataType; set => dataType = value?.ToLower(); }
+        public int Scaling { get => _scaling; set => _scaling = value; }
 
-
-        public DataAddressItem(string address, string description, DataTypes datatype)
+        public DataAddressItem(string address, string description, DataTypes datatype, int scaling)
         {
             Address = address;
             Description = description;
             DataType = datatype.ToString();
+            Scaling = scaling;
         }
     }
 }

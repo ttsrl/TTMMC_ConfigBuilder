@@ -37,6 +37,7 @@ namespace TTMMC_ConfigBuilder
                     subnodes.Add(new TreeNode("Address: " + dataIt.Address));
                     subnodes.Add(new TreeNode("Description: " + dataIt.Description));
                     subnodes.Add(new TreeNode("DataType: " + dataIt.DataType.ToUpper()));
+                    subnodes.Add(new TreeNode("Scaling: " + dataIt.Scaling.ToString()));
                     var node = new TreeNode(c.ToString(), subnodes.ToArray());
                     snodes.Add(node);
                     c++;
@@ -87,7 +88,8 @@ namespace TTMMC_ConfigBuilder
                     if (exist)
                     {
                         var existk = datasAddress.ContainsKey(e.Label) || datasAddress.ContainsKey("[" + e.Label + "]") || datasAddress.ContainsKey("{" + e.Label + "}");
-                        if (!existk)
+                        var index = treeView1.Nodes.IndexOf(elm);
+                        if (!existk || (datasAddress.ElementAt(index).Key == e.Label || datasAddress.ElementAt(index).Key == "[" + e.Label + "]" || datasAddress.ElementAt(index).Key == "{" + e.Label + "}"))
                         {
                             var isNotmapped = (e.Label.Substring(0, 1) == "[" && e.Label.Substring(e.Label.Length - 1, 1) == "]");
                             var isReferenceKey = (e.Label.Substring(0, 1) == "{" && e.Label.Substring(e.Label.Length - 1, 1) == "}");
@@ -192,7 +194,7 @@ namespace TTMMC_ConfigBuilder
                                 }
                             }
                         }
-                        else
+                        else if(indx == 2)
                         {
                             var frm = new inputSelect();
                             frm.LblTxt = "Tipo:";
@@ -202,6 +204,19 @@ namespace TTMMC_ConfigBuilder
                             {
                                 item.DataType = frm.Value;
                                 elm.Text = "DataType: " + frm.Value;
+                            }
+                        }
+                        else
+                        {
+                            var options = new List<string> { "Nessuna", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+                            var frm = new inputSelect();
+                            frm.LblTxt = "Scalatura:";
+                            frm.Value = (item.Scaling == 0) ? "Nessuna" : item.Scaling.ToString();
+                            frm.List = options;
+                            if (frm.ShowDialog() == DialogResult.OK)
+                            {
+                                item.Scaling = options.IndexOf(frm.Value);
+                                elm.Text = "Scaling: " + frm.Value;
                             }
                         }
                     }
@@ -312,9 +327,12 @@ namespace TTMMC_ConfigBuilder
                         node.Nodes[index].Nodes[1].ToolTipText = frm.Description;
                         node.Nodes[index].Nodes.Add("DataType: " + frm.DataType);
                         node.Nodes[index].Nodes[2].ToolTipText = frm.DataType;
+                        node.Nodes[index].Nodes.Add("Scaling: " + frm.Scaling);
+                        node.Nodes[index].Nodes[3].ToolTipText = frm.Scaling.ToString();
+
                         treeView1.EndUpdate();
                         var itemList = datasAddress[node.Text];
-                        itemList.Add(new DataAddressItem(frm.Address, frm.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), frm.DataType))));
+                        itemList.Add(new DataAddressItem(frm.Address, frm.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), frm.DataType)), frm.Scaling));
                     }
                 }
             }

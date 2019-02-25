@@ -325,7 +325,7 @@ namespace TTMMC_ConfigBuilder
                             var list = new List<DataAddressItem>();
                             foreach (var itl in it.Value)
                             {
-                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())));
+                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())), itl.Scaling);
                                 list.Add(dr);
                             }
                             newDatasToRead.Add(it.Key, list);
@@ -345,7 +345,7 @@ namespace TTMMC_ConfigBuilder
                             var list = new List<DataAddressItem>();
                             foreach (var itl in it.Value)
                             {
-                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())));
+                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())), itl.Scaling);
                                 list.Add(dr);
                             }
                             newDatasToWrite.Add(it.Key, list);
