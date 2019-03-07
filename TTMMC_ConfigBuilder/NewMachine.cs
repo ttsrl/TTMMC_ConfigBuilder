@@ -23,6 +23,8 @@ namespace TTMMC_ConfigBuilder
         public string Address;
         public string Port;
         public string Image;
+        public int ModalityLogCheck;
+        public int ValueModalityLogCheck;
         public Dictionary<string, List<DataAddressItem>> DatasAddressToRead;
         public Dictionary<string, List<DataAddressItem>> DatasAddressToWrite;
 
@@ -53,7 +55,7 @@ namespace TTMMC_ConfigBuilder
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "" && comboBox1.Text != "" && comboBox2.Text != "")
+            if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "" && comboBox1.Text != "" && comboBox2.Text != "" && comboBox3.Text != "")
             {
                 MachineName = textBox1.Text;
                 Description = textBox2.Text;
@@ -62,6 +64,8 @@ namespace TTMMC_ConfigBuilder
                 Address = textBox3.Text;
                 Port = textBox4.Text;
                 Image = (textBox5.Text == "") ? null : textBox5.Text;
+                ModalityLogCheck = comboBox3.SelectedIndex;
+                ValueModalityLogCheck = Convert.ToInt16(numericUpDown1.Value);
                 DialogResult = DialogResult.OK;
             }
             else
@@ -102,6 +106,20 @@ namespace TTMMC_ConfigBuilder
                         DatasAddressToWrite = frmTreview.datasAddress;
                     }
                 }
+            }
+        }
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var txt = comboBox3.SelectedItem.ToString();
+            if(txt == "Key > 0 Ogni X Volte" || txt == "Key > Prec. Ogni X Volte")
+            {
+                numericUpDown1.Enabled = true;
+            }
+            else
+            {
+                numericUpDown1.Enabled = false;
+                numericUpDown1.Value = 1;
             }
         }
     }

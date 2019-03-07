@@ -12,15 +12,15 @@ namespace TTMMC_ConfigBuilder
 {
     public partial class inputKey : Form
     {
-        public enum Modality
+        public enum KeyAttribute
         {
-            Normal,
+            NotMapped,
             ReferenceKey,
-            NotMapped
+            FinishKey
         }
 
         public string Value { get; set; }
-        public Modality KeyModality { get; set; }
+        public List<KeyAttribute> Attributes { get; set; }
 
         public inputKey()
         {
@@ -29,7 +29,10 @@ namespace TTMMC_ConfigBuilder
 
         private void inputKey_Load(object sender, EventArgs e)
         {
-            KeyModality = Modality.Normal;
+            Attributes = (Attributes == null) ? new List<KeyAttribute>() : Attributes;
+            checkBox1.Checked = Attributes.Contains(KeyAttribute.NotMapped);
+            checkBox2.Checked = Attributes.Contains(KeyAttribute.ReferenceKey);
+            checkBox3.Checked = Attributes.Contains(KeyAttribute.FinishKey);
             textBox1.Text = Value;
         }
 
@@ -54,15 +57,56 @@ namespace TTMMC_ConfigBuilder
         private void checkBox1_CheckStateChanged(object sender, EventArgs e)
         {
             if (checkBox2.Checked && checkBox1.Checked)
+            {
                 checkBox2.Checked = false;
-            KeyModality = (checkBox1.Checked) ? Modality.NotMapped : Modality.Normal;
+                checkBox3.Checked = false;
+            }
+                
+            if (checkBox1.Checked)
+            {
+                Attributes.Clear();
+                Attributes.Add(KeyAttribute.NotMapped);
+            }
+            else
+            {
+                Attributes.Remove(KeyAttribute.NotMapped);
+            }
         }
 
         private void checkBox2_CheckStateChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked && checkBox2.Checked)
                 checkBox1.Checked = false;
-            KeyModality = (checkBox2.Checked) ? Modality.ReferenceKey : Modality.Normal;
+
+            if (checkBox2.Checked)
+            {
+                if (!Attributes.Contains(KeyAttribute.ReferenceKey))
+                {
+                    Attributes.Add(KeyAttribute.ReferenceKey);
+                }
+            }
+            else
+            {
+                Attributes.Remove(KeyAttribute.ReferenceKey);
+            }
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked && checkBox3.Checked)
+                checkBox1.Checked = false;
+
+            if (checkBox3.Checked)
+            {
+                if (!Attributes.Contains(KeyAttribute.FinishKey))
+                {
+                    Attributes.Add(KeyAttribute.FinishKey);
+                }
+            }
+            else
+            {
+                Attributes.Remove(KeyAttribute.FinishKey);
+            }
         }
     }
 }

@@ -28,18 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(158, 82);
+            this.button2.Location = new System.Drawing.Point(158, 97);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 7;
@@ -50,7 +53,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(239, 82);
+            this.button1.Location = new System.Drawing.Point(239, 97);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 6;
@@ -60,7 +63,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(57, 11);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(257, 20);
@@ -83,6 +86,7 @@
             this.checkBox1.Size = new System.Drawing.Size(124, 17);
             this.checkBox1.TabIndex = 8;
             this.checkBox1.Text = "Non mappare nei log";
+            this.toolTip1.SetToolTip(this.checkBox1, "Proprietà che non verrà registrata mai nei records.");
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckStateChanged += new System.EventHandler(this.checkBox1_CheckStateChanged);
             // 
@@ -94,15 +98,31 @@
             this.checkBox2.Size = new System.Drawing.Size(115, 17);
             this.checkBox2.TabIndex = 9;
             this.checkBox2.Text = "ReferenceKey Log";
+            this.toolTip1.SetToolTip(this.checkBox2, "Utilizzare questa proprietà come chiave di controllo per determinare se è possibi" +
+        "le lanciare un altro record");
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckStateChanged += new System.EventHandler(this.checkBox2_CheckStateChanged);
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(57, 75);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(92, 17);
+            this.checkBox3.TabIndex = 10;
+            this.checkBox3.Text = "FinishKey Log";
+            this.toolTip1.SetToolTip(this.checkBox3, "Utilizzare questa proprietà come chiave di controllo per determinare lo stato di " +
+        "\"Finish\" della lavorazione");
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
             // inputKey
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(326, 117);
+            this.ClientSize = new System.Drawing.Size(326, 132);
+            this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button2);
@@ -114,7 +134,7 @@
             this.MinimizeBox = false;
             this.Name = "inputKey";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "inputKey";
+            this.Text = "Dato Macchina";
             this.Load += new System.EventHandler(this.inputKey_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -129,5 +149,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

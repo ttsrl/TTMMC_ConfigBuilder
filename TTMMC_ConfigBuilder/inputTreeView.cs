@@ -16,7 +16,7 @@ namespace TTMMC_ConfigBuilder
 
         private string _nmEditLbl;
         public Dictionary<string, List<DataAddressItem>> datasAddress = new Dictionary<string, List<DataAddressItem>>();
-        public bool DatasRead = false;
+        public FileConfigMachine Machine { get; set; }
 
         public inputTreeView()
         {
@@ -42,10 +42,9 @@ namespace TTMMC_ConfigBuilder
                     snodes.Add(node);
                     c++;
                 }
-                var isNotmapped = (it.Key.Substring(0, 1) == "[" && it.Key.Substring(it.Key.Length - 1, 1) == "]");
-                var isReferenceKey = (it.Key.Substring(0, 1) == "{" && it.Key.Substring(it.Key.Length - 1, 1) == "}");
-                var nodeg = new TreeNode(it.Key, snodes.ToArray());
-                nodeg.ForeColor = (isNotmapped) ? Color.Red : ((isReferenceKey) ? Color.Blue : Color.Black);
+                var isNotMapped = (it.Key.Substring(0, 1) == "[" && it.Key.Substring(it.Key.Length - 1, 1) == "]");
+                var nodeg = new TreeNode(it.Key.Replace("[", "").Replace("]", ""), snodes.ToArray());
+                nodeg.ForeColor = (isNotMapped) ? Color.Red : defineColor(Machine, it.Key);
                 nodes.Add(nodeg);
             }
             treeView1.Nodes.AddRange(nodes.ToArray());
@@ -84,29 +83,20 @@ namespace TTMMC_ConfigBuilder
             {
                 if (elm.Level == 0)
                 {
-                    var exist = datasAddress.ContainsKey(_nmEditLbl);
-                    if (exist)
+                    var existOld = datasAddress.ContainsKey(_nmEditLbl);
+                    var existOldNM = datasAddress.ContainsKey("[" + _nmEditLbl + "]");
+                    if (existOld || existOldNM)
                     {
-                        var existk = datasAddress.ContainsKey(e.Label) || datasAddress.ContainsKey("[" + e.Label + "]") || datasAddress.ContainsKey("{" + e.Label + "}");
+                        var existk = datasAddress.ContainsKey(e.Label) || datasAddress.ContainsKey("[" + e.Label + "]");
                         var index = treeView1.Nodes.IndexOf(elm);
-                        if (!existk || (datasAddress.ElementAt(index).Key == e.Label || datasAddress.ElementAt(index).Key == "[" + e.Label + "]" || datasAddress.ElementAt(index).Key == "{" + e.Label + "}"))
+                        if (!existk || datasAddress.ElementAt(index).Key == e.Label || datasAddress.ElementAt(index).Key == "[" + e.Label + "]")
                         {
-                            var isNotmapped = (e.Label.Substring(0, 1) == "[" && e.Label.Substring(e.Label.Length - 1, 1) == "]");
-                            var isReferenceKey = (e.Label.Substring(0, 1) == "{" && e.Label.Substring(e.Label.Length - 1, 1) == "}");
-                            var val = (!isNotmapped && !isReferenceKey) ? e.Label.Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "") : e.Label;
-                            var existRef = (isReferenceKey) ? ((datasAddress.Keys.Where(k => k.Contains("{")).Count() > 0) ? true : false) : false;
-                            if (!existRef)
-                            {
-                                elm.ForeColor = (isNotmapped) ? Color.Red : ((isReferenceKey) ? Color.Blue : Color.Black);
-                                var it = datasAddress[_nmEditLbl];
-                                datasAddress.Remove(_nmEditLbl);
-                                datasAddress.Add(val, it);
-                                elm.Text = val;
-                            }
-                            else
-                            {
-                                MessageBox.Show("Un'altra ReferenceKey è già presente", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
+                            var it = existOld ? datasAddress[_nmEditLbl] : (existOldNM ? datasAddress["[" + _nmEditLbl + "]"] : null);
+                            datasAddress.Remove(_nmEditLbl);
+                            datasAddress.Remove("[" + _nmEditLbl + "]");
+                            var nmK = existOld ? e.Label : "[" + e.Label + "]";
+                            datasAddress.Add(nmK, it);
+                            elm.Text = e.Label;
                         }
                         else
                         {
@@ -128,39 +118,37 @@ namespace TTMMC_ConfigBuilder
             {
                 if (elm.Level == 0)
                 {
-                    var exist = datasAddress.ContainsKey(elm.Text);
-                    if (exist)
+                    var existOld = datasAddress.ContainsKey(elm.Text);
+                    var existOldNM = datasAddress.ContainsKey("[" + elm.Text + "]");
+                    if (existOld || existOldNM)
                     {
-                        var frm = new inputTxt();
-                        frm.LblTxt = "Nome:";
+                        var frm = new inputKey();
+                        var listAttr = new List<inputKey.KeyAttribute>();
+                        if (Machine.ReferenceKey == elm.Text)
+                        {
+                            listAttr.Add(inputKey.KeyAttribute.ReferenceKey);
+                        }
+                        if (Machine.FinishKey == elm.Text)
+                        {
+                            listAttr.Add(inputKey.KeyAttribute.FinishKey);
+                        }
+                        if (existOldNM)
+                        {
+                            listAttr.Add(inputKey.KeyAttribute.NotMapped);
+                        }
+                        frm.Attributes = listAttr;
                         frm.Value = elm.Text;
                         if (frm.ShowDialog() == DialogResult.OK)
                         {
-
-                            var existk = datasAddress.ContainsKey(frm.Value) || datasAddress.ContainsKey("[" + frm.Value + "]") || datasAddress.ContainsKey("{" + frm.Value + "}");
-                            if (!existk && frm.Value != elm.Text)
-                            {
-                                var isNotmapped = (frm.Value.Substring(0, 1) == "[" && frm.Value.Substring(frm.Value.Length - 1, 1) == "]");
-                                var isReferenceKey = (frm.Value.Substring(0, 1) == "{" && frm.Value.Substring(frm.Value.Length - 1, 1) == "}");
-                                var val = (!isNotmapped && !isReferenceKey) ? frm.Value.Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "") : frm.Value;
-                                var existRef = (isReferenceKey) ? ((datasAddress.Keys.Where(k => k.Contains("{")).Count() > 0) ? true : false) : false;
-                                if (!existRef)
-                                {
-                                    elm.ForeColor = (isNotmapped) ? Color.Red : ((isReferenceKey) ? Color.Blue : Color.Black);
-                                    var it = datasAddress[elm.Text];
-                                    datasAddress.Remove(elm.Text);
-                                    datasAddress.Add(frm.Value, it);
-                                    elm.Text = val;
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Un'altra ReferenceKey è già presente", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                }
-                            }
-                            else if (existk && frm.Value != elm.Text)
-                            {
-                                MessageBox.Show("Nome elemento già presente nella lista", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
+                            var it = existOld ? datasAddress[elm.Text] : (existOldNM ? datasAddress["[" + elm.Text + "]"] : null);
+                            datasAddress.Remove(elm.Text);
+                            datasAddress.Remove("[" + elm.Text + "]");
+                            var nmK = (frm.Attributes.Contains(inputKey.KeyAttribute.NotMapped)) ? "[" + frm.Value + "]" : frm.Value;
+                            datasAddress.Add(nmK, it);
+                            setRefKey(frm.Attributes.Contains(inputKey.KeyAttribute.ReferenceKey), frm.Value);
+                            setFinKey(frm.Attributes.Contains(inputKey.KeyAttribute.FinishKey), frm.Value);
+                            elm.Text = frm.Value;
+                            elm.ForeColor = (frm.Attributes.Contains(inputKey.KeyAttribute.NotMapped)) ? Color.Red : defineColor(Machine, frm.Value);
                         }
                     }
                     else
@@ -234,25 +222,19 @@ namespace TTMMC_ConfigBuilder
             var frm = new inputKey();
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                if (!frm.Value.Contains("[") && !frm.Value.Contains("]") && !frm.Value.Contains("{") && !frm.Value.Contains("}"))
+                if (!frm.Value.Contains("[") && !frm.Value.Contains("]"))
                 {
-                    var exist = datasAddress.ContainsKey(frm.Value) || datasAddress.ContainsKey("[" + frm.Value + "]") || datasAddress.ContainsKey("{" + frm.Value + "}");
+                    var exist = datasAddress.ContainsKey(frm.Value) || datasAddress.ContainsKey("[" + frm.Value + "]");
                     if (!exist)
                     {
-                        var key = (frm.KeyModality == inputKey.Modality.NotMapped) ? "[" + frm.Value + "]" : ((frm.KeyModality == inputKey.Modality.ReferenceKey) ? "{" + frm.Value + "}" : frm.Value);
-                        var existRef = (frm.KeyModality == inputKey.Modality.ReferenceKey) ? ((datasAddress.Keys.Where(k => k.Contains("{")).Count() > 0) ? true : false) : false;
-                        if (!existRef)
-                        {
-                            var node = treeView1.Nodes.Add(key);
-                            node.ForeColor = (frm.KeyModality == inputKey.Modality.NotMapped) ? Color.Red : ((frm.KeyModality == inputKey.Modality.ReferenceKey) ? Color.Blue : Color.Black);
-                            treeView1.SelectedNode = node;
-                            datasAddress.Add(key, new List<DataAddressItem>());
-                            button5_Click(sender, new EventArgs());
-                        }
-                        else
-                        {
-                            MessageBox.Show("Un'altra ReferenceKey è già presente", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
+                        var node = treeView1.Nodes.Add(frm.Value);
+                        treeView1.SelectedNode = node;
+                        var nm = (frm.Attributes.Contains(inputKey.KeyAttribute.NotMapped)) ? "[" + frm.Value + "]" : frm.Value;
+                        datasAddress.Add(nm, new List<DataAddressItem>());
+                        setRefKey(frm.Attributes.Contains(inputKey.KeyAttribute.ReferenceKey), frm.Value);
+                        setFinKey(frm.Attributes.Contains(inputKey.KeyAttribute.FinishKey), frm.Value);
+                        node.ForeColor = (frm.Attributes.Contains(inputKey.KeyAttribute.NotMapped)) ? Color.Red : defineColor(Machine, frm.Value);
+                        button5_Click(sender, new EventArgs());
                     }
                     else
                     {
@@ -279,6 +261,8 @@ namespace TTMMC_ConfigBuilder
                     {
                         datasAddress.Remove(subitem.Parent.Text);
                         treeView1.Nodes.Remove(subitem.Parent);
+                        Machine.ReferenceKey = (Machine.ReferenceKey == subitem.Parent.Text) ? "" : Machine.ReferenceKey;
+                        Machine.FinishKey = (Machine.FinishKey == subitem.Parent.Text) ? "" : Machine.FinishKey;
                     }
                     else
                     {
@@ -296,9 +280,12 @@ namespace TTMMC_ConfigBuilder
                 else //lvl 0
                 {
                     var res = datasAddress.Remove(node.Text);
-                    if (res)
+                    var res1 = datasAddress.Remove("[" + node.Text + "]");
+                    if (res || res1)
                     {
                         treeView1.Nodes.Remove(node);
+                        Machine.ReferenceKey = (Machine.ReferenceKey == node.Text) ? "" : Machine.ReferenceKey;
+                        Machine.FinishKey = (Machine.FinishKey == node.Text) ? "" : Machine.FinishKey;
                     }
                     else
                     {
@@ -356,5 +343,77 @@ namespace TTMMC_ConfigBuilder
         {
             DialogResult = DialogResult.OK;
         }
+
+        private Color defineColor(FileConfigMachine machine, string key)
+        {
+            if (machine.ReferenceKey == key && machine.FinishKey == key)
+            {
+                return Color.Purple;
+            }
+            else if (machine.ReferenceKey == key && machine.FinishKey != key)
+            {
+               return Color.Blue;
+            }
+            else if (machine.ReferenceKey != key && machine.FinishKey == key)
+            {
+                return Color.Green;
+            }
+            return Color.Black;
+        }
+
+        private void setRefKey(bool contains, string value)
+        {
+            if (contains && Machine.ReferenceKey != value)
+            {
+                if (string.IsNullOrEmpty(Machine.ReferenceKey))
+                {
+                    Machine.ReferenceKey = value;
+                }
+                else
+                {
+                    if (MessageBox.Show("Reference key già impostata per un'altra proprietà, si desidera sostituirla con questa?", "Avviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        var refOld = treeView1.Nodes[Machine.ReferenceKey];
+                        if (refOld != null)
+                        {
+                            refOld.ForeColor = Color.Black;
+                        }
+                        Machine.ReferenceKey = value;
+                    }
+                }
+            }
+            else if (!contains && Machine.ReferenceKey == value)
+            {
+                Machine.ReferenceKey = "";
+            }
+        }
+
+        private void setFinKey(bool contains, string value)
+        {
+            if (contains && Machine.FinishKey != value)
+            {
+                if (string.IsNullOrEmpty(Machine.FinishKey))
+                {
+                    Machine.FinishKey = value;
+                }
+                else
+                {
+                    if (MessageBox.Show("Reference key già impostata per un'altra proprietà, si desidera sostituirla con questa?", "Avviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        var refOld = treeView1.Nodes[Machine.FinishKey];
+                        if (refOld != null)
+                        {
+                            refOld.ForeColor = Color.Black;
+                        }
+                        Machine.FinishKey = value;
+                    }
+                }
+            }
+            else if (!contains && Machine.FinishKey == value)
+            {
+                Machine.FinishKey = "";
+            }
+        }
+
     }
 }

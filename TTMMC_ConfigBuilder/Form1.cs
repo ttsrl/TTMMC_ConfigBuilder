@@ -11,6 +11,7 @@ namespace TTMMC_ConfigBuilder
     public partial class Form1 : Form
     {
         public static FileConfig file_;
+        public List<string> Modality;
 
         public enum DataTypes
         {
@@ -77,7 +78,7 @@ namespace TTMMC_ConfigBuilder
                             }
                             else
                             {
-                                file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w);
+                                file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.ReferenceKey, m.Value.FinishKey);
                             }
                         }
                     }
@@ -134,7 +135,7 @@ namespace TTMMC_ConfigBuilder
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var r = file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead, frm.DatasAddressToWrite);
+                var r = file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
                 if (r)
                 {
                     listBox1.Items.Add(frm.MachineName);
@@ -192,6 +193,8 @@ namespace TTMMC_ConfigBuilder
                         lblImg.Text = machine.Image;
                         lblCountDatasRead.Text = machine.DatasAddressToRead.Count.ToString();
                         lblCountDatasWrite.Text = machine.DatasAddressToWrite.Count.ToString();
+                        lblMod.Text = Modality[machine.ModalityLogCheck];
+                        lblXMod.Text = machine.ValueModalityLogCheck.ToString();
                         databaseDetails.Visible = false;
                         machineDetails.Visible = true;
                     }
@@ -330,6 +333,7 @@ namespace TTMMC_ConfigBuilder
                             }
                             newDatasToRead.Add(it.Key, list);
                         }
+                        frmTreview.Machine = machine;
                         frmTreview.datasAddress = newDatasToRead;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
                         {
@@ -350,11 +354,26 @@ namespace TTMMC_ConfigBuilder
                             }
                             newDatasToWrite.Add(it.Key, list);
                         }
+                        frmTreview.Machine = machine;
                         frmTreview.datasAddress = newDatasToWrite;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
                         {
                             machine.DatasAddressToWrite = frmTreview.datasAddress;
                         }
+                    }
+                    else if (nm == "editMod")
+                    {
+                        frmSelect.LblTxt = "Modalita Record:";
+                        frmSelect.List = Modality;
+                        frmSelect.Value = Modality[machine.ModalityLogCheck];
+                        if (frmSelect.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.ModalityLogCheck = Modality.IndexOf(frmSelect.Value);
+                        }
+                    }
+                    else if (nm == "editXMod")
+                    {
+                        
                     }
                     //refresh
                     listBox1_SelectedIndexChanged(listBox1.SelectedItem, new EventArgs());
@@ -449,6 +468,8 @@ namespace TTMMC_ConfigBuilder
                     Protocol = it.Protocol.Name,
                     Type = it.Type.Name,
                     Image = it.Image,
+                    ModalityLogCheck = it.ModalityLogCheck,
+                    ValueModalityLogCheck = it.ValueModalityLogCheck,
                     DatasAddressToRead = it.DatasAddressToRead.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s)),
                     DatasAddressToWrite = it.DatasAddressToWrite.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s))
                 };
@@ -512,5 +533,13 @@ namespace TTMMC_ConfigBuilder
             databaseDetails.Visible = false;
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Modality = new List<string>();
+            Modality.Add("Key > 0");
+            Modality.Add("Key > Prec.");
+            Modality.Add("Key > 0 Ogni X Volte");
+            Modality.Add("Key > Prec. Ogni X Volte");
+        }
     }
 }

@@ -52,6 +52,11 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.addDatasWrite = new System.Windows.Forms.LinkLabel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -161,7 +166,7 @@
             // 
             this.textBox4.Location = new System.Drawing.Point(103, 197);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(50, 20);
+            this.textBox4.Size = new System.Drawing.Size(60, 20);
             this.textBox4.TabIndex = 13;
             // 
             // label7
@@ -192,7 +197,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(192, 326);
+            this.button1.Location = new System.Drawing.Point(193, 375);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 28);
@@ -204,7 +209,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button2.Location = new System.Drawing.Point(14, 326);
+            this.button2.Location = new System.Drawing.Point(14, 375);
             this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 28);
@@ -246,7 +251,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(11, 281);
+            this.label11.Location = new System.Drawing.Point(12, 284);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(71, 13);
             this.label11.TabIndex = 33;
@@ -255,7 +260,7 @@
             // addDatasWrite
             // 
             this.addDatasWrite.AutoSize = true;
-            this.addDatasWrite.Location = new System.Drawing.Point(100, 281);
+            this.addDatasWrite.Location = new System.Drawing.Point(100, 284);
             this.addDatasWrite.Name = "addDatasWrite";
             this.addDatasWrite.Size = new System.Drawing.Size(48, 13);
             this.addDatasWrite.TabIndex = 32;
@@ -264,12 +269,67 @@
             this.addDatasWrite.VisitedLinkColor = System.Drawing.Color.Blue;
             this.addDatasWrite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.editDatasWrite_LinkClicked);
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(12, 313);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(71, 13);
+            this.label12.TabIndex = 34;
+            this.label12.Text = "Modalità Log:";
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Items.AddRange(new object[] {
+            "Key > 0",
+            "Key > Prec.",
+            "Key > 0 Ogni X Volte",
+            "Key > Prec. Ogni X Volte"});
+            this.comboBox3.Location = new System.Drawing.Point(103, 310);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(165, 21);
+            this.comboBox3.TabIndex = 35;
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(13, 341);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(44, 13);
+            this.label13.TabIndex = 36;
+            this.label13.Text = "X Volte:";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Enabled = false;
+            this.numericUpDown1.Location = new System.Drawing.Point(103, 339);
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(60, 20);
+            this.numericUpDown1.TabIndex = 37;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // NewMachine
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(283, 364);
+            this.ClientSize = new System.Drawing.Size(283, 413);
+            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.comboBox3);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.addDatasWrite);
             this.Controls.Add(this.label9);
@@ -300,6 +360,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Nuova Macchina";
             this.Load += new System.EventHandler(this.NewMachine_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -330,5 +391,9 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.LinkLabel addDatasWrite;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
     }
 }
