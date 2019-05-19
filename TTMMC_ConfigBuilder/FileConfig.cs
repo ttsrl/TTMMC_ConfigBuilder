@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TTMMC_ConfigBuilder
 {
@@ -96,9 +93,9 @@ namespace TTMMC_ConfigBuilder
             db = null;
         }
 
-        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressItem>> datasAddressToRead)
+        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKey = "", string finKey = "")
         {
-            if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) && datasAddressToRead is Dictionary<string, List<DataAddressItem>>)
+            if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
             {
                 var protExist = protocols.Exists(x => x.Name == protocol.Name);
                 var typeExist = machineTypes.Exists(x => x.Name == type.Name);
@@ -114,7 +111,12 @@ namespace TTMMC_ConfigBuilder
                         Port = port,
                         ReferenceName = name,
                         Image = image,
-                        DatasAddressToRead = datasAddressToRead
+                        ModalityLogCheck = modality,
+                        ValueModalityLogCheck = valuex,
+                        ReferenceKey = refKey,
+                        FinishKey = finKey,
+                        DatasAddressToRead = datasAddressToRead ?? new Dictionary<string, List<DataAddressItem>>(),
+                        DatasAddressToWrite = datasAddressToWrite ?? new Dictionary<string, List<DataAddressItem>>()
                     };
                     machines.Add(m);
                     return true;
@@ -209,6 +211,9 @@ namespace TTMMC_ConfigBuilder
 
     public class FileConfigMachine
     {
+        private string _referenceKey = "";
+        private string _finishKey = "";
+
         public int Id { get; set; }
         public FileConfigMachineType Type { get; set; }
         public string ReferenceName { get; set; }
@@ -217,7 +222,12 @@ namespace TTMMC_ConfigBuilder
         public string Address { get; set; }
         public string Port { get; set; }
         public string Image { get; set; }
+        public int ModalityLogCheck { get; set; }
+        public int ValueModalityLogCheck { get; set; }
+        public string ReferenceKey { get => _referenceKey; set => _referenceKey = value; }
+        public string FinishKey { get => _finishKey; set => _finishKey = value; }
         public Dictionary<string, List<DataAddressItem>> DatasAddressToRead { get; set; }
+        public Dictionary<string, List<DataAddressItem>> DatasAddressToWrite { get; set; }
     }
 
     public class FileConfigProtocol

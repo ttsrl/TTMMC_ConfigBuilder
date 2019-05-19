@@ -11,6 +11,7 @@ namespace TTMMC_ConfigBuilder
     public partial class Form1 : Form
     {
         public static FileConfig file_;
+        public List<string> Modality;
 
         public enum DataTypes
         {
@@ -51,7 +52,8 @@ namespace TTMMC_ConfigBuilder
             {
                 var file = new StreamReader(import.FileName);
                 var read = file.ReadToEnd();
-                if(!string.IsNullOrEmpty(read))
+                file.Close();
+                if (!string.IsNullOrEmpty(read))
                 {
                     var json = JsonConvert.DeserializeObject<ModelJson>(read);
                     file_ = new FileConfig(import.SafeFileName);
@@ -68,8 +70,16 @@ namespace TTMMC_ConfigBuilder
                         {
                             file_.AddMachineType(m.Value.Type);
                             file_.AddProtocol(m.Value.Protocol);
-                            var l = m.Value.DatasAddressToRead.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
-                            file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l);
+                            var l = m.Value.DatasAddressToRead?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
+                            var w = m.Value.DatasAddressToWrite?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
+                            if (w == null || l == null)
+                            {
+                                MessageBox.Show("Impossibile caricare un elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            else
+                            {
+                                file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.ReferenceKey, m.Value.FinishKey);
+                            }
                         }
                     }
                     reloadListBox1();
@@ -125,7 +135,7 @@ namespace TTMMC_ConfigBuilder
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var r = file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead);
+                var r = file_.AddMachine(frm.Type, frm.Protocol, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
                 if (r)
                 {
                     listBox1.Items.Add(frm.MachineName);
@@ -182,6 +192,9 @@ namespace TTMMC_ConfigBuilder
                         lblPort.Text = machine.Port;
                         lblImg.Text = machine.Image;
                         lblCountDatasRead.Text = machine.DatasAddressToRead.Count.ToString();
+                        lblCountDatasWrite.Text = machine.DatasAddressToWrite.Count.ToString();
+                        lblMod.Text = Modality[machine.ModalityLogCheck];
+                        lblXMod.Text = machine.ValueModalityLogCheck.ToString();
                         databaseDetails.Visible = false;
                         machineDetails.Visible = true;
                     }
@@ -315,16 +328,52 @@ namespace TTMMC_ConfigBuilder
                             var list = new List<DataAddressItem>();
                             foreach (var itl in it.Value)
                             {
-                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())));
+                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())), itl.Scaling);
                                 list.Add(dr);
                             }
                             newDatasToRead.Add(it.Key, list);
                         }
-                        frmTreview.datasAddressToRead = newDatasToRead;
+                        frmTreview.Machine = machine;
+                        frmTreview.datasAddress = newDatasToRead;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
                         {
-                            machine.DatasAddressToRead = frmTreview.datasAddressToRead;
+                            machine.DatasAddressToRead = frmTreview.datasAddress;
                         }
+                    }
+                    else if (nm == "editDatasWrite")
+                    {
+                        //copia
+                        var newDatasToWrite = new Dictionary<string, List<DataAddressItem>>();
+                        foreach (var it in machine.DatasAddressToWrite)
+                        {
+                            var list = new List<DataAddressItem>();
+                            foreach (var itl in it.Value)
+                            {
+                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())), itl.Scaling);
+                                list.Add(dr);
+                            }
+                            newDatasToWrite.Add(it.Key, list);
+                        }
+                        frmTreview.Machine = machine;
+                        frmTreview.datasAddress = newDatasToWrite;
+                        if (frmTreview.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.DatasAddressToWrite = frmTreview.datasAddress;
+                        }
+                    }
+                    else if (nm == "editMod")
+                    {
+                        frmSelect.LblTxt = "Modalita Record:";
+                        frmSelect.List = Modality;
+                        frmSelect.Value = Modality[machine.ModalityLogCheck];
+                        if (frmSelect.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.ModalityLogCheck = Modality.IndexOf(frmSelect.Value);
+                        }
+                    }
+                    else if (nm == "editXMod")
+                    {
+                        
                     }
                     //refresh
                     listBox1_SelectedIndexChanged(listBox1.SelectedItem, new EventArgs());
@@ -419,7 +468,10 @@ namespace TTMMC_ConfigBuilder
                     Protocol = it.Protocol.Name,
                     Type = it.Type.Name,
                     Image = it.Image,
-                    DatasAddressToRead = it.DatasAddressToRead.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s))
+                    ModalityLogCheck = it.ModalityLogCheck,
+                    ValueModalityLogCheck = it.ValueModalityLogCheck,
+                    DatasAddressToRead = it.DatasAddressToRead.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s)),
+                    DatasAddressToWrite = it.DatasAddressToWrite.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s))
                 };
                 machines.Add(c.ToString(), nm);
                 c++;
@@ -481,5 +533,13 @@ namespace TTMMC_ConfigBuilder
             databaseDetails.Visible = false;
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Modality = new List<string>();
+            Modality.Add("Key > 0");
+            Modality.Add("Key > Prec.");
+            Modality.Add("Key > 0 Ogni X Volte");
+            Modality.Add("Key > Prec. Ogni X Volte");
+        }
     }
 }

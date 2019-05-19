@@ -76,6 +76,15 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.machineDetails = new System.Windows.Forms.GroupBox();
+            this.editXMod = new System.Windows.Forms.LinkLabel();
+            this.lblXMod = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.editMod = new System.Windows.Forms.LinkLabel();
+            this.lblMod = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.editDatasWrite = new System.Windows.Forms.LinkLabel();
+            this.lblCountDatasWrite = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.editDatasRead = new System.Windows.Forms.LinkLabel();
             this.lblCountDatasRead = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
@@ -205,33 +214,33 @@
             // protocolloToolStripMenuItem
             // 
             this.protocolloToolStripMenuItem.Name = "protocolloToolStripMenuItem";
-            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.protocolloToolStripMenuItem.Text = "Protocollo";
             this.protocolloToolStripMenuItem.Click += new System.EventHandler(this.ProtocolloToolStripMenuItem_Click);
             // 
             // tipologiaMacchinaToolStripMenuItem
             // 
             this.tipologiaMacchinaToolStripMenuItem.Name = "tipologiaMacchinaToolStripMenuItem";
-            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.tipologiaMacchinaToolStripMenuItem.Text = "Tipologia Macchina";
             this.tipologiaMacchinaToolStripMenuItem.Click += new System.EventHandler(this.TipologiaMacchinaToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(176, 6);
             // 
             // databaseToolStripMenuItem
             // 
             this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
-            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.databaseToolStripMenuItem.Text = "Database";
             this.databaseToolStripMenuItem.Click += new System.EventHandler(this.DatabaseToolStripMenuItem_Click);
             // 
             // macchinaToolStripMenuItem
             // 
             this.macchinaToolStripMenuItem.Name = "macchinaToolStripMenuItem";
-            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.macchinaToolStripMenuItem.Text = "Macchina";
             this.macchinaToolStripMenuItem.Click += new System.EventHandler(this.MacchinaToolStripMenuItem_Click);
             // 
@@ -300,7 +309,7 @@
             // editSecInfo
             // 
             this.editSecInfo.AutoSize = true;
-            this.editSecInfo.Location = new System.Drawing.Point(299, 125);
+            this.editSecInfo.Location = new System.Drawing.Point(326, 125);
             this.editSecInfo.Name = "editSecInfo";
             this.editSecInfo.Size = new System.Drawing.Size(47, 13);
             this.editSecInfo.TabIndex = 22;
@@ -312,7 +321,7 @@
             // editPass
             // 
             this.editPass.AutoSize = true;
-            this.editPass.Location = new System.Drawing.Point(299, 101);
+            this.editPass.Location = new System.Drawing.Point(326, 101);
             this.editPass.Name = "editPass";
             this.editPass.Size = new System.Drawing.Size(47, 13);
             this.editPass.TabIndex = 21;
@@ -324,7 +333,7 @@
             // editUsrn
             // 
             this.editUsrn.AutoSize = true;
-            this.editUsrn.Location = new System.Drawing.Point(299, 77);
+            this.editUsrn.Location = new System.Drawing.Point(326, 77);
             this.editUsrn.Name = "editUsrn";
             this.editUsrn.Size = new System.Drawing.Size(47, 13);
             this.editUsrn.TabIndex = 20;
@@ -336,7 +345,7 @@
             // editDb
             // 
             this.editDb.AutoSize = true;
-            this.editDb.Location = new System.Drawing.Point(299, 53);
+            this.editDb.Location = new System.Drawing.Point(326, 53);
             this.editDb.Name = "editDb";
             this.editDb.Size = new System.Drawing.Size(47, 13);
             this.editDb.TabIndex = 19;
@@ -348,7 +357,7 @@
             // editHost
             // 
             this.editHost.AutoSize = true;
-            this.editHost.Location = new System.Drawing.Point(299, 29);
+            this.editHost.Location = new System.Drawing.Point(326, 29);
             this.editHost.Name = "editHost";
             this.editHost.Size = new System.Drawing.Size(47, 13);
             this.editHost.TabIndex = 18;
@@ -359,7 +368,7 @@
             // 
             // reqinfoLbl
             // 
-            this.reqinfoLbl.Location = new System.Drawing.Point(114, 125);
+            this.reqinfoLbl.Location = new System.Drawing.Point(135, 125);
             this.reqinfoLbl.Name = "reqinfoLbl";
             this.reqinfoLbl.Size = new System.Drawing.Size(180, 13);
             this.reqinfoLbl.TabIndex = 9;
@@ -367,7 +376,7 @@
             // 
             // passwordLbl
             // 
-            this.passwordLbl.Location = new System.Drawing.Point(114, 101);
+            this.passwordLbl.Location = new System.Drawing.Point(135, 101);
             this.passwordLbl.Name = "passwordLbl";
             this.passwordLbl.Size = new System.Drawing.Size(180, 13);
             this.passwordLbl.TabIndex = 8;
@@ -375,7 +384,7 @@
             // 
             // usernameLbl
             // 
-            this.usernameLbl.Location = new System.Drawing.Point(114, 77);
+            this.usernameLbl.Location = new System.Drawing.Point(135, 77);
             this.usernameLbl.Name = "usernameLbl";
             this.usernameLbl.Size = new System.Drawing.Size(180, 13);
             this.usernameLbl.TabIndex = 7;
@@ -383,7 +392,7 @@
             // 
             // dbLbl
             // 
-            this.dbLbl.Location = new System.Drawing.Point(114, 53);
+            this.dbLbl.Location = new System.Drawing.Point(135, 53);
             this.dbLbl.Name = "dbLbl";
             this.dbLbl.Size = new System.Drawing.Size(180, 13);
             this.dbLbl.TabIndex = 6;
@@ -391,7 +400,7 @@
             // 
             // ipLbl
             // 
-            this.ipLbl.Location = new System.Drawing.Point(114, 29);
+            this.ipLbl.Location = new System.Drawing.Point(135, 29);
             this.ipLbl.Name = "ipLbl";
             this.ipLbl.Size = new System.Drawing.Size(180, 13);
             this.ipLbl.TabIndex = 5;
@@ -400,45 +409,50 @@
             // label8
             // 
             this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(27, 125);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(87, 13);
+            this.label8.Size = new System.Drawing.Size(102, 13);
             this.label8.TabIndex = 4;
             this.label8.Text = "RequestSecInfo:";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(27, 101);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(56, 13);
+            this.label7.Size = new System.Drawing.Size(65, 13);
             this.label7.TabIndex = 3;
             this.label7.Text = "Password:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(27, 77);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(58, 13);
+            this.label6.Size = new System.Drawing.Size(67, 13);
             this.label6.TabIndex = 2;
             this.label6.Text = "Username:";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(27, 53);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(56, 13);
+            this.label5.Size = new System.Drawing.Size(65, 13);
             this.label5.TabIndex = 1;
             this.label5.Text = "Database:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(27, 29);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(32, 13);
+            this.label4.Size = new System.Drawing.Size(37, 13);
             this.label4.TabIndex = 0;
             this.label4.Text = "Host:";
             // 
@@ -513,6 +527,15 @@
             // 
             // machineDetails
             // 
+            this.machineDetails.Controls.Add(this.editXMod);
+            this.machineDetails.Controls.Add(this.lblXMod);
+            this.machineDetails.Controls.Add(this.label19);
+            this.machineDetails.Controls.Add(this.editMod);
+            this.machineDetails.Controls.Add(this.lblMod);
+            this.machineDetails.Controls.Add(this.label18);
+            this.machineDetails.Controls.Add(this.editDatasWrite);
+            this.machineDetails.Controls.Add(this.lblCountDatasWrite);
+            this.machineDetails.Controls.Add(this.label17);
             this.machineDetails.Controls.Add(this.editDatasRead);
             this.machineDetails.Controls.Add(this.lblCountDatasRead);
             this.machineDetails.Controls.Add(this.label16);
@@ -547,10 +570,106 @@
             this.machineDetails.Text = "  Dettagli Macchina  ";
             this.machineDetails.Visible = false;
             // 
+            // editXMod
+            // 
+            this.editXMod.AutoSize = true;
+            this.editXMod.Location = new System.Drawing.Point(326, 246);
+            this.editXMod.Name = "editXMod";
+            this.editXMod.Size = new System.Drawing.Size(47, 13);
+            this.editXMod.TabIndex = 35;
+            this.editXMod.TabStop = true;
+            this.editXMod.Text = "Modifica";
+            this.editXMod.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editXMod.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblXMod
+            // 
+            this.lblXMod.Location = new System.Drawing.Point(135, 246);
+            this.lblXMod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblXMod.Name = "lblXMod";
+            this.lblXMod.Size = new System.Drawing.Size(180, 13);
+            this.lblXMod.TabIndex = 34;
+            this.lblXMod.Text = "Nome:";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(27, 246);
+            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(81, 13);
+            this.label19.TabIndex = 33;
+            this.label19.Text = "Ogni X volte:";
+            // 
+            // editMod
+            // 
+            this.editMod.AutoSize = true;
+            this.editMod.Location = new System.Drawing.Point(326, 222);
+            this.editMod.Name = "editMod";
+            this.editMod.Size = new System.Drawing.Size(47, 13);
+            this.editMod.TabIndex = 32;
+            this.editMod.TabStop = true;
+            this.editMod.Text = "Modifica";
+            this.editMod.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editMod.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblMod
+            // 
+            this.lblMod.Location = new System.Drawing.Point(135, 222);
+            this.lblMod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblMod.Name = "lblMod";
+            this.lblMod.Size = new System.Drawing.Size(180, 13);
+            this.lblMod.TabIndex = 31;
+            this.lblMod.Text = "Nome:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(27, 222);
+            this.label18.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(104, 13);
+            this.label18.TabIndex = 30;
+            this.label18.Text = "Modalita Record:";
+            // 
+            // editDatasWrite
+            // 
+            this.editDatasWrite.AutoSize = true;
+            this.editDatasWrite.Location = new System.Drawing.Point(326, 294);
+            this.editDatasWrite.Name = "editDatasWrite";
+            this.editDatasWrite.Size = new System.Drawing.Size(47, 13);
+            this.editDatasWrite.TabIndex = 29;
+            this.editDatasWrite.TabStop = true;
+            this.editDatasWrite.Text = "Modifica";
+            this.editDatasWrite.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editDatasWrite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblCountDatasWrite
+            // 
+            this.lblCountDatasWrite.Location = new System.Drawing.Point(135, 294);
+            this.lblCountDatasWrite.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCountDatasWrite.Name = "lblCountDatasWrite";
+            this.lblCountDatasWrite.Size = new System.Drawing.Size(180, 13);
+            this.lblCountDatasWrite.TabIndex = 28;
+            this.lblCountDatasWrite.Text = "Nome:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(27, 294);
+            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(86, 13);
+            this.label17.TabIndex = 27;
+            this.label17.Text = "Dati Scrittura:";
+            // 
             // editDatasRead
             // 
             this.editDatasRead.AutoSize = true;
-            this.editDatasRead.Location = new System.Drawing.Point(299, 222);
+            this.editDatasRead.Location = new System.Drawing.Point(326, 270);
             this.editDatasRead.Name = "editDatasRead";
             this.editDatasRead.Size = new System.Drawing.Size(47, 13);
             this.editDatasRead.TabIndex = 26;
@@ -561,7 +680,7 @@
             // 
             // lblCountDatasRead
             // 
-            this.lblCountDatasRead.Location = new System.Drawing.Point(114, 222);
+            this.lblCountDatasRead.Location = new System.Drawing.Point(135, 270);
             this.lblCountDatasRead.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCountDatasRead.Name = "lblCountDatasRead";
             this.lblCountDatasRead.Size = new System.Drawing.Size(180, 13);
@@ -571,17 +690,18 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(27, 222);
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(27, 270);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(65, 13);
+            this.label16.Size = new System.Drawing.Size(78, 13);
             this.label16.TabIndex = 24;
             this.label16.Text = "Dati Lettura:";
             // 
             // editImg
             // 
             this.editImg.AutoSize = true;
-            this.editImg.Location = new System.Drawing.Point(299, 198);
+            this.editImg.Location = new System.Drawing.Point(326, 198);
             this.editImg.Name = "editImg";
             this.editImg.Size = new System.Drawing.Size(47, 13);
             this.editImg.TabIndex = 23;
@@ -593,7 +713,7 @@
             // editPort
             // 
             this.editPort.AutoSize = true;
-            this.editPort.Location = new System.Drawing.Point(299, 174);
+            this.editPort.Location = new System.Drawing.Point(326, 174);
             this.editPort.Name = "editPort";
             this.editPort.Size = new System.Drawing.Size(47, 13);
             this.editPort.TabIndex = 22;
@@ -605,7 +725,7 @@
             // editAddress
             // 
             this.editAddress.AutoSize = true;
-            this.editAddress.Location = new System.Drawing.Point(299, 150);
+            this.editAddress.Location = new System.Drawing.Point(326, 150);
             this.editAddress.Name = "editAddress";
             this.editAddress.Size = new System.Drawing.Size(47, 13);
             this.editAddress.TabIndex = 21;
@@ -617,7 +737,7 @@
             // editProtocol
             // 
             this.editProtocol.AutoSize = true;
-            this.editProtocol.Location = new System.Drawing.Point(299, 125);
+            this.editProtocol.Location = new System.Drawing.Point(326, 125);
             this.editProtocol.Name = "editProtocol";
             this.editProtocol.Size = new System.Drawing.Size(47, 13);
             this.editProtocol.TabIndex = 20;
@@ -629,7 +749,7 @@
             // editType
             // 
             this.editType.AutoSize = true;
-            this.editType.Location = new System.Drawing.Point(299, 101);
+            this.editType.Location = new System.Drawing.Point(326, 101);
             this.editType.Name = "editType";
             this.editType.Size = new System.Drawing.Size(47, 13);
             this.editType.TabIndex = 19;
@@ -641,7 +761,7 @@
             // editDesc
             // 
             this.editDesc.AutoSize = true;
-            this.editDesc.Location = new System.Drawing.Point(299, 77);
+            this.editDesc.Location = new System.Drawing.Point(326, 77);
             this.editDesc.Name = "editDesc";
             this.editDesc.Size = new System.Drawing.Size(47, 13);
             this.editDesc.TabIndex = 18;
@@ -653,7 +773,7 @@
             // editName
             // 
             this.editName.AutoSize = true;
-            this.editName.Location = new System.Drawing.Point(299, 53);
+            this.editName.Location = new System.Drawing.Point(326, 53);
             this.editName.Name = "editName";
             this.editName.Size = new System.Drawing.Size(47, 13);
             this.editName.TabIndex = 17;
@@ -664,7 +784,7 @@
             // 
             // lblImg
             // 
-            this.lblImg.Location = new System.Drawing.Point(114, 198);
+            this.lblImg.Location = new System.Drawing.Point(135, 198);
             this.lblImg.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblImg.Name = "lblImg";
             this.lblImg.Size = new System.Drawing.Size(180, 13);
@@ -674,16 +794,17 @@
             // label15
             // 
             this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.Location = new System.Drawing.Point(27, 198);
             this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(55, 13);
+            this.label15.Size = new System.Drawing.Size(64, 13);
             this.label15.TabIndex = 14;
             this.label15.Text = "Immagine:";
             // 
             // lblPort
             // 
-            this.lblPort.Location = new System.Drawing.Point(114, 174);
+            this.lblPort.Location = new System.Drawing.Point(135, 174);
             this.lblPort.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPort.Name = "lblPort";
             this.lblPort.Size = new System.Drawing.Size(180, 13);
@@ -693,16 +814,17 @@
             // label14
             // 
             this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(27, 174);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(35, 13);
+            this.label14.Size = new System.Drawing.Size(41, 13);
             this.label14.TabIndex = 12;
             this.label14.Text = "Porta:";
             // 
             // lblAddress
             // 
-            this.lblAddress.Location = new System.Drawing.Point(114, 150);
+            this.lblAddress.Location = new System.Drawing.Point(135, 150);
             this.lblAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAddress.Name = "lblAddress";
             this.lblAddress.Size = new System.Drawing.Size(180, 13);
@@ -712,16 +834,17 @@
             // label13
             // 
             this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.Location = new System.Drawing.Point(27, 150);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(48, 13);
+            this.label13.Size = new System.Drawing.Size(58, 13);
             this.label13.TabIndex = 10;
             this.label13.Text = "Indirizzo:";
             // 
             // lblProtocol
             // 
-            this.lblProtocol.Location = new System.Drawing.Point(114, 125);
+            this.lblProtocol.Location = new System.Drawing.Point(135, 125);
             this.lblProtocol.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProtocol.Name = "lblProtocol";
             this.lblProtocol.Size = new System.Drawing.Size(180, 13);
@@ -731,16 +854,17 @@
             // label12
             // 
             this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.Location = new System.Drawing.Point(27, 125);
             this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(57, 13);
+            this.label12.Size = new System.Drawing.Size(68, 13);
             this.label12.TabIndex = 8;
             this.label12.Text = "Protocollo:";
             // 
             // lblType
             // 
-            this.lblType.Location = new System.Drawing.Point(114, 101);
+            this.lblType.Location = new System.Drawing.Point(135, 101);
             this.lblType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblType.Name = "lblType";
             this.lblType.Size = new System.Drawing.Size(180, 13);
@@ -750,16 +874,17 @@
             // label11
             // 
             this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.Location = new System.Drawing.Point(27, 101);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(31, 13);
+            this.label11.Size = new System.Drawing.Size(36, 13);
             this.label11.TabIndex = 6;
             this.label11.Text = "Tipo:";
             // 
             // lblDesc
             // 
-            this.lblDesc.Location = new System.Drawing.Point(114, 77);
+            this.lblDesc.Location = new System.Drawing.Point(135, 77);
             this.lblDesc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblDesc.Name = "lblDesc";
             this.lblDesc.Size = new System.Drawing.Size(180, 13);
@@ -769,16 +894,17 @@
             // label10
             // 
             this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(27, 77);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(65, 13);
+            this.label10.Size = new System.Drawing.Size(77, 13);
             this.label10.TabIndex = 4;
             this.label10.Text = "Descrizione:";
             // 
             // lblNm
             // 
-            this.lblNm.Location = new System.Drawing.Point(114, 53);
+            this.lblNm.Location = new System.Drawing.Point(135, 53);
             this.lblNm.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNm.Name = "lblNm";
             this.lblNm.Size = new System.Drawing.Size(180, 13);
@@ -788,16 +914,17 @@
             // label9
             // 
             this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(27, 53);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(38, 13);
+            this.label9.Size = new System.Drawing.Size(43, 13);
             this.label9.TabIndex = 2;
             this.label9.Text = "Nome:";
             // 
             // lblId
             // 
-            this.lblId.Location = new System.Drawing.Point(114, 29);
+            this.lblId.Location = new System.Drawing.Point(135, 29);
             this.lblId.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblId.Name = "lblId";
             this.lblId.Size = new System.Drawing.Size(180, 13);
@@ -807,10 +934,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(27, 29);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(19, 13);
+            this.label2.Size = new System.Drawing.Size(22, 13);
             this.label2.TabIndex = 0;
             this.label2.Text = "Id:";
             // 
@@ -873,6 +1001,7 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TTMMC ConfigBuilder";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.databaseDetails.ResumeLayout(false);
@@ -967,6 +1096,15 @@
         private System.Windows.Forms.LinkLabel editUsrn;
         private System.Windows.Forms.LinkLabel editDb;
         private System.Windows.Forms.LinkLabel editHost;
+        private System.Windows.Forms.LinkLabel editDatasWrite;
+        private System.Windows.Forms.Label lblCountDatasWrite;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.LinkLabel editMod;
+        private System.Windows.Forms.Label lblMod;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.LinkLabel editXMod;
+        private System.Windows.Forms.Label lblXMod;
+        private System.Windows.Forms.Label label19;
     }
 }
 
