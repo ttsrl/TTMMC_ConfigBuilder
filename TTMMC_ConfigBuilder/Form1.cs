@@ -78,7 +78,7 @@ namespace TTMMC_ConfigBuilder
                             }
                             else
                             {
-                                file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.ReferenceKey, m.Value.FinishKey);
+                                file_.AddMachine(machineType, machineProtocol, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.ReferenceKeyRead, m.Value.FinishKeyRead, m.Value.FinishKeyWrite);
                             }
                         }
                     }
@@ -333,6 +333,7 @@ namespace TTMMC_ConfigBuilder
                             }
                             newDatasToRead.Add(it.Key, list);
                         }
+                        frmTreview.Read = true;
                         frmTreview.Machine = machine;
                         frmTreview.datasAddress = newDatasToRead;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
@@ -354,6 +355,7 @@ namespace TTMMC_ConfigBuilder
                             }
                             newDatasToWrite.Add(it.Key, list);
                         }
+                        frmTreview.Read = false;
                         frmTreview.Machine = machine;
                         frmTreview.datasAddress = newDatasToWrite;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
@@ -470,6 +472,9 @@ namespace TTMMC_ConfigBuilder
                     Image = it.Image,
                     ModalityLogCheck = it.ModalityLogCheck,
                     ValueModalityLogCheck = it.ValueModalityLogCheck,
+                    ReferenceKeyRead = it.ReferenceKeyRead,
+                    FinishKeyRead = it.FinishKeyRead,
+                    FinishKeyWrite = it.FinishKeyWrite,
                     DatasAddressToRead = it.DatasAddressToRead.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s)),
                     DatasAddressToWrite = it.DatasAddressToWrite.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s))
                 };

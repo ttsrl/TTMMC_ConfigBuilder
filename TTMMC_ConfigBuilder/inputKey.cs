@@ -18,7 +18,7 @@ namespace TTMMC_ConfigBuilder
             ReferenceKey,
             FinishKey
         }
-
+        public bool Read { get; set; }
         public string Value { get; set; }
         public List<KeyAttribute> Attributes { get; set; }
 
@@ -29,6 +29,10 @@ namespace TTMMC_ConfigBuilder
 
         private void inputKey_Load(object sender, EventArgs e)
         {
+            if (!Read)
+            {
+                checkBox2.Enabled = false;
+            }
             Attributes = (Attributes == null) ? new List<KeyAttribute>() : Attributes;
             checkBox1.Checked = Attributes.Contains(KeyAttribute.NotMapped);
             checkBox2.Checked = Attributes.Contains(KeyAttribute.ReferenceKey);

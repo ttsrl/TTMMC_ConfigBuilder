@@ -15,6 +15,7 @@ namespace TTMMC_ConfigBuilder
     {
 
         private string _nmEditLbl;
+        public bool Read { get; set; }
         public Dictionary<string, List<DataAddressItem>> datasAddress = new Dictionary<string, List<DataAddressItem>>();
         public FileConfigMachine Machine { get; set; }
 
@@ -123,12 +124,13 @@ namespace TTMMC_ConfigBuilder
                     if (existOld || existOldNM)
                     {
                         var frm = new inputKey();
+                        frm.Read = Read;
                         var listAttr = new List<inputKey.KeyAttribute>();
-                        if (Machine.ReferenceKey == elm.Text)
+                        if (Read && Machine.ReferenceKeyRead == elm.Text)
                         {
                             listAttr.Add(inputKey.KeyAttribute.ReferenceKey);
                         }
-                        if (Machine.FinishKey == elm.Text)
+                        if (Machine.FinishKeyRead == elm.Text || Machine.FinishKeyWrite == elm.Text)
                         {
                             listAttr.Add(inputKey.KeyAttribute.FinishKey);
                         }
@@ -136,6 +138,7 @@ namespace TTMMC_ConfigBuilder
                         {
                             listAttr.Add(inputKey.KeyAttribute.NotMapped);
                         }
+                        
                         frm.Attributes = listAttr;
                         frm.Value = elm.Text;
                         if (frm.ShowDialog() == DialogResult.OK)
@@ -145,8 +148,15 @@ namespace TTMMC_ConfigBuilder
                             datasAddress.Remove("[" + elm.Text + "]");
                             var nmK = (frm.Attributes.Contains(inputKey.KeyAttribute.NotMapped)) ? "[" + frm.Value + "]" : frm.Value;
                             datasAddress.Add(nmK, it);
-                            setRefKey(frm.Attributes.Contains(inputKey.KeyAttribute.ReferenceKey), frm.Value);
-                            setFinKey(frm.Attributes.Contains(inputKey.KeyAttribute.FinishKey), frm.Value);
+                            if (Read)
+                            {
+                                setRefKey(frm.Attributes.Contains(inputKey.KeyAttribute.ReferenceKey), frm.Value);
+                                setFinKeyR(frm.Attributes.Contains(inputKey.KeyAttribute.FinishKey), frm.Value);
+                            }
+                            else
+                            {
+                                setFinKeyW(frm.Attributes.Contains(inputKey.KeyAttribute.FinishKey), frm.Value);
+                            }
                             elm.Text = frm.Value;
                             elm.ForeColor = (frm.Attributes.Contains(inputKey.KeyAttribute.NotMapped)) ? Color.Red : defineColor(Machine, frm.Value);
                         }
@@ -231,8 +241,15 @@ namespace TTMMC_ConfigBuilder
                         treeView1.SelectedNode = node;
                         var nm = (frm.Attributes.Contains(inputKey.KeyAttribute.NotMapped)) ? "[" + frm.Value + "]" : frm.Value;
                         datasAddress.Add(nm, new List<DataAddressItem>());
-                        setRefKey(frm.Attributes.Contains(inputKey.KeyAttribute.ReferenceKey), frm.Value);
-                        setFinKey(frm.Attributes.Contains(inputKey.KeyAttribute.FinishKey), frm.Value);
+                        if (Read)
+                        {
+                            setRefKey(frm.Attributes.Contains(inputKey.KeyAttribute.ReferenceKey), frm.Value);
+                            setFinKeyR(frm.Attributes.Contains(inputKey.KeyAttribute.FinishKey), frm.Value);
+                        }
+                        else
+                        {
+                            setFinKeyW(frm.Attributes.Contains(inputKey.KeyAttribute.FinishKey), frm.Value);
+                        }
                         node.ForeColor = (frm.Attributes.Contains(inputKey.KeyAttribute.NotMapped)) ? Color.Red : defineColor(Machine, frm.Value);
                         button5_Click(sender, new EventArgs());
                     }
@@ -261,8 +278,15 @@ namespace TTMMC_ConfigBuilder
                     {
                         datasAddress.Remove(subitem.Parent.Text);
                         treeView1.Nodes.Remove(subitem.Parent);
-                        Machine.ReferenceKey = (Machine.ReferenceKey == subitem.Parent.Text) ? "" : Machine.ReferenceKey;
-                        Machine.FinishKey = (Machine.FinishKey == subitem.Parent.Text) ? "" : Machine.FinishKey;
+                        if (Read)
+                        {
+                            Machine.ReferenceKeyRead = (Machine.ReferenceKeyRead == subitem.Parent.Text) ? "" : Machine.ReferenceKeyRead;
+                            Machine.FinishKeyRead = (Machine.FinishKeyRead == subitem.Parent.Text) ? "" : Machine.FinishKeyRead;
+                        }
+                        else
+                        {
+                            Machine.FinishKeyWrite = (Machine.FinishKeyWrite == subitem.Parent.Text) ? "" : Machine.FinishKeyWrite;
+                        }
                     }
                     else
                     {
@@ -284,8 +308,15 @@ namespace TTMMC_ConfigBuilder
                     if (res || res1)
                     {
                         treeView1.Nodes.Remove(node);
-                        Machine.ReferenceKey = (Machine.ReferenceKey == node.Text) ? "" : Machine.ReferenceKey;
-                        Machine.FinishKey = (Machine.FinishKey == node.Text) ? "" : Machine.FinishKey;
+                        if (Read)
+                        {
+                            Machine.ReferenceKeyRead = (Machine.ReferenceKeyRead == node.Text) ? "" : Machine.ReferenceKeyRead;
+                            Machine.FinishKeyRead = (Machine.FinishKeyRead == node.Text) ? "" : Machine.FinishKeyRead;
+                        }
+                        else
+                        {
+                            Machine.FinishKeyWrite = (Machine.FinishKeyWrite == node.Text) ? "" : Machine.FinishKeyWrite;
+                        }
                     }
                     else
                     {
@@ -346,15 +377,15 @@ namespace TTMMC_ConfigBuilder
 
         private Color defineColor(FileConfigMachine machine, string key)
         {
-            if (machine.ReferenceKey == key && machine.FinishKey == key)
+            if (machine.ReferenceKeyRead == key && (machine.FinishKeyRead == key || machine.FinishKeyWrite == key))
             {
                 return Color.Purple;
             }
-            else if (machine.ReferenceKey == key && machine.FinishKey != key)
+            else if (machine.ReferenceKeyRead == key && (machine.FinishKeyRead != key || machine.FinishKeyWrite != key))
             {
                return Color.Blue;
             }
-            else if (machine.ReferenceKey != key && machine.FinishKey == key)
+            else if (machine.ReferenceKeyRead != key && (machine.FinishKeyRead == key || machine.FinishKeyWrite == key))
             {
                 return Color.Green;
             }
@@ -363,57 +394,82 @@ namespace TTMMC_ConfigBuilder
 
         private void setRefKey(bool contains, string value)
         {
-            if (contains && Machine.ReferenceKey != value)
+            if (contains && Machine.ReferenceKeyRead != value)
             {
-                if (string.IsNullOrEmpty(Machine.ReferenceKey))
+                if (string.IsNullOrEmpty(Machine.ReferenceKeyRead))
                 {
-                    Machine.ReferenceKey = value;
+                    Machine.ReferenceKeyRead = value;
                 }
                 else
                 {
                     if (MessageBox.Show("Reference key già impostata per un'altra proprietà, si desidera sostituirla con questa?", "Avviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        var refOld = treeView1.Nodes[Machine.ReferenceKey];
+                        var refOld = treeView1.Nodes[Machine.ReferenceKeyRead];
                         if (refOld != null)
                         {
                             refOld.ForeColor = Color.Black;
                         }
-                        Machine.ReferenceKey = value;
+                        Machine.ReferenceKeyRead = value;
                     }
                 }
             }
-            else if (!contains && Machine.ReferenceKey == value)
+            else if (!contains && Machine.ReferenceKeyRead == value)
             {
-                Machine.ReferenceKey = "";
+                Machine.ReferenceKeyRead = "";
             }
         }
 
-        private void setFinKey(bool contains, string value)
+        private void setFinKeyR(bool contains, string value)
         {
-            if (contains && Machine.FinishKey != value)
+            if (contains && Machine.FinishKeyRead != value)
             {
-                if (string.IsNullOrEmpty(Machine.FinishKey))
+                if (string.IsNullOrEmpty(Machine.FinishKeyRead))
                 {
-                    Machine.FinishKey = value;
+                    Machine.FinishKeyRead = value;
                 }
                 else
                 {
                     if (MessageBox.Show("Reference key già impostata per un'altra proprietà, si desidera sostituirla con questa?", "Avviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        var refOld = treeView1.Nodes[Machine.FinishKey];
+                        var refOld = treeView1.Nodes[Machine.FinishKeyRead];
                         if (refOld != null)
                         {
                             refOld.ForeColor = Color.Black;
                         }
-                        Machine.FinishKey = value;
+                        Machine.FinishKeyRead = value;
                     }
                 }
             }
-            else if (!contains && Machine.FinishKey == value)
+            else if (!contains && Machine.FinishKeyRead == value)
             {
-                Machine.FinishKey = "";
+                Machine.FinishKeyRead = "";
             }
         }
-
+        private void setFinKeyW(bool contains, string value)
+        {
+            if (contains && Machine.FinishKeyWrite != value)
+            {
+                if (string.IsNullOrEmpty(Machine.FinishKeyWrite))
+                {
+                    Machine.FinishKeyWrite = value;
+                }
+                else
+                {
+                    if (MessageBox.Show("Reference key già impostata per un'altra proprietà, si desidera sostituirla con questa?", "Avviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        var refOld = treeView1.Nodes[Machine.FinishKeyWrite];
+                        if (refOld != null)
+                        {
+                            refOld.ForeColor = Color.Black;
+                        }
+                        Machine.FinishKeyWrite = value;
+                    }
+                }
+            }
+            else if (!contains && Machine.FinishKeyWrite == value)
+            {
+                Machine.FinishKeyWrite = "";
+            }
+        }
     }
 }

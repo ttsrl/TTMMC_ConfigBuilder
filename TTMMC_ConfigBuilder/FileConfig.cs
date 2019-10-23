@@ -93,7 +93,7 @@ namespace TTMMC_ConfigBuilder
             db = null;
         }
 
-        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKey = "", string finKey = "")
+        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKeyRead = "", string finKeyRead = "", string finKeyWrite = "")
         {
             if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
             {
@@ -113,8 +113,9 @@ namespace TTMMC_ConfigBuilder
                         Image = image,
                         ModalityLogCheck = modality,
                         ValueModalityLogCheck = valuex,
-                        ReferenceKey = refKey,
-                        FinishKey = finKey,
+                        ReferenceKeyRead = refKeyRead,
+                        FinishKeyRead = finKeyRead,
+                        FinishKeyWrite = finKeyWrite,
                         DatasAddressToRead = datasAddressToRead ?? new Dictionary<string, List<DataAddressItem>>(),
                         DatasAddressToWrite = datasAddressToWrite ?? new Dictionary<string, List<DataAddressItem>>()
                     };
@@ -211,8 +212,9 @@ namespace TTMMC_ConfigBuilder
 
     public class FileConfigMachine
     {
-        private string _referenceKey = "";
-        private string _finishKey = "";
+        private string _referenceKeyR = "";
+        private string _finishKeyR = "";
+        private string _finishKeyW = "";
 
         public int Id { get; set; }
         public FileConfigMachineType Type { get; set; }
@@ -224,8 +226,9 @@ namespace TTMMC_ConfigBuilder
         public string Image { get; set; }
         public int ModalityLogCheck { get; set; }
         public int ValueModalityLogCheck { get; set; }
-        public string ReferenceKey { get => _referenceKey; set => _referenceKey = value; }
-        public string FinishKey { get => _finishKey; set => _finishKey = value; }
+        public string ReferenceKeyRead { get => _referenceKeyR; set => _referenceKeyR = value; }
+        public string FinishKeyRead { get => _finishKeyR; set => _finishKeyR = value; }
+        public string FinishKeyWrite { get => _finishKeyW; set => _finishKeyW = value; }
         public Dictionary<string, List<DataAddressItem>> DatasAddressToRead { get; set; }
         public Dictionary<string, List<DataAddressItem>> DatasAddressToWrite { get; set; }
     }

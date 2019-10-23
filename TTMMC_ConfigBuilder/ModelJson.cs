@@ -13,8 +13,9 @@ namespace TTMMC_ConfigBuilder
 
     public class MachineJSON
     {
-        private string _referenceKey = "";
-        private string _finishKey = "";
+        private string _referenceKeyR = "";
+        private string _finishKeyR = "";
+        private string _finishKeyW = "";
 
         public int Id { get; set; }
         public string Type { get; set; }
@@ -26,8 +27,9 @@ namespace TTMMC_ConfigBuilder
         public string Image { get; set; }
         public int ModalityLogCheck { get; set; }
         public int ValueModalityLogCheck { get; set; }
-        public string ReferenceKey { get => _referenceKey; set => _referenceKey = value; }
-        public string FinishKey { get => _finishKey; set => _finishKey = value; }
+        public string ReferenceKeyRead { get => _referenceKeyR; set => _referenceKeyR = value; }
+        public string FinishKeyRead { get => _finishKeyR; set => _finishKeyR = value; }
+        public string FinishKeyWrite { get => _finishKeyW; set => _finishKeyW = value; }
         public Dictionary<string, Dictionary<string, DataAddressItem>> DatasAddressToRead { get; set; }
         public Dictionary<string, Dictionary<string, DataAddressItem>> DatasAddressToWrite { get; set; }
     }
