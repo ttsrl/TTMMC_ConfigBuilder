@@ -42,6 +42,7 @@
             this.aggiungiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protocolloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tipologiaMacchinaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gruppoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.macchinaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,9 +74,14 @@
             this.tsslNProt = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslNTypes = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslNGroup = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.machineDetails = new System.Windows.Forms.GroupBox();
+            this.editGroup = new System.Windows.Forms.LinkLabel();
+            this.lblGroup = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
             this.editXMod = new System.Windows.Forms.LinkLabel();
             this.lblXMod = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -112,11 +118,11 @@
             this.lblId = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.menuStripList = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.modificaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.eliminaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saver = new System.ComponentModel.BackgroundWorker();
             this.import = new System.Windows.Forms.OpenFileDialog();
+            this.moveUp = new System.Windows.Forms.Button();
+            this.moveDown = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.databaseDetails.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -133,7 +139,7 @@
             this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(686, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(704, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -203,6 +209,7 @@
             this.aggiungiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.protocolloToolStripMenuItem,
             this.tipologiaMacchinaToolStripMenuItem,
+            this.gruppoToolStripMenuItem,
             this.toolStripSeparator3,
             this.databaseToolStripMenuItem,
             this.macchinaToolStripMenuItem});
@@ -214,33 +221,40 @@
             // protocolloToolStripMenuItem
             // 
             this.protocolloToolStripMenuItem.Name = "protocolloToolStripMenuItem";
-            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.protocolloToolStripMenuItem.Text = "Protocollo";
             this.protocolloToolStripMenuItem.Click += new System.EventHandler(this.ProtocolloToolStripMenuItem_Click);
             // 
             // tipologiaMacchinaToolStripMenuItem
             // 
             this.tipologiaMacchinaToolStripMenuItem.Name = "tipologiaMacchinaToolStripMenuItem";
-            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.tipologiaMacchinaToolStripMenuItem.Text = "Tipologia Macchina";
             this.tipologiaMacchinaToolStripMenuItem.Click += new System.EventHandler(this.TipologiaMacchinaToolStripMenuItem_Click);
+            // 
+            // gruppoToolStripMenuItem
+            // 
+            this.gruppoToolStripMenuItem.Name = "gruppoToolStripMenuItem";
+            this.gruppoToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.gruppoToolStripMenuItem.Text = "Gruppo";
+            this.gruppoToolStripMenuItem.Click += new System.EventHandler(this.gruppoToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(176, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(175, 6);
             // 
             // databaseToolStripMenuItem
             // 
             this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
-            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.databaseToolStripMenuItem.Text = "Database";
             this.databaseToolStripMenuItem.Click += new System.EventHandler(this.DatabaseToolStripMenuItem_Click);
             // 
             // macchinaToolStripMenuItem
             // 
             this.macchinaToolStripMenuItem.Name = "macchinaToolStripMenuItem";
-            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.macchinaToolStripMenuItem.Text = "Macchina";
             this.macchinaToolStripMenuItem.Click += new System.EventHandler(this.MacchinaToolStripMenuItem_Click);
             // 
@@ -267,7 +281,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 54);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(251, 329);
+            this.listBox1.Size = new System.Drawing.Size(238, 342);
             this.listBox1.TabIndex = 1;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
@@ -298,7 +312,7 @@
             this.databaseDetails.Controls.Add(this.label6);
             this.databaseDetails.Controls.Add(this.label5);
             this.databaseDetails.Controls.Add(this.label4);
-            this.databaseDetails.Location = new System.Drawing.Point(278, 48);
+            this.databaseDetails.Location = new System.Drawing.Point(298, 48);
             this.databaseDetails.Name = "databaseDetails";
             this.databaseDetails.Size = new System.Drawing.Size(395, 158);
             this.databaseDetails.TabIndex = 3;
@@ -466,11 +480,13 @@
             this.tsslNProt,
             this.toolStripStatusLabel2,
             this.tsslNTypes,
+            this.toolStripStatusLabel5,
+            this.tsslNGroup,
             this.toolStripStatusLabel4,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 396);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 407);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(686, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(704, 22);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -501,7 +517,7 @@
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(63, 17);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(62, 17);
             this.toolStripStatusLabel2.Text = "Topologie:";
             // 
             // tsslNTypes
@@ -509,6 +525,18 @@
             this.tsslNTypes.Name = "tsslNTypes";
             this.tsslNTypes.Size = new System.Drawing.Size(13, 17);
             this.tsslNTypes.Text = "0";
+            // 
+            // toolStripStatusLabel5
+            // 
+            this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
+            this.toolStripStatusLabel5.Size = new System.Drawing.Size(46, 17);
+            this.toolStripStatusLabel5.Text = "Gruppi:";
+            // 
+            // tsslNGroup
+            // 
+            this.tsslNGroup.Name = "tsslNGroup";
+            this.tsslNGroup.Size = new System.Drawing.Size(13, 17);
+            this.tsslNGroup.Text = "0";
             // 
             // toolStripStatusLabel4
             // 
@@ -527,6 +555,9 @@
             // 
             // machineDetails
             // 
+            this.machineDetails.Controls.Add(this.editGroup);
+            this.machineDetails.Controls.Add(this.lblGroup);
+            this.machineDetails.Controls.Add(this.label20);
             this.machineDetails.Controls.Add(this.editXMod);
             this.machineDetails.Controls.Add(this.lblXMod);
             this.machineDetails.Controls.Add(this.label19);
@@ -562,18 +593,50 @@
             this.machineDetails.Controls.Add(this.label9);
             this.machineDetails.Controls.Add(this.lblId);
             this.machineDetails.Controls.Add(this.label2);
-            this.machineDetails.Location = new System.Drawing.Point(278, 48);
+            this.machineDetails.Location = new System.Drawing.Point(298, 48);
             this.machineDetails.Name = "machineDetails";
-            this.machineDetails.Size = new System.Drawing.Size(395, 336);
+            this.machineDetails.Size = new System.Drawing.Size(395, 348);
             this.machineDetails.TabIndex = 5;
             this.machineDetails.TabStop = false;
             this.machineDetails.Text = "  Dettagli Macchina  ";
             this.machineDetails.Visible = false;
             // 
+            // editGroup
+            // 
+            this.editGroup.AutoSize = true;
+            this.editGroup.Location = new System.Drawing.Point(326, 125);
+            this.editGroup.Name = "editGroup";
+            this.editGroup.Size = new System.Drawing.Size(47, 13);
+            this.editGroup.TabIndex = 38;
+            this.editGroup.TabStop = true;
+            this.editGroup.Text = "Modifica";
+            this.editGroup.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editGroup.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblGroup
+            // 
+            this.lblGroup.Location = new System.Drawing.Point(135, 125);
+            this.lblGroup.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblGroup.Name = "lblGroup";
+            this.lblGroup.Size = new System.Drawing.Size(180, 13);
+            this.lblGroup.TabIndex = 37;
+            this.lblGroup.Text = "Nome:";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(27, 125);
+            this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(52, 13);
+            this.label20.TabIndex = 36;
+            this.label20.Text = "Gruppo:";
+            // 
             // editXMod
             // 
             this.editXMod.AutoSize = true;
-            this.editXMod.Location = new System.Drawing.Point(326, 246);
+            this.editXMod.Location = new System.Drawing.Point(326, 270);
             this.editXMod.Name = "editXMod";
             this.editXMod.Size = new System.Drawing.Size(47, 13);
             this.editXMod.TabIndex = 35;
@@ -584,7 +647,7 @@
             // 
             // lblXMod
             // 
-            this.lblXMod.Location = new System.Drawing.Point(135, 246);
+            this.lblXMod.Location = new System.Drawing.Point(135, 270);
             this.lblXMod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblXMod.Name = "lblXMod";
             this.lblXMod.Size = new System.Drawing.Size(180, 13);
@@ -595,7 +658,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(27, 246);
+            this.label19.Location = new System.Drawing.Point(27, 270);
             this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(81, 13);
@@ -605,7 +668,7 @@
             // editMod
             // 
             this.editMod.AutoSize = true;
-            this.editMod.Location = new System.Drawing.Point(326, 222);
+            this.editMod.Location = new System.Drawing.Point(326, 246);
             this.editMod.Name = "editMod";
             this.editMod.Size = new System.Drawing.Size(47, 13);
             this.editMod.TabIndex = 32;
@@ -616,7 +679,7 @@
             // 
             // lblMod
             // 
-            this.lblMod.Location = new System.Drawing.Point(135, 222);
+            this.lblMod.Location = new System.Drawing.Point(135, 246);
             this.lblMod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMod.Name = "lblMod";
             this.lblMod.Size = new System.Drawing.Size(180, 13);
@@ -627,7 +690,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(27, 222);
+            this.label18.Location = new System.Drawing.Point(27, 246);
             this.label18.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(104, 13);
@@ -637,7 +700,7 @@
             // editDatasWrite
             // 
             this.editDatasWrite.AutoSize = true;
-            this.editDatasWrite.Location = new System.Drawing.Point(326, 294);
+            this.editDatasWrite.Location = new System.Drawing.Point(326, 318);
             this.editDatasWrite.Name = "editDatasWrite";
             this.editDatasWrite.Size = new System.Drawing.Size(47, 13);
             this.editDatasWrite.TabIndex = 29;
@@ -648,7 +711,7 @@
             // 
             // lblCountDatasWrite
             // 
-            this.lblCountDatasWrite.Location = new System.Drawing.Point(135, 294);
+            this.lblCountDatasWrite.Location = new System.Drawing.Point(135, 318);
             this.lblCountDatasWrite.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCountDatasWrite.Name = "lblCountDatasWrite";
             this.lblCountDatasWrite.Size = new System.Drawing.Size(180, 13);
@@ -659,7 +722,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(27, 294);
+            this.label17.Location = new System.Drawing.Point(27, 318);
             this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(86, 13);
@@ -669,7 +732,7 @@
             // editDatasRead
             // 
             this.editDatasRead.AutoSize = true;
-            this.editDatasRead.Location = new System.Drawing.Point(326, 270);
+            this.editDatasRead.Location = new System.Drawing.Point(326, 294);
             this.editDatasRead.Name = "editDatasRead";
             this.editDatasRead.Size = new System.Drawing.Size(47, 13);
             this.editDatasRead.TabIndex = 26;
@@ -680,7 +743,7 @@
             // 
             // lblCountDatasRead
             // 
-            this.lblCountDatasRead.Location = new System.Drawing.Point(135, 270);
+            this.lblCountDatasRead.Location = new System.Drawing.Point(135, 294);
             this.lblCountDatasRead.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCountDatasRead.Name = "lblCountDatasRead";
             this.lblCountDatasRead.Size = new System.Drawing.Size(180, 13);
@@ -691,7 +754,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(27, 270);
+            this.label16.Location = new System.Drawing.Point(27, 294);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(78, 13);
@@ -701,7 +764,7 @@
             // editImg
             // 
             this.editImg.AutoSize = true;
-            this.editImg.Location = new System.Drawing.Point(326, 198);
+            this.editImg.Location = new System.Drawing.Point(326, 222);
             this.editImg.Name = "editImg";
             this.editImg.Size = new System.Drawing.Size(47, 13);
             this.editImg.TabIndex = 23;
@@ -713,7 +776,7 @@
             // editPort
             // 
             this.editPort.AutoSize = true;
-            this.editPort.Location = new System.Drawing.Point(326, 174);
+            this.editPort.Location = new System.Drawing.Point(326, 198);
             this.editPort.Name = "editPort";
             this.editPort.Size = new System.Drawing.Size(47, 13);
             this.editPort.TabIndex = 22;
@@ -725,7 +788,7 @@
             // editAddress
             // 
             this.editAddress.AutoSize = true;
-            this.editAddress.Location = new System.Drawing.Point(326, 150);
+            this.editAddress.Location = new System.Drawing.Point(326, 174);
             this.editAddress.Name = "editAddress";
             this.editAddress.Size = new System.Drawing.Size(47, 13);
             this.editAddress.TabIndex = 21;
@@ -737,7 +800,7 @@
             // editProtocol
             // 
             this.editProtocol.AutoSize = true;
-            this.editProtocol.Location = new System.Drawing.Point(326, 125);
+            this.editProtocol.Location = new System.Drawing.Point(326, 149);
             this.editProtocol.Name = "editProtocol";
             this.editProtocol.Size = new System.Drawing.Size(47, 13);
             this.editProtocol.TabIndex = 20;
@@ -784,7 +847,7 @@
             // 
             // lblImg
             // 
-            this.lblImg.Location = new System.Drawing.Point(135, 198);
+            this.lblImg.Location = new System.Drawing.Point(135, 222);
             this.lblImg.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblImg.Name = "lblImg";
             this.lblImg.Size = new System.Drawing.Size(180, 13);
@@ -795,7 +858,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(27, 198);
+            this.label15.Location = new System.Drawing.Point(27, 222);
             this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(64, 13);
@@ -804,7 +867,7 @@
             // 
             // lblPort
             // 
-            this.lblPort.Location = new System.Drawing.Point(135, 174);
+            this.lblPort.Location = new System.Drawing.Point(135, 198);
             this.lblPort.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPort.Name = "lblPort";
             this.lblPort.Size = new System.Drawing.Size(180, 13);
@@ -815,7 +878,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(27, 174);
+            this.label14.Location = new System.Drawing.Point(27, 198);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(41, 13);
@@ -824,7 +887,7 @@
             // 
             // lblAddress
             // 
-            this.lblAddress.Location = new System.Drawing.Point(135, 150);
+            this.lblAddress.Location = new System.Drawing.Point(135, 174);
             this.lblAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAddress.Name = "lblAddress";
             this.lblAddress.Size = new System.Drawing.Size(180, 13);
@@ -835,7 +898,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(27, 150);
+            this.label13.Location = new System.Drawing.Point(27, 174);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(58, 13);
@@ -844,7 +907,7 @@
             // 
             // lblProtocol
             // 
-            this.lblProtocol.Location = new System.Drawing.Point(135, 125);
+            this.lblProtocol.Location = new System.Drawing.Point(135, 149);
             this.lblProtocol.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProtocol.Name = "lblProtocol";
             this.lblProtocol.Size = new System.Drawing.Size(180, 13);
@@ -855,7 +918,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(27, 125);
+            this.label12.Location = new System.Drawing.Point(27, 149);
             this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(68, 13);
@@ -946,27 +1009,14 @@
             // 
             this.menuStripList.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStripList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.modificaToolStripMenuItem,
-            this.toolStripSeparator4,
             this.eliminaToolStripMenuItem});
             this.menuStripList.Name = "menuStripList";
-            this.menuStripList.Size = new System.Drawing.Size(122, 54);
-            // 
-            // modificaToolStripMenuItem
-            // 
-            this.modificaToolStripMenuItem.Name = "modificaToolStripMenuItem";
-            this.modificaToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.modificaToolStripMenuItem.Text = "Modifica";
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(118, 6);
+            this.menuStripList.Size = new System.Drawing.Size(114, 26);
             // 
             // eliminaToolStripMenuItem
             // 
             this.eliminaToolStripMenuItem.Name = "eliminaToolStripMenuItem";
-            this.eliminaToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.eliminaToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.eliminaToolStripMenuItem.Text = "Elimina";
             this.eliminaToolStripMenuItem.Click += new System.EventHandler(this.eliminaToolStripMenuItem_Click);
             // 
@@ -984,17 +1034,43 @@
             this.import.Filter = "|*.json";
             this.import.Title = "Seleziona il file config";
             // 
+            // moveUp
+            // 
+            this.moveUp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("moveUp.BackgroundImage")));
+            this.moveUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.moveUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.moveUp.Location = new System.Drawing.Point(259, 67);
+            this.moveUp.Name = "moveUp";
+            this.moveUp.Size = new System.Drawing.Size(30, 28);
+            this.moveUp.TabIndex = 6;
+            this.moveUp.UseVisualStyleBackColor = true;
+            this.moveUp.Click += new System.EventHandler(this.moveUp_Click);
+            // 
+            // moveDown
+            // 
+            this.moveDown.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("moveDown.BackgroundImage")));
+            this.moveDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.moveDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.moveDown.Location = new System.Drawing.Point(259, 125);
+            this.moveDown.Name = "moveDown";
+            this.moveDown.Size = new System.Drawing.Size(30, 28);
+            this.moveDown.TabIndex = 7;
+            this.moveDown.UseVisualStyleBackColor = true;
+            this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(686, 418);
-            this.Controls.Add(this.machineDetails);
+            this.ClientSize = new System.Drawing.Size(704, 429);
+            this.Controls.Add(this.moveDown);
+            this.Controls.Add(this.moveUp);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.databaseDetails);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.machineDetails);
+            this.Controls.Add(this.databaseDetails);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
@@ -1072,8 +1148,6 @@
         private System.Windows.Forms.Label lblAddress;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.ContextMenuStrip menuStripList;
-        private System.Windows.Forms.ToolStripMenuItem modificaToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem eliminaToolStripMenuItem;
         private System.Windows.Forms.LinkLabel editImg;
         private System.Windows.Forms.LinkLabel editPort;
@@ -1105,6 +1179,14 @@
         private System.Windows.Forms.LinkLabel editXMod;
         private System.Windows.Forms.Label lblXMod;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.ToolStripMenuItem gruppoToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel editGroup;
+        private System.Windows.Forms.Label lblGroup;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
+        private System.Windows.Forms.ToolStripStatusLabel tsslNGroup;
+        private System.Windows.Forms.Button moveUp;
+        private System.Windows.Forms.Button moveDown;
     }
 }
 

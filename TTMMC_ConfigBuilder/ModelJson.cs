@@ -21,6 +21,7 @@ namespace TTMMC_ConfigBuilder
         public string Type { get; set; }
         public string ReferenceName { get; set; }
         public string Description { get; set; }
+        public string Group { get; set; }
         public string Protocol { get; set; }
         public string Address { get; set; }
         public string Port { get; set; }

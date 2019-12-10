@@ -20,6 +20,7 @@ namespace TTMMC_ConfigBuilder
         public string Description;
         public FileConfigMachineType Type;
         public FileConfigProtocol Protocol;
+        public FileConfigGroup Group;
         public string Address;
         public string Port;
         public string Image;
@@ -47,6 +48,11 @@ namespace TTMMC_ConfigBuilder
                     comboBox2.Items.Add(p.Name);
                 }
 
+                foreach (var g in Form1.file_.Groups)
+                {
+                    comboBox4.Items.Add(g.Name);
+                }
+
                 lblId.Text = (file_.Machines.Count + 1).ToString();
 
                 DatasAddressToRead = new Dictionary<string, List<DataAddressItem>>();
@@ -61,6 +67,7 @@ namespace TTMMC_ConfigBuilder
                 Description = textBox2.Text;
                 Type = Form1.file_.GetMachineType(comboBox1.SelectedItem.ToString());
                 Protocol = Form1.file_.GetProtocol(comboBox2.SelectedItem.ToString());
+                Group = Form1.file_.GetGroup(comboBox4.SelectedItem.ToString());
                 Address = textBox3.Text;
                 Port = textBox4.Text;
                 Image = (textBox5.Text == "") ? null : textBox5.Text;

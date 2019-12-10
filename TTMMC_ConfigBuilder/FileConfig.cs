@@ -8,11 +8,13 @@ namespace TTMMC_ConfigBuilder
         private List<FileConfigProtocol> protocols = new List<FileConfigProtocol>();
         private List<FileConfigMachineType> machineTypes = new List<FileConfigMachineType>();
         private List<FileConfigMachine> machines = new List<FileConfigMachine>();
+        private List<FileConfigGroup> group = new List<FileConfigGroup>();
         private FileConfigDB db;
         private string _name;
 
         public string Name { get => _name; set => _name = value.Replace(".json", ""); }
         public List<FileConfigProtocol> Protocols { get => protocols; }
+        public List<FileConfigGroup> Groups { get => group; }
         public List<FileConfigMachineType> MachineTypes { get => machineTypes; }
         public List<FileConfigMachine> Machines { get => machines; }
         public FileConfigDB DB { get => db; }
@@ -20,6 +22,13 @@ namespace TTMMC_ConfigBuilder
         public FileConfig(string name)
         {
             Name = name;
+        }
+
+        public void AddGroup(string name)
+        {
+            var groupExist = group.Exists(x => x.Name == name);
+            if (!groupExist)
+                group.Add(new FileConfigGroup { Name = name });
         }
 
         public void AddProtocol(string name)
@@ -93,7 +102,7 @@ namespace TTMMC_ConfigBuilder
             db = null;
         }
 
-        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKeyRead = "", string finKeyRead = "", string finKeyWrite = "")
+        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, FileConfigGroup group, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKeyRead = "", string finKeyRead = "", string finKeyWrite = "")
         {
             if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
             {
@@ -108,6 +117,7 @@ namespace TTMMC_ConfigBuilder
                         Protocol = protocol,
                         Address = address,
                         Description = descr,
+                        Group = group,
                         Port = port,
                         ReferenceName = name,
                         Image = image,
@@ -124,6 +134,44 @@ namespace TTMMC_ConfigBuilder
                 }
             }
             return false;
+        }
+
+        public bool MoveUpMachine(string name)
+        {
+            try
+            {
+                FileConfigMachine ma = GetMachine(name);
+                if (ma == null)
+                    return false;
+                var indx = machines.IndexOf(ma);
+                if (indx == 0)
+                    return false;
+                machines.Remove(ma);
+                machines.Insert(indx - 1, ma);
+                ma.Id = ma.Id - 1;
+                machines[indx].Id = machines[indx].Id + 1;
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public bool MoveDownMachine(string name)
+        {
+            try
+            {
+                FileConfigMachine ma = GetMachine(name);
+                if (ma == null)
+                    return false;
+                var indx = machines.IndexOf(ma);
+                if (indx == machines.Count - 1)
+                    return false;
+                machines.Remove(ma);
+                machines.Insert(indx + 1, ma);
+                ma.Id = ma.Id + 1;
+                machines[indx].Id = machines[indx].Id - 1;
+                return true;
+            }
+            catch { return false; }
         }
 
         public bool RemoveMachine(string name)
@@ -183,6 +231,23 @@ namespace TTMMC_ConfigBuilder
             return (index < protocols.Count) ? protocols[index] : null;
         }
 
+        public FileConfigGroup GetGroup(string name)
+        {
+            foreach (var p in group)
+            {
+                if (p.Name == name)
+                {
+                    return p;
+                }
+            }
+            return null;
+        }
+
+        public FileConfigGroup GetGroup(int index)
+        {
+            return (index < group.Count) ? group[index] : null;
+        }
+
         public FileConfigMachine GetMachine(string name)
         {
             foreach (var m in machines)
@@ -221,6 +286,7 @@ namespace TTMMC_ConfigBuilder
         public string ReferenceName { get; set; }
         public string Description { get; set; }
         public FileConfigProtocol Protocol { get; set; }
+        public FileConfigGroup Group { get; set; }
         public string Address { get; set; }
         public string Port { get; set; }
         public string Image { get; set; }
@@ -234,6 +300,11 @@ namespace TTMMC_ConfigBuilder
     }
 
     public class FileConfigProtocol
+    {
+        public string Name { get; set; }
+    }
+
+    public class FileConfigGroup
     {
         public string Name { get; set; }
     }
