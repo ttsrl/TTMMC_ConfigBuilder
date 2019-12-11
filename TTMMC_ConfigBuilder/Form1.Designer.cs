@@ -46,6 +46,10 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.macchinaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.modificaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.protocolliToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tipologieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gruppiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.open = new System.Windows.Forms.OpenFileDialog();
             this.export = new System.Windows.Forms.SaveFileDialog();
@@ -123,6 +127,9 @@
             this.import = new System.Windows.Forms.OpenFileDialog();
             this.moveUp = new System.Windows.Forms.Button();
             this.moveDown = new System.Windows.Forms.Button();
+            this.editIcon = new System.Windows.Forms.LinkLabel();
+            this.lblIcon = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.databaseDetails.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -136,6 +143,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.aggiungiToolStripMenuItem,
+            this.modificaToolStripMenuItem,
             this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -160,14 +168,14 @@
             // nuovoToolStripMenuItem
             // 
             this.nuovoToolStripMenuItem.Name = "nuovoToolStripMenuItem";
-            this.nuovoToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.nuovoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nuovoToolStripMenuItem.Text = "Nuovo";
             this.nuovoToolStripMenuItem.Click += new System.EventHandler(this.NuovoToolStripMenuItem_Click);
             // 
             // apriToolStripMenuItem
             // 
             this.apriToolStripMenuItem.Name = "apriToolStripMenuItem";
-            this.apriToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.apriToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.apriToolStripMenuItem.Text = "Apri";
             this.apriToolStripMenuItem.Click += new System.EventHandler(this.ApriToolStripMenuItem_Click);
             // 
@@ -175,32 +183,32 @@
             // 
             this.chiudiStripMenuItem2.Enabled = false;
             this.chiudiStripMenuItem2.Name = "chiudiStripMenuItem2";
-            this.chiudiStripMenuItem2.Size = new System.Drawing.Size(113, 22);
+            this.chiudiStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.chiudiStripMenuItem2.Text = "Chiudi";
             this.chiudiStripMenuItem2.Click += new System.EventHandler(this.chiudiStripMenuItem2_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(110, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // esportaToolStripMenuItem
             // 
             this.esportaToolStripMenuItem.Enabled = false;
             this.esportaToolStripMenuItem.Name = "esportaToolStripMenuItem";
-            this.esportaToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.esportaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.esportaToolStripMenuItem.Text = "Esporta";
             this.esportaToolStripMenuItem.Click += new System.EventHandler(this.esportaToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(110, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // esciToolStripMenuItem
             // 
             this.esciToolStripMenuItem.Name = "esciToolStripMenuItem";
-            this.esciToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.esciToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.esciToolStripMenuItem.Text = "Esci";
             this.esciToolStripMenuItem.Click += new System.EventHandler(this.esciToolStripMenuItem_Click);
             // 
@@ -221,42 +229,74 @@
             // protocolloToolStripMenuItem
             // 
             this.protocolloToolStripMenuItem.Name = "protocolloToolStripMenuItem";
-            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.protocolloToolStripMenuItem.Text = "Protocollo";
             this.protocolloToolStripMenuItem.Click += new System.EventHandler(this.ProtocolloToolStripMenuItem_Click);
             // 
             // tipologiaMacchinaToolStripMenuItem
             // 
             this.tipologiaMacchinaToolStripMenuItem.Name = "tipologiaMacchinaToolStripMenuItem";
-            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.tipologiaMacchinaToolStripMenuItem.Text = "Tipologia Macchina";
+            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tipologiaMacchinaToolStripMenuItem.Text = "Tipologia";
             this.tipologiaMacchinaToolStripMenuItem.Click += new System.EventHandler(this.TipologiaMacchinaToolStripMenuItem_Click);
             // 
             // gruppoToolStripMenuItem
             // 
             this.gruppoToolStripMenuItem.Name = "gruppoToolStripMenuItem";
-            this.gruppoToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.gruppoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.gruppoToolStripMenuItem.Text = "Gruppo";
             this.gruppoToolStripMenuItem.Click += new System.EventHandler(this.gruppoToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // databaseToolStripMenuItem
             // 
             this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
-            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.databaseToolStripMenuItem.Text = "Database";
             this.databaseToolStripMenuItem.Click += new System.EventHandler(this.DatabaseToolStripMenuItem_Click);
             // 
             // macchinaToolStripMenuItem
             // 
             this.macchinaToolStripMenuItem.Name = "macchinaToolStripMenuItem";
-            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.macchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.macchinaToolStripMenuItem.Text = "Macchina";
             this.macchinaToolStripMenuItem.Click += new System.EventHandler(this.MacchinaToolStripMenuItem_Click);
+            // 
+            // modificaToolStripMenuItem
+            // 
+            this.modificaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.protocolliToolStripMenuItem,
+            this.tipologieToolStripMenuItem,
+            this.gruppiToolStripMenuItem});
+            this.modificaToolStripMenuItem.Enabled = false;
+            this.modificaToolStripMenuItem.Name = "modificaToolStripMenuItem";
+            this.modificaToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+            this.modificaToolStripMenuItem.Text = "Modifica";
+            // 
+            // protocolliToolStripMenuItem
+            // 
+            this.protocolliToolStripMenuItem.Name = "protocolliToolStripMenuItem";
+            this.protocolliToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.protocolliToolStripMenuItem.Text = "Protocolli";
+            this.protocolliToolStripMenuItem.Click += new System.EventHandler(this.protocolliToolStripMenuItem_Click);
+            // 
+            // tipologieToolStripMenuItem
+            // 
+            this.tipologieToolStripMenuItem.Name = "tipologieToolStripMenuItem";
+            this.tipologieToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tipologieToolStripMenuItem.Text = "Tipologie";
+            this.tipologieToolStripMenuItem.Click += new System.EventHandler(this.tipologieToolStripMenuItem_Click);
+            // 
+            // gruppiToolStripMenuItem
+            // 
+            this.gruppiToolStripMenuItem.Name = "gruppiToolStripMenuItem";
+            this.gruppiToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gruppiToolStripMenuItem.Text = "Gruppi";
+            this.gruppiToolStripMenuItem.Click += new System.EventHandler(this.gruppiToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -281,7 +321,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 54);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(238, 342);
+            this.listBox1.Size = new System.Drawing.Size(238, 368);
             this.listBox1.TabIndex = 1;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
@@ -484,7 +524,7 @@
             this.tsslNGroup,
             this.toolStripStatusLabel4,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 407);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 441);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(704, 22);
             this.statusStrip1.TabIndex = 4;
@@ -555,6 +595,9 @@
             // 
             // machineDetails
             // 
+            this.machineDetails.Controls.Add(this.editIcon);
+            this.machineDetails.Controls.Add(this.lblIcon);
+            this.machineDetails.Controls.Add(this.label21);
             this.machineDetails.Controls.Add(this.editGroup);
             this.machineDetails.Controls.Add(this.lblGroup);
             this.machineDetails.Controls.Add(this.label20);
@@ -595,7 +638,7 @@
             this.machineDetails.Controls.Add(this.label2);
             this.machineDetails.Location = new System.Drawing.Point(298, 48);
             this.machineDetails.Name = "machineDetails";
-            this.machineDetails.Size = new System.Drawing.Size(395, 348);
+            this.machineDetails.Size = new System.Drawing.Size(395, 374);
             this.machineDetails.TabIndex = 5;
             this.machineDetails.TabStop = false;
             this.machineDetails.Text = "  Dettagli Macchina  ";
@@ -636,7 +679,7 @@
             // editXMod
             // 
             this.editXMod.AutoSize = true;
-            this.editXMod.Location = new System.Drawing.Point(326, 270);
+            this.editXMod.Location = new System.Drawing.Point(326, 294);
             this.editXMod.Name = "editXMod";
             this.editXMod.Size = new System.Drawing.Size(47, 13);
             this.editXMod.TabIndex = 35;
@@ -647,7 +690,7 @@
             // 
             // lblXMod
             // 
-            this.lblXMod.Location = new System.Drawing.Point(135, 270);
+            this.lblXMod.Location = new System.Drawing.Point(135, 294);
             this.lblXMod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblXMod.Name = "lblXMod";
             this.lblXMod.Size = new System.Drawing.Size(180, 13);
@@ -658,7 +701,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(27, 270);
+            this.label19.Location = new System.Drawing.Point(27, 294);
             this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(81, 13);
@@ -668,7 +711,7 @@
             // editMod
             // 
             this.editMod.AutoSize = true;
-            this.editMod.Location = new System.Drawing.Point(326, 246);
+            this.editMod.Location = new System.Drawing.Point(326, 270);
             this.editMod.Name = "editMod";
             this.editMod.Size = new System.Drawing.Size(47, 13);
             this.editMod.TabIndex = 32;
@@ -679,7 +722,7 @@
             // 
             // lblMod
             // 
-            this.lblMod.Location = new System.Drawing.Point(135, 246);
+            this.lblMod.Location = new System.Drawing.Point(135, 270);
             this.lblMod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMod.Name = "lblMod";
             this.lblMod.Size = new System.Drawing.Size(180, 13);
@@ -690,7 +733,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(27, 246);
+            this.label18.Location = new System.Drawing.Point(27, 270);
             this.label18.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(104, 13);
@@ -700,7 +743,7 @@
             // editDatasWrite
             // 
             this.editDatasWrite.AutoSize = true;
-            this.editDatasWrite.Location = new System.Drawing.Point(326, 318);
+            this.editDatasWrite.Location = new System.Drawing.Point(326, 342);
             this.editDatasWrite.Name = "editDatasWrite";
             this.editDatasWrite.Size = new System.Drawing.Size(47, 13);
             this.editDatasWrite.TabIndex = 29;
@@ -711,7 +754,7 @@
             // 
             // lblCountDatasWrite
             // 
-            this.lblCountDatasWrite.Location = new System.Drawing.Point(135, 318);
+            this.lblCountDatasWrite.Location = new System.Drawing.Point(135, 342);
             this.lblCountDatasWrite.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCountDatasWrite.Name = "lblCountDatasWrite";
             this.lblCountDatasWrite.Size = new System.Drawing.Size(180, 13);
@@ -722,7 +765,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(27, 318);
+            this.label17.Location = new System.Drawing.Point(27, 342);
             this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(86, 13);
@@ -732,7 +775,7 @@
             // editDatasRead
             // 
             this.editDatasRead.AutoSize = true;
-            this.editDatasRead.Location = new System.Drawing.Point(326, 294);
+            this.editDatasRead.Location = new System.Drawing.Point(326, 318);
             this.editDatasRead.Name = "editDatasRead";
             this.editDatasRead.Size = new System.Drawing.Size(47, 13);
             this.editDatasRead.TabIndex = 26;
@@ -743,7 +786,7 @@
             // 
             // lblCountDatasRead
             // 
-            this.lblCountDatasRead.Location = new System.Drawing.Point(135, 294);
+            this.lblCountDatasRead.Location = new System.Drawing.Point(135, 318);
             this.lblCountDatasRead.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCountDatasRead.Name = "lblCountDatasRead";
             this.lblCountDatasRead.Size = new System.Drawing.Size(180, 13);
@@ -754,7 +797,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(27, 294);
+            this.label16.Location = new System.Drawing.Point(27, 318);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(78, 13);
@@ -1058,11 +1101,43 @@
             this.moveDown.UseVisualStyleBackColor = true;
             this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
             // 
+            // editIcon
+            // 
+            this.editIcon.AutoSize = true;
+            this.editIcon.Location = new System.Drawing.Point(326, 246);
+            this.editIcon.Name = "editIcon";
+            this.editIcon.Size = new System.Drawing.Size(47, 13);
+            this.editIcon.TabIndex = 41;
+            this.editIcon.TabStop = true;
+            this.editIcon.Text = "Modifica";
+            this.editIcon.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editIcon.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblIcon
+            // 
+            this.lblIcon.Location = new System.Drawing.Point(135, 246);
+            this.lblIcon.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblIcon.Name = "lblIcon";
+            this.lblIcon.Size = new System.Drawing.Size(180, 13);
+            this.lblIcon.TabIndex = 40;
+            this.lblIcon.Text = "Nome:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(27, 246);
+            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(43, 13);
+            this.label21.TabIndex = 39;
+            this.label21.Text = "Icona:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 429);
+            this.ClientSize = new System.Drawing.Size(704, 463);
             this.Controls.Add(this.moveDown);
             this.Controls.Add(this.moveUp);
             this.Controls.Add(this.statusStrip1);
@@ -1111,7 +1186,6 @@
         private System.Windows.Forms.GroupBox databaseDetails;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel tsslNElem;
         private System.Windows.Forms.ToolStripMenuItem chiudiStripMenuItem2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem esciToolStripMenuItem;
@@ -1130,7 +1204,6 @@
         private System.Windows.Forms.Label dbLbl;
         private System.Windows.Forms.GroupBox machineDetails;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
-        private System.Windows.Forms.ToolStripStatusLabel tsslNProt;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblId;
         private System.Windows.Forms.Label lblNm;
@@ -1160,7 +1233,6 @@
         private System.Windows.Forms.Label lblCountDatasRead;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.ToolStripStatusLabel tsslNTypes;
         private System.ComponentModel.BackgroundWorker saver;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
@@ -1184,9 +1256,19 @@
         private System.Windows.Forms.Label lblGroup;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
-        private System.Windows.Forms.ToolStripStatusLabel tsslNGroup;
         private System.Windows.Forms.Button moveUp;
         private System.Windows.Forms.Button moveDown;
+        private System.Windows.Forms.ToolStripMenuItem modificaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem protocolliToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tipologieToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gruppiToolStripMenuItem;
+        public System.Windows.Forms.ToolStripStatusLabel tsslNElem;
+        public System.Windows.Forms.ToolStripStatusLabel tsslNProt;
+        public System.Windows.Forms.ToolStripStatusLabel tsslNTypes;
+        public System.Windows.Forms.ToolStripStatusLabel tsslNGroup;
+        private System.Windows.Forms.LinkLabel editIcon;
+        private System.Windows.Forms.Label lblIcon;
+        private System.Windows.Forms.Label label21;
     }
 }
 

@@ -24,6 +24,7 @@ namespace TTMMC_ConfigBuilder
         public string Address;
         public string Port;
         public string Image;
+        public string Icon;
         public int ModalityLogCheck;
         public int ValueModalityLogCheck;
         public Dictionary<string, List<DataAddressItem>> DatasAddressToRead;
@@ -71,6 +72,7 @@ namespace TTMMC_ConfigBuilder
                 Address = textBox3.Text;
                 Port = textBox4.Text;
                 Image = (textBox5.Text == "") ? null : textBox5.Text;
+                Icon = (textBox6.Text == "") ? null : textBox6.Text;
                 ModalityLogCheck = comboBox3.SelectedIndex;
                 ValueModalityLogCheck = Convert.ToInt16(numericUpDown1.Value);
                 DialogResult = DialogResult.OK;

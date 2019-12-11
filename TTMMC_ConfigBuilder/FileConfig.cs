@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TTMMC_ConfigBuilder
 {
@@ -8,13 +9,13 @@ namespace TTMMC_ConfigBuilder
         private List<FileConfigProtocol> protocols = new List<FileConfigProtocol>();
         private List<FileConfigMachineType> machineTypes = new List<FileConfigMachineType>();
         private List<FileConfigMachine> machines = new List<FileConfigMachine>();
-        private List<FileConfigGroup> group = new List<FileConfigGroup>();
+        private List<FileConfigGroup> groups = new List<FileConfigGroup>();
         private FileConfigDB db;
         private string _name;
 
         public string Name { get => _name; set => _name = value.Replace(".json", ""); }
         public List<FileConfigProtocol> Protocols { get => protocols; }
-        public List<FileConfigGroup> Groups { get => group; }
+        public List<FileConfigGroup> Groups { get => groups; }
         public List<FileConfigMachineType> MachineTypes { get => machineTypes; }
         public List<FileConfigMachine> Machines { get => machines; }
         public FileConfigDB DB { get => db; }
@@ -26,9 +27,9 @@ namespace TTMMC_ConfigBuilder
 
         public void AddGroup(string name)
         {
-            var groupExist = group.Exists(x => x.Name == name);
+            var groupExist = groups.Exists(x => x.Name == name);
             if (!groupExist)
-                group.Add(new FileConfigGroup { Name = name });
+                groups.Add(new FileConfigGroup { Name = name });
         }
 
         public void AddProtocol(string name)
@@ -102,25 +103,43 @@ namespace TTMMC_ConfigBuilder
             db = null;
         }
 
-        public bool AddMachine(FileConfigMachineType type, FileConfigProtocol protocol, FileConfigGroup group, string name, string descr, string address, string port, string image, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKeyRead = "", string finKeyRead = "", string finKeyWrite = "")
+        public bool AddMachine(string type, string protocol, string group, string name, string descr, string address, string port, string image, string icon, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKeyRead = "", string finKeyRead = "", string finKeyWrite = "")
         {
-            if (type is FileConfigMachineType && protocol is FileConfigProtocol && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
+            if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(protocol) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
             {
-                var protExist = protocols.Exists(x => x.Name == protocol.Name);
-                var typeExist = machineTypes.Exists(x => x.Name == type.Name);
-                if (protExist && typeExist)
+                var gr = groups.Where(g => g.Name == (group ?? "")).FirstOrDefault();
+                if (gr == null)
+                {
+                    AddGroup(group);
+                    gr = GetGroup(group);
+                }
+                var pr = protocols.Where(p => p.Name == protocol).FirstOrDefault();
+                if (pr == null)
+                {
+                    AddProtocol(protocol);
+                    pr = GetProtocol(protocol);
+                }
+                var ty = machineTypes.Where(p => p.Name == type).FirstOrDefault();
+                if (ty == null)
+                {
+                    AddMachineType(type);
+                    ty = GetMachineType(type);
+                }
+
+                if (gr != null && pr != null && ty != null)
                 {
                     var m = new FileConfigMachine
                     {
                         Id = machines.Count + 1,
-                        Type = type,
-                        Protocol = protocol,
+                        Type = ty,
+                        Protocol = pr,
                         Address = address,
                         Description = descr,
-                        Group = group,
+                        Group = gr,
                         Port = port,
                         ReferenceName = name,
                         Image = image,
+                        Icon = icon,
                         ModalityLogCheck = modality,
                         ValueModalityLogCheck = valuex,
                         ReferenceKeyRead = refKeyRead,
@@ -197,6 +216,60 @@ namespace TTMMC_ConfigBuilder
             return false;
         }
 
+        public bool RemoveProtocol(string name)
+        {
+            try
+            {
+                var prot = GetProtocol(name);
+                if (prot == null)
+                    return false;
+                foreach (var m in machines)
+                {
+                    if (m.Protocol.Name == name)
+                        m.Protocol = null;
+                }
+                protocols.Remove(prot);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public bool RemoveGroup(string name)
+        {
+            try
+            {
+                var prot = GetGroup(name);
+                if (prot == null)
+                    return false;
+                foreach (var m in machines)
+                {
+                    if (m.Group.Name == name)
+                        m.Group = null;
+                }
+                groups.Remove(prot);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public bool RemoveMachineType(string name)
+        {
+            try
+            {
+                var prot = GetMachineType(name);
+                if (prot == null)
+                    return false;
+                foreach (var m in machines)
+                {
+                    if (m.Type.Name == name)
+                        m.Type = null;
+                }
+                machineTypes.Remove(prot);
+                return true;
+            }
+            catch { return false; }
+        }
+
         public FileConfigMachineType GetMachineType(string name)
         {
             foreach(var t in machineTypes)
@@ -233,7 +306,7 @@ namespace TTMMC_ConfigBuilder
 
         public FileConfigGroup GetGroup(string name)
         {
-            foreach (var p in group)
+            foreach (var p in groups)
             {
                 if (p.Name == name)
                 {
@@ -245,7 +318,7 @@ namespace TTMMC_ConfigBuilder
 
         public FileConfigGroup GetGroup(int index)
         {
-            return (index < group.Count) ? group[index] : null;
+            return (index < groups.Count) ? groups[index] : null;
         }
 
         public FileConfigMachine GetMachine(string name)
@@ -290,6 +363,7 @@ namespace TTMMC_ConfigBuilder
         public string Address { get; set; }
         public string Port { get; set; }
         public string Image { get; set; }
+        public string Icon { get; set; }
         public int ModalityLogCheck { get; set; }
         public int ValueModalityLogCheck { get; set; }
         public string ReferenceKeyRead { get => _referenceKeyR; set => _referenceKeyR = value; }

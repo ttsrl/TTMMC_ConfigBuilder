@@ -50,6 +50,7 @@ namespace TTMMC_ConfigBuilder
                 file_ = new FileConfig(fnm.Value);
                 nuovoToolStripMenuItem.Enabled = false;
                 aggiungiToolStripMenuItem.Enabled = true;
+                modificaToolStripMenuItem.Enabled = true;
                 apriToolStripMenuItem.Enabled = false;
                 esportaToolStripMenuItem.Enabled = true;
                 chiudiStripMenuItem2.Enabled = true;
@@ -76,29 +77,17 @@ namespace TTMMC_ConfigBuilder
                     }
                     foreach (var m in json.Machines)
                     {
-                        var machineType = file_.GetMachineType(m.Value.Type) ?? new FileConfigMachineType { Name = m.Value.Type };
-                        var machineProtocol = file_.GetProtocol(m.Value.Protocol) ?? new FileConfigProtocol { Name = m.Value.Protocol };
-                        var machineGroup = file_.GetGroup(m.Value.Group) ?? new FileConfigGroup { Name = m.Value.Group };
-                        if (machineType is FileConfigMachineType && machineProtocol is FileConfigProtocol)
-                        {
-                            file_.AddMachineType(m.Value.Type);
-                            file_.AddProtocol(m.Value.Protocol);
-                            file_.AddGroup(m.Value.Group);
-                            var l = m.Value.DatasAddressToRead?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
-                            var w = m.Value.DatasAddressToWrite?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
-                            if (w == null || l == null)
-                            {
-                                MessageBox.Show("Impossibile caricare un elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            else
-                            {
-                                file_.AddMachine(machineType, machineProtocol, machineGroup ,m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.ReferenceKeyRead, m.Value.FinishKeyRead, m.Value.FinishKeyWrite);
-                            }
-                        }
+                        var l = m.Value.DatasAddressToRead?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
+                        var w = m.Value.DatasAddressToWrite?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
+                        if (w == null || l == null)
+                            MessageBox.Show("Impossibile caricare un elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        else
+                            file_.AddMachine(m.Value.Type, m.Value.Protocol, m.Value.Group, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, m.Value.Icon, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.ReferenceKeyRead, m.Value.FinishKeyRead, m.Value.FinishKeyWrite);
                     }
                     reloadListBox1();
                     nuovoToolStripMenuItem.Enabled = false;
                     aggiungiToolStripMenuItem.Enabled = true;
+                    modificaToolStripMenuItem.Enabled = true;
                     apriToolStripMenuItem.Enabled = false;
                     esportaToolStripMenuItem.Enabled = true;
                     chiudiStripMenuItem2.Enabled = true;
@@ -121,6 +110,7 @@ namespace TTMMC_ConfigBuilder
             reloadListBox1();
             nuovoToolStripMenuItem.Enabled = true;
             aggiungiToolStripMenuItem.Enabled = false;
+            modificaToolStripMenuItem.Enabled = false;
             apriToolStripMenuItem.Enabled = true;
             esportaToolStripMenuItem.Enabled = false;
             chiudiStripMenuItem2.Enabled = false;
@@ -196,7 +186,7 @@ namespace TTMMC_ConfigBuilder
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var r = file_.AddMachine(frm.Type, frm.Protocol, frm.Group, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
+                var r = file_.AddMachine(frm.Type.Name, frm.Protocol.Name, frm.Group.Name, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
                 if (r)
                 {
                     listBox1.Items.Add(frm.MachineName);
@@ -220,6 +210,34 @@ namespace TTMMC_ConfigBuilder
             }
             tsslNElem.Text = (int.Parse(tsslNElem.Text) - 1).ToString();
             listBox1.Items.Remove(listBox1.SelectedItem.ToString());
+        }
+
+
+        private void protocolliToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            editList frm = new editList();
+            frm.TypeList = typeof(FileConfigProtocol);
+            frm.List = file_.Protocols.Select(p => p.Name).ToList();
+            frm.ShowDialog();
+            tsslNProt.Text = file_.Protocols.Count.ToString();
+        }
+
+        private void tipologieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            editList frm = new editList();
+            frm.TypeList = typeof(FileConfigMachineType);
+            frm.List = file_.MachineTypes.Select(p => p.Name).ToList();
+            frm.ShowDialog();
+            tsslNTypes.Text = file_.MachineTypes.Count.ToString();
+        }
+
+        private void gruppiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            editList frm = new editList();
+            frm.TypeList = typeof(FileConfigGroup);
+            frm.List = file_.Groups.Select(p => p.Name).ToList();
+            frm.ShowDialog();
+            tsslNGroup.Text = file_.Groups.Count.ToString();
         }
 
         #endregion
@@ -247,12 +265,13 @@ namespace TTMMC_ConfigBuilder
                         lblId.Text = machine.Id.ToString();
                         lblNm.Text = machine.ReferenceName;
                         lblDesc.Text = machine.Description;
-                        lblType.Text = machine.Type.Name;
-                        lblProtocol.Text = machine.Protocol.Name;
-                        lblGroup.Text = machine.Group.Name;
+                        lblType.Text = machine.Type?.Name ?? "";
+                        lblProtocol.Text = machine.Protocol?.Name ?? "";
+                        lblGroup.Text = machine.Group?.Name ?? "";
                         lblAddress.Text = machine.Address;
                         lblPort.Text = machine.Port;
                         lblImg.Text = machine.Image;
+                        lblIcon.Text = machine.Icon;
                         lblCountDatasRead.Text = machine.DatasAddressToRead.Count.ToString();
                         lblCountDatasWrite.Text = machine.DatasAddressToWrite.Count.ToString();
                         lblMod.Text = Modality[machine.ModalityLogCheck];
@@ -371,11 +390,20 @@ namespace TTMMC_ConfigBuilder
                     }
                     else if (nm == "editImg")
                     {
-                        frmInputTxt.LblTxt = "Porta:";
+                        frmInputTxt.LblTxt = "Immagine:";
                         frmInputTxt.Value = machine.Image;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
                         {
                             machine.Image = frmInputTxt.Value;
+                        }
+                    }
+                    else if (nm == "editIcon")
+                    {
+                        frmInputTxt.LblTxt = "Icona:";
+                        frmInputTxt.Value = machine.Icon;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.Icon = frmInputTxt.Value;
                         }
                     }
                     else if (nm == "editDatasRead")
