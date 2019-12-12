@@ -18,7 +18,7 @@ namespace TTMMC_ConfigBuilder
 
         public string MachineName;
         public string Description;
-        public FileConfigMachineType Type;
+        public MachineType Type;
         public FileConfigProtocol Protocol;
         public FileConfigGroup Group;
         public string Address;
@@ -39,9 +39,9 @@ namespace TTMMC_ConfigBuilder
         {
             if (file_ is FileConfig)
             {
-                foreach (var t in Form1.file_.MachineTypes)
+                foreach (var t in Enum.GetNames(typeof(MachineType)))
                 {
-                    comboBox1.Items.Add(t.Name);
+                    comboBox1.Items.Add(t);
                 }
 
                 foreach (var p in Form1.file_.Protocols)
@@ -66,7 +66,7 @@ namespace TTMMC_ConfigBuilder
             {
                 MachineName = textBox1.Text;
                 Description = textBox2.Text;
-                Type = Form1.file_.GetMachineType(comboBox1.SelectedItem.ToString());
+                Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString());
                 Protocol = Form1.file_.GetProtocol(comboBox2.SelectedItem.ToString());
                 Group = Form1.file_.GetGroup(comboBox4.SelectedItem.ToString());
                 Address = textBox3.Text;

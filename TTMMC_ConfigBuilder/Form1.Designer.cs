@@ -41,14 +41,12 @@
             this.esciToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aggiungiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protocolloToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tipologiaMacchinaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gruppoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.macchinaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modificaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protocolliToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tipologieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gruppiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.open = new System.Windows.Forms.OpenFileDialog();
@@ -76,13 +74,14 @@
             this.tsslNElem = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslNProt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsslNTypes = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslNGroup = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.machineDetails = new System.Windows.Forms.GroupBox();
+            this.editIcon = new System.Windows.Forms.LinkLabel();
+            this.lblIcon = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.editGroup = new System.Windows.Forms.LinkLabel();
             this.lblGroup = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
@@ -127,9 +126,6 @@
             this.import = new System.Windows.Forms.OpenFileDialog();
             this.moveUp = new System.Windows.Forms.Button();
             this.moveDown = new System.Windows.Forms.Button();
-            this.editIcon = new System.Windows.Forms.LinkLabel();
-            this.lblIcon = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.databaseDetails.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -168,14 +164,14 @@
             // nuovoToolStripMenuItem
             // 
             this.nuovoToolStripMenuItem.Name = "nuovoToolStripMenuItem";
-            this.nuovoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nuovoToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.nuovoToolStripMenuItem.Text = "Nuovo";
             this.nuovoToolStripMenuItem.Click += new System.EventHandler(this.NuovoToolStripMenuItem_Click);
             // 
             // apriToolStripMenuItem
             // 
             this.apriToolStripMenuItem.Name = "apriToolStripMenuItem";
-            this.apriToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.apriToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.apriToolStripMenuItem.Text = "Apri";
             this.apriToolStripMenuItem.Click += new System.EventHandler(this.ApriToolStripMenuItem_Click);
             // 
@@ -183,32 +179,32 @@
             // 
             this.chiudiStripMenuItem2.Enabled = false;
             this.chiudiStripMenuItem2.Name = "chiudiStripMenuItem2";
-            this.chiudiStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.chiudiStripMenuItem2.Size = new System.Drawing.Size(113, 22);
             this.chiudiStripMenuItem2.Text = "Chiudi";
             this.chiudiStripMenuItem2.Click += new System.EventHandler(this.chiudiStripMenuItem2_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(110, 6);
             // 
             // esportaToolStripMenuItem
             // 
             this.esportaToolStripMenuItem.Enabled = false;
             this.esportaToolStripMenuItem.Name = "esportaToolStripMenuItem";
-            this.esportaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.esportaToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.esportaToolStripMenuItem.Text = "Esporta";
             this.esportaToolStripMenuItem.Click += new System.EventHandler(this.esportaToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(110, 6);
             // 
             // esciToolStripMenuItem
             // 
             this.esciToolStripMenuItem.Name = "esciToolStripMenuItem";
-            this.esciToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.esciToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.esciToolStripMenuItem.Text = "Esci";
             this.esciToolStripMenuItem.Click += new System.EventHandler(this.esciToolStripMenuItem_Click);
             // 
@@ -216,7 +212,6 @@
             // 
             this.aggiungiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.protocolloToolStripMenuItem,
-            this.tipologiaMacchinaToolStripMenuItem,
             this.gruppoToolStripMenuItem,
             this.toolStripSeparator3,
             this.databaseToolStripMenuItem,
@@ -232,13 +227,6 @@
             this.protocolloToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.protocolloToolStripMenuItem.Text = "Protocollo";
             this.protocolloToolStripMenuItem.Click += new System.EventHandler(this.ProtocolloToolStripMenuItem_Click);
-            // 
-            // tipologiaMacchinaToolStripMenuItem
-            // 
-            this.tipologiaMacchinaToolStripMenuItem.Name = "tipologiaMacchinaToolStripMenuItem";
-            this.tipologiaMacchinaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.tipologiaMacchinaToolStripMenuItem.Text = "Tipologia";
-            this.tipologiaMacchinaToolStripMenuItem.Click += new System.EventHandler(this.TipologiaMacchinaToolStripMenuItem_Click);
             // 
             // gruppoToolStripMenuItem
             // 
@@ -270,7 +258,6 @@
             // 
             this.modificaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.protocolliToolStripMenuItem,
-            this.tipologieToolStripMenuItem,
             this.gruppiToolStripMenuItem});
             this.modificaToolStripMenuItem.Enabled = false;
             this.modificaToolStripMenuItem.Name = "modificaToolStripMenuItem";
@@ -283,13 +270,6 @@
             this.protocolliToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.protocolliToolStripMenuItem.Text = "Protocolli";
             this.protocolliToolStripMenuItem.Click += new System.EventHandler(this.protocolliToolStripMenuItem_Click);
-            // 
-            // tipologieToolStripMenuItem
-            // 
-            this.tipologieToolStripMenuItem.Name = "tipologieToolStripMenuItem";
-            this.tipologieToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.tipologieToolStripMenuItem.Text = "Tipologie";
-            this.tipologieToolStripMenuItem.Click += new System.EventHandler(this.tipologieToolStripMenuItem_Click);
             // 
             // gruppiToolStripMenuItem
             // 
@@ -518,8 +498,6 @@
             this.tsslNElem,
             this.toolStripStatusLabel3,
             this.tsslNProt,
-            this.toolStripStatusLabel2,
-            this.tsslNTypes,
             this.toolStripStatusLabel5,
             this.tsslNGroup,
             this.toolStripStatusLabel4,
@@ -553,18 +531,6 @@
             this.tsslNProt.Name = "tsslNProt";
             this.tsslNProt.Size = new System.Drawing.Size(13, 17);
             this.tsslNProt.Text = "0";
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(62, 17);
-            this.toolStripStatusLabel2.Text = "Topologie:";
-            // 
-            // tsslNTypes
-            // 
-            this.tsslNTypes.Name = "tsslNTypes";
-            this.tsslNTypes.Size = new System.Drawing.Size(13, 17);
-            this.tsslNTypes.Text = "0";
             // 
             // toolStripStatusLabel5
             // 
@@ -643,6 +609,38 @@
             this.machineDetails.TabStop = false;
             this.machineDetails.Text = "  Dettagli Macchina  ";
             this.machineDetails.Visible = false;
+            // 
+            // editIcon
+            // 
+            this.editIcon.AutoSize = true;
+            this.editIcon.Location = new System.Drawing.Point(326, 246);
+            this.editIcon.Name = "editIcon";
+            this.editIcon.Size = new System.Drawing.Size(47, 13);
+            this.editIcon.TabIndex = 41;
+            this.editIcon.TabStop = true;
+            this.editIcon.Text = "Modifica";
+            this.editIcon.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editIcon.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblIcon
+            // 
+            this.lblIcon.Location = new System.Drawing.Point(135, 246);
+            this.lblIcon.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblIcon.Name = "lblIcon";
+            this.lblIcon.Size = new System.Drawing.Size(180, 13);
+            this.lblIcon.TabIndex = 40;
+            this.lblIcon.Text = "Nome:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(27, 246);
+            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(43, 13);
+            this.label21.TabIndex = 39;
+            this.label21.Text = "Icona:";
             // 
             // editGroup
             // 
@@ -1101,38 +1099,6 @@
             this.moveDown.UseVisualStyleBackColor = true;
             this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
             // 
-            // editIcon
-            // 
-            this.editIcon.AutoSize = true;
-            this.editIcon.Location = new System.Drawing.Point(326, 246);
-            this.editIcon.Name = "editIcon";
-            this.editIcon.Size = new System.Drawing.Size(47, 13);
-            this.editIcon.TabIndex = 41;
-            this.editIcon.TabStop = true;
-            this.editIcon.Text = "Modifica";
-            this.editIcon.VisitedLinkColor = System.Drawing.Color.Blue;
-            this.editIcon.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
-            // 
-            // lblIcon
-            // 
-            this.lblIcon.Location = new System.Drawing.Point(135, 246);
-            this.lblIcon.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblIcon.Name = "lblIcon";
-            this.lblIcon.Size = new System.Drawing.Size(180, 13);
-            this.lblIcon.TabIndex = 40;
-            this.lblIcon.Text = "Nome:";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(27, 246);
-            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(43, 13);
-            this.label21.TabIndex = 39;
-            this.label21.Text = "Icona:";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1191,7 +1157,6 @@
         private System.Windows.Forms.ToolStripMenuItem esciToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem protocolloToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tipologiaMacchinaToolStripMenuItem;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
@@ -1232,7 +1197,6 @@
         private System.Windows.Forms.LinkLabel editDatasRead;
         private System.Windows.Forms.Label lblCountDatasRead;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.ComponentModel.BackgroundWorker saver;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
@@ -1260,11 +1224,9 @@
         private System.Windows.Forms.Button moveDown;
         private System.Windows.Forms.ToolStripMenuItem modificaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem protocolliToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tipologieToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gruppiToolStripMenuItem;
         public System.Windows.Forms.ToolStripStatusLabel tsslNElem;
         public System.Windows.Forms.ToolStripStatusLabel tsslNProt;
-        public System.Windows.Forms.ToolStripStatusLabel tsslNTypes;
         public System.Windows.Forms.ToolStripStatusLabel tsslNGroup;
         private System.Windows.Forms.LinkLabel editIcon;
         private System.Windows.Forms.Label lblIcon;

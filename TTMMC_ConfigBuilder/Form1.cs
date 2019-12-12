@@ -94,7 +94,6 @@ namespace TTMMC_ConfigBuilder
                     listBox1.Enabled = true;
                     tsslNElem.Text = (file_.Machines.Count + ((file_.DB is FileConfigDB) ? 1 : 0)).ToString();
                     tsslNProt.Text = file_.Protocols.Count.ToString();
-                    tsslNTypes.Text = file_.MachineTypes.Count.ToString();
                     tsslNGroup.Text = file_.Groups.Count.ToString();
                 }
             }
@@ -105,7 +104,6 @@ namespace TTMMC_ConfigBuilder
             file_ = null;
             tsslNElem.Text = "0";
             tsslNProt.Text = "0";
-            tsslNTypes.Text = "0";
             tsslNGroup.Text = "0";
             reloadListBox1();
             nuovoToolStripMenuItem.Enabled = true;
@@ -147,16 +145,6 @@ namespace TTMMC_ConfigBuilder
             }
         }
 
-        private void TipologiaMacchinaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frm = new inputTxt();
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                file_.AddMachineType(frm.Value);
-                tsslNTypes.Text = (int.Parse(tsslNTypes.Text) + 1).ToString();
-            }
-        }
-
         private void gruppoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var frm = new inputTxt();
@@ -186,7 +174,7 @@ namespace TTMMC_ConfigBuilder
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var r = file_.AddMachine(frm.Type.Name, frm.Protocol.Name, frm.Group.Name, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
+                var r = file_.AddMachine(Enum.GetName(typeof(MachineType), frm.Type), frm.Protocol.Name, frm.Group.Name, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
                 if (r)
                 {
                     listBox1.Items.Add(frm.MachineName);
@@ -212,7 +200,6 @@ namespace TTMMC_ConfigBuilder
             listBox1.Items.Remove(listBox1.SelectedItem.ToString());
         }
 
-
         private void protocolliToolStripMenuItem_Click(object sender, EventArgs e)
         {
             editList frm = new editList();
@@ -220,15 +207,6 @@ namespace TTMMC_ConfigBuilder
             frm.List = file_.Protocols.Select(p => p.Name).ToList();
             frm.ShowDialog();
             tsslNProt.Text = file_.Protocols.Count.ToString();
-        }
-
-        private void tipologieToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            editList frm = new editList();
-            frm.TypeList = typeof(FileConfigMachineType);
-            frm.List = file_.MachineTypes.Select(p => p.Name).ToList();
-            frm.ShowDialog();
-            tsslNTypes.Text = file_.MachineTypes.Count.ToString();
         }
 
         private void gruppiToolStripMenuItem_Click(object sender, EventArgs e)
@@ -265,7 +243,7 @@ namespace TTMMC_ConfigBuilder
                         lblId.Text = machine.Id.ToString();
                         lblNm.Text = machine.ReferenceName;
                         lblDesc.Text = machine.Description;
-                        lblType.Text = machine.Type?.Name ?? "";
+                        lblType.Text = (machine.Type == null) ? "" : Enum.GetName(typeof(MachineType), machine.Type);
                         lblProtocol.Text = machine.Protocol?.Name ?? "";
                         lblGroup.Text = machine.Group?.Name ?? "";
                         lblAddress.Text = machine.Address;
@@ -343,11 +321,11 @@ namespace TTMMC_ConfigBuilder
                     else if (nm == "editType")
                     {
                         frmSelect.LblTxt = "Tipologia:";
-                        frmSelect.List = file_.MachineTypes.Select(it => it.Name).ToList();
-                        frmSelect.Value = machine.Type.Name;
+                        frmSelect.List = Enum.GetNames(typeof(MachineType)).ToList();
+                        frmSelect.Value = machine.Type.ToString();
                         if (frmSelect.ShowDialog() == DialogResult.OK)
                         {
-                            machine.Type = file_.GetMachineType(frmSelect.Value);
+                            machine.Type = (MachineType)Enum.Parse(typeof(MachineType), frmSelect.Value);
                         }
                     }
                     else if (nm == "editGroup")
@@ -561,8 +539,9 @@ namespace TTMMC_ConfigBuilder
                     Group = it.Group.Name,
                     Port = it.Port,
                     Protocol = it.Protocol.Name,
-                    Type = it.Type.Name,
+                    Type = Enum.GetName(typeof(MachineType), it.Type),
                     Image = it.Image,
+                    Icon = it.Icon,
                     ModalityLogCheck = it.ModalityLogCheck,
                     ValueModalityLogCheck = it.ValueModalityLogCheck,
                     ReferenceKeyRead = it.ReferenceKeyRead,

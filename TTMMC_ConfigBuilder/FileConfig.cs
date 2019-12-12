@@ -4,10 +4,15 @@ using System.Linq;
 
 namespace TTMMC_ConfigBuilder
 {
+    public enum MachineType
+    {
+        Machinary,
+        UtilityMachine
+    }
+
     public class FileConfig
     {
         private List<FileConfigProtocol> protocols = new List<FileConfigProtocol>();
-        private List<FileConfigMachineType> machineTypes = new List<FileConfigMachineType>();
         private List<FileConfigMachine> machines = new List<FileConfigMachine>();
         private List<FileConfigGroup> groups = new List<FileConfigGroup>();
         private FileConfigDB db;
@@ -16,7 +21,6 @@ namespace TTMMC_ConfigBuilder
         public string Name { get => _name; set => _name = value.Replace(".json", ""); }
         public List<FileConfigProtocol> Protocols { get => protocols; }
         public List<FileConfigGroup> Groups { get => groups; }
-        public List<FileConfigMachineType> MachineTypes { get => machineTypes; }
         public List<FileConfigMachine> Machines { get => machines; }
         public FileConfigDB DB { get => db; }
 
@@ -37,13 +41,6 @@ namespace TTMMC_ConfigBuilder
             var protExist = protocols.Exists(x => x.Name == name);
             if (!protExist)
                 protocols.Add(new FileConfigProtocol { Name = name });
-        }
-
-        public void AddMachineType(string name)
-        {
-            var typeExist = machineTypes.Exists(x => x.Name == name);
-            if (!typeExist)
-                machineTypes.Add(new FileConfigMachineType { Name = name });
         }
 
         public void AddDatabase(string ip, string database, string username, string password, bool requestSecurityInfo)
@@ -105,7 +102,7 @@ namespace TTMMC_ConfigBuilder
 
         public bool AddMachine(string type, string protocol, string group, string name, string descr, string address, string port, string image, string icon, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKeyRead = "", string finKeyRead = "", string finKeyWrite = "")
         {
-            if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(protocol) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
+            if ( !string.IsNullOrEmpty(protocol) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
             {
                 var gr = groups.Where(g => g.Name == (group ?? "")).FirstOrDefault();
                 if (gr == null)
@@ -119,19 +116,14 @@ namespace TTMMC_ConfigBuilder
                     AddProtocol(protocol);
                     pr = GetProtocol(protocol);
                 }
-                var ty = machineTypes.Where(p => p.Name == type).FirstOrDefault();
-                if (ty == null)
-                {
-                    AddMachineType(type);
-                    ty = GetMachineType(type);
-                }
-
-                if (gr != null && pr != null && ty != null)
+                MachineType ty;
+                var try_ = Enum.TryParse(type, out ty);
+                if (gr != null && pr != null)
                 {
                     var m = new FileConfigMachine
                     {
                         Id = machines.Count + 1,
-                        Type = ty,
+                        Type = (!try_) ? null : (MachineType?)ty,
                         Protocol = pr,
                         Address = address,
                         Description = descr,
@@ -252,41 +244,6 @@ namespace TTMMC_ConfigBuilder
             catch { return false; }
         }
 
-        public bool RemoveMachineType(string name)
-        {
-            try
-            {
-                var prot = GetMachineType(name);
-                if (prot == null)
-                    return false;
-                foreach (var m in machines)
-                {
-                    if (m.Type.Name == name)
-                        m.Type = null;
-                }
-                machineTypes.Remove(prot);
-                return true;
-            }
-            catch { return false; }
-        }
-
-        public FileConfigMachineType GetMachineType(string name)
-        {
-            foreach(var t in machineTypes)
-            {
-                if (t.Name == name)
-                {
-                    return t;
-                }
-            }
-            return null;
-        }
-
-        public FileConfigMachineType GetMachineType(int index)
-        {
-            return (index < machineTypes.Count) ? machineTypes[index] : null;
-        }
-
         public FileConfigProtocol GetProtocol(string name)
         {
             foreach (var p in protocols)
@@ -355,7 +312,7 @@ namespace TTMMC_ConfigBuilder
         private string _finishKeyW = "";
 
         public int Id { get; set; }
-        public FileConfigMachineType Type { get; set; }
+        public MachineType? Type { get; set; }
         public string ReferenceName { get; set; }
         public string Description { get; set; }
         public FileConfigProtocol Protocol { get; set; }
@@ -379,11 +336,6 @@ namespace TTMMC_ConfigBuilder
     }
 
     public class FileConfigGroup
-    {
-        public string Name { get; set; }
-    }
-
-    public class FileConfigMachineType
     {
         public string Name { get; set; }
     }

@@ -55,15 +55,6 @@ namespace TTMMC_ConfigBuilder
                     List[index] = inputTxt.Value;
                     listBox1.Items[listBox1.SelectedIndex] = inputTxt.Value;
                 }
-                else if (TypeList == typeof(FileConfigMachineType))
-                {
-                    var prot = Form1.file_.MachineTypes.Where(p => p.Name == curItem).FirstOrDefault();
-                    if (prot == null)
-                        return;
-                    prot.Name = inputTxt.Value;
-                    List[index] = inputTxt.Value;
-                    listBox1.Items[listBox1.SelectedIndex] = inputTxt.Value;
-                }
             }
         }
 
@@ -88,14 +79,6 @@ namespace TTMMC_ConfigBuilder
                 List.Remove(curItem);
                 listBox1.Items.Remove(curItem);
             }
-            else if (TypeList == typeof(FileConfigMachineType))
-            {
-                var res = Form1.file_.RemoveMachineType(curItem);
-                if (!res)
-                    return;
-                List.Remove(curItem);
-                listBox1.Items.Remove(curItem);
-            }
         }
 
         private void btt_add_Click(object sender, EventArgs e)
@@ -110,10 +93,6 @@ namespace TTMMC_ConfigBuilder
                 else if (TypeList == typeof(FileConfigGroup))
                 {
                     Form1.file_.AddGroup(frm.Value);
-                }
-                else if (TypeList == typeof(FileConfigMachineType))
-                {
-                    Form1.file_.AddMachineType(frm.Value);
                 }
             }
         }
