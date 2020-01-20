@@ -15,6 +15,8 @@ namespace TTMMC_ConfigBuilder
 
         public enum DataTypes
         {
+            SHORT,
+            USHORT,
             INT,
             UINT,
             DINT,
@@ -174,7 +176,7 @@ namespace TTMMC_ConfigBuilder
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var r = file_.AddMachine(Enum.GetName(typeof(MachineType), frm.Type), frm.Protocol.Name, frm.Group.Name, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
+                var r = file_.AddMachine(Enum.GetName(typeof(MachineType), frm.Type), frm.Protocol.Name, frm.Group.Name, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon_, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
                 if (r)
                 {
                     listBox1.Items.Add(frm.MachineName);
