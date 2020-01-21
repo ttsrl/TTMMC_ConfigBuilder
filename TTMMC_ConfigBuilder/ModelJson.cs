@@ -16,6 +16,7 @@ namespace TTMMC_ConfigBuilder
         private string _referenceKeyR = "";
         private string _finishKeyR = "";
         private string _finishKeyW = "";
+        private int refTime = 500;
 
         public int Id { get; set; }
         public string Type { get; set; }
@@ -27,7 +28,7 @@ namespace TTMMC_ConfigBuilder
         public string Port { get; set; }
         public string Image { get; set; }
         public string Icon { get; set; }
-        public int RefreshRealTimeDatasRead { get; set; }
+        public int RefreshRealTimeDatasRead { get => refTime; set { refTime = (value < 10) ? 10 : value; } }
         public int ModalityLogCheck { get; set; }
         public int ValueModalityLogCheck { get; set; }
         public string ReferenceKeyRead { get => _referenceKeyR; set => _referenceKeyR = value; }
