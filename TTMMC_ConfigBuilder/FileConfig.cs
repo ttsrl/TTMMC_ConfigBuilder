@@ -100,7 +100,7 @@ namespace TTMMC_ConfigBuilder
             db = null;
         }
 
-        public bool AddMachine(string type, string protocol, string group, string name, string descr, string address, string port, string image, string icon, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, string refKeyRead = "", string finKeyRead = "", string finKeyWrite = "")
+        public bool AddMachine(string type, string protocol, string group, string name, string descr, string address, string port, string image, string icon, Dictionary<string, List<DataAddressItem>> datasAddressToRead, Dictionary<string, List<DataAddressItem>> datasAddressToWrite, int modality, int valuex, int refreshReadTimer, string refKeyRead = "", string finKeyRead = "", string finKeyWrite = "")
         {
             if ( !string.IsNullOrEmpty(protocol) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
             {
@@ -132,6 +132,7 @@ namespace TTMMC_ConfigBuilder
                         ReferenceName = name,
                         Image = image,
                         Icon = icon,
+                        MinRefreshReadDatasTime = refreshReadTimer,
                         ModalityLogCheck = modality,
                         ValueModalityLogCheck = valuex,
                         ReferenceKeyRead = refKeyRead,
@@ -310,6 +311,7 @@ namespace TTMMC_ConfigBuilder
         private string _referenceKeyR = "";
         private string _finishKeyR = "";
         private string _finishKeyW = "";
+        private int minRefreshTime = 500;
 
         public int Id { get; set; }
         public MachineType? Type { get; set; }
@@ -321,6 +323,7 @@ namespace TTMMC_ConfigBuilder
         public string Port { get; set; }
         public string Image { get; set; }
         public string Icon { get; set; }
+        public int MinRefreshReadDatasTime { get => minRefreshTime; set => minRefreshTime = value; }
         public int ModalityLogCheck { get; set; }
         public int ValueModalityLogCheck { get; set; }
         public string ReferenceKeyRead { get => _referenceKeyR; set => _referenceKeyR = value; }

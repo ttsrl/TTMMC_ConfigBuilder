@@ -27,6 +27,7 @@ namespace TTMMC_ConfigBuilder
         public string Port { get; set; }
         public string Image { get; set; }
         public string Icon { get; set; }
+        public int RefreshRealTimeDatasRead { get; set; }
         public int ModalityLogCheck { get; set; }
         public int ValueModalityLogCheck { get; set; }
         public string ReferenceKeyRead { get => _referenceKeyR; set => _referenceKeyR = value; }

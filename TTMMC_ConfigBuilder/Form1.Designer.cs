@@ -126,6 +126,9 @@
             this.import = new System.Windows.Forms.OpenFileDialog();
             this.moveUp = new System.Windows.Forms.Button();
             this.moveDown = new System.Windows.Forms.Button();
+            this.editMinRef = new System.Windows.Forms.LinkLabel();
+            this.lblMinRef = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.databaseDetails.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -143,7 +146,7 @@
             this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(704, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(732, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -297,12 +300,16 @@
             // 
             // listBox1
             // 
+            this.listBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.listBox1.Enabled = false;
+            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 25;
             this.listBox1.Location = new System.Drawing.Point(12, 54);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(238, 368);
+            this.listBox1.Size = new System.Drawing.Size(238, 407);
             this.listBox1.TabIndex = 1;
+            this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox1_DrawItem);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
             // 
@@ -334,7 +341,7 @@
             this.databaseDetails.Controls.Add(this.label4);
             this.databaseDetails.Location = new System.Drawing.Point(298, 48);
             this.databaseDetails.Name = "databaseDetails";
-            this.databaseDetails.Size = new System.Drawing.Size(395, 158);
+            this.databaseDetails.Size = new System.Drawing.Size(422, 158);
             this.databaseDetails.TabIndex = 3;
             this.databaseDetails.TabStop = false;
             this.databaseDetails.Text = "  Dettagli Database  ";
@@ -502,9 +509,9 @@
             this.tsslNGroup,
             this.toolStripStatusLabel4,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 441);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 472);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(704, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(732, 22);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -561,6 +568,9 @@
             // 
             // machineDetails
             // 
+            this.machineDetails.Controls.Add(this.editMinRef);
+            this.machineDetails.Controls.Add(this.lblMinRef);
+            this.machineDetails.Controls.Add(this.label22);
             this.machineDetails.Controls.Add(this.editIcon);
             this.machineDetails.Controls.Add(this.lblIcon);
             this.machineDetails.Controls.Add(this.label21);
@@ -604,7 +614,7 @@
             this.machineDetails.Controls.Add(this.label2);
             this.machineDetails.Location = new System.Drawing.Point(298, 48);
             this.machineDetails.Name = "machineDetails";
-            this.machineDetails.Size = new System.Drawing.Size(395, 374);
+            this.machineDetails.Size = new System.Drawing.Size(422, 413);
             this.machineDetails.TabIndex = 5;
             this.machineDetails.TabStop = false;
             this.machineDetails.Text = "  Dettagli Macchina  ";
@@ -613,7 +623,7 @@
             // editIcon
             // 
             this.editIcon.AutoSize = true;
-            this.editIcon.Location = new System.Drawing.Point(326, 246);
+            this.editIcon.Location = new System.Drawing.Point(360, 246);
             this.editIcon.Name = "editIcon";
             this.editIcon.Size = new System.Drawing.Size(47, 13);
             this.editIcon.TabIndex = 41;
@@ -624,7 +634,7 @@
             // 
             // lblIcon
             // 
-            this.lblIcon.Location = new System.Drawing.Point(135, 246);
+            this.lblIcon.Location = new System.Drawing.Point(169, 246);
             this.lblIcon.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblIcon.Name = "lblIcon";
             this.lblIcon.Size = new System.Drawing.Size(180, 13);
@@ -645,7 +655,7 @@
             // editGroup
             // 
             this.editGroup.AutoSize = true;
-            this.editGroup.Location = new System.Drawing.Point(326, 125);
+            this.editGroup.Location = new System.Drawing.Point(360, 125);
             this.editGroup.Name = "editGroup";
             this.editGroup.Size = new System.Drawing.Size(47, 13);
             this.editGroup.TabIndex = 38;
@@ -656,7 +666,7 @@
             // 
             // lblGroup
             // 
-            this.lblGroup.Location = new System.Drawing.Point(135, 125);
+            this.lblGroup.Location = new System.Drawing.Point(169, 125);
             this.lblGroup.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblGroup.Name = "lblGroup";
             this.lblGroup.Size = new System.Drawing.Size(180, 13);
@@ -677,7 +687,7 @@
             // editXMod
             // 
             this.editXMod.AutoSize = true;
-            this.editXMod.Location = new System.Drawing.Point(326, 294);
+            this.editXMod.Location = new System.Drawing.Point(360, 318);
             this.editXMod.Name = "editXMod";
             this.editXMod.Size = new System.Drawing.Size(47, 13);
             this.editXMod.TabIndex = 35;
@@ -688,7 +698,7 @@
             // 
             // lblXMod
             // 
-            this.lblXMod.Location = new System.Drawing.Point(135, 294);
+            this.lblXMod.Location = new System.Drawing.Point(169, 318);
             this.lblXMod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblXMod.Name = "lblXMod";
             this.lblXMod.Size = new System.Drawing.Size(180, 13);
@@ -699,7 +709,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(27, 294);
+            this.label19.Location = new System.Drawing.Point(27, 318);
             this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(81, 13);
@@ -709,7 +719,7 @@
             // editMod
             // 
             this.editMod.AutoSize = true;
-            this.editMod.Location = new System.Drawing.Point(326, 270);
+            this.editMod.Location = new System.Drawing.Point(360, 294);
             this.editMod.Name = "editMod";
             this.editMod.Size = new System.Drawing.Size(47, 13);
             this.editMod.TabIndex = 32;
@@ -720,7 +730,7 @@
             // 
             // lblMod
             // 
-            this.lblMod.Location = new System.Drawing.Point(135, 270);
+            this.lblMod.Location = new System.Drawing.Point(169, 294);
             this.lblMod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMod.Name = "lblMod";
             this.lblMod.Size = new System.Drawing.Size(180, 13);
@@ -731,7 +741,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(27, 270);
+            this.label18.Location = new System.Drawing.Point(27, 294);
             this.label18.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(104, 13);
@@ -741,7 +751,7 @@
             // editDatasWrite
             // 
             this.editDatasWrite.AutoSize = true;
-            this.editDatasWrite.Location = new System.Drawing.Point(326, 342);
+            this.editDatasWrite.Location = new System.Drawing.Point(360, 366);
             this.editDatasWrite.Name = "editDatasWrite";
             this.editDatasWrite.Size = new System.Drawing.Size(47, 13);
             this.editDatasWrite.TabIndex = 29;
@@ -752,7 +762,7 @@
             // 
             // lblCountDatasWrite
             // 
-            this.lblCountDatasWrite.Location = new System.Drawing.Point(135, 342);
+            this.lblCountDatasWrite.Location = new System.Drawing.Point(169, 366);
             this.lblCountDatasWrite.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCountDatasWrite.Name = "lblCountDatasWrite";
             this.lblCountDatasWrite.Size = new System.Drawing.Size(180, 13);
@@ -763,7 +773,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(27, 342);
+            this.label17.Location = new System.Drawing.Point(27, 366);
             this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(86, 13);
@@ -773,7 +783,7 @@
             // editDatasRead
             // 
             this.editDatasRead.AutoSize = true;
-            this.editDatasRead.Location = new System.Drawing.Point(326, 318);
+            this.editDatasRead.Location = new System.Drawing.Point(360, 342);
             this.editDatasRead.Name = "editDatasRead";
             this.editDatasRead.Size = new System.Drawing.Size(47, 13);
             this.editDatasRead.TabIndex = 26;
@@ -784,7 +794,7 @@
             // 
             // lblCountDatasRead
             // 
-            this.lblCountDatasRead.Location = new System.Drawing.Point(135, 318);
+            this.lblCountDatasRead.Location = new System.Drawing.Point(169, 342);
             this.lblCountDatasRead.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCountDatasRead.Name = "lblCountDatasRead";
             this.lblCountDatasRead.Size = new System.Drawing.Size(180, 13);
@@ -795,7 +805,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(27, 318);
+            this.label16.Location = new System.Drawing.Point(27, 342);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(78, 13);
@@ -805,7 +815,7 @@
             // editImg
             // 
             this.editImg.AutoSize = true;
-            this.editImg.Location = new System.Drawing.Point(326, 222);
+            this.editImg.Location = new System.Drawing.Point(360, 222);
             this.editImg.Name = "editImg";
             this.editImg.Size = new System.Drawing.Size(47, 13);
             this.editImg.TabIndex = 23;
@@ -817,7 +827,7 @@
             // editPort
             // 
             this.editPort.AutoSize = true;
-            this.editPort.Location = new System.Drawing.Point(326, 198);
+            this.editPort.Location = new System.Drawing.Point(360, 198);
             this.editPort.Name = "editPort";
             this.editPort.Size = new System.Drawing.Size(47, 13);
             this.editPort.TabIndex = 22;
@@ -829,7 +839,7 @@
             // editAddress
             // 
             this.editAddress.AutoSize = true;
-            this.editAddress.Location = new System.Drawing.Point(326, 174);
+            this.editAddress.Location = new System.Drawing.Point(360, 174);
             this.editAddress.Name = "editAddress";
             this.editAddress.Size = new System.Drawing.Size(47, 13);
             this.editAddress.TabIndex = 21;
@@ -841,7 +851,7 @@
             // editProtocol
             // 
             this.editProtocol.AutoSize = true;
-            this.editProtocol.Location = new System.Drawing.Point(326, 149);
+            this.editProtocol.Location = new System.Drawing.Point(360, 149);
             this.editProtocol.Name = "editProtocol";
             this.editProtocol.Size = new System.Drawing.Size(47, 13);
             this.editProtocol.TabIndex = 20;
@@ -853,7 +863,7 @@
             // editType
             // 
             this.editType.AutoSize = true;
-            this.editType.Location = new System.Drawing.Point(326, 101);
+            this.editType.Location = new System.Drawing.Point(360, 101);
             this.editType.Name = "editType";
             this.editType.Size = new System.Drawing.Size(47, 13);
             this.editType.TabIndex = 19;
@@ -865,7 +875,7 @@
             // editDesc
             // 
             this.editDesc.AutoSize = true;
-            this.editDesc.Location = new System.Drawing.Point(326, 77);
+            this.editDesc.Location = new System.Drawing.Point(360, 77);
             this.editDesc.Name = "editDesc";
             this.editDesc.Size = new System.Drawing.Size(47, 13);
             this.editDesc.TabIndex = 18;
@@ -877,7 +887,7 @@
             // editName
             // 
             this.editName.AutoSize = true;
-            this.editName.Location = new System.Drawing.Point(326, 53);
+            this.editName.Location = new System.Drawing.Point(360, 53);
             this.editName.Name = "editName";
             this.editName.Size = new System.Drawing.Size(47, 13);
             this.editName.TabIndex = 17;
@@ -888,7 +898,7 @@
             // 
             // lblImg
             // 
-            this.lblImg.Location = new System.Drawing.Point(135, 222);
+            this.lblImg.Location = new System.Drawing.Point(169, 222);
             this.lblImg.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblImg.Name = "lblImg";
             this.lblImg.Size = new System.Drawing.Size(180, 13);
@@ -908,7 +918,7 @@
             // 
             // lblPort
             // 
-            this.lblPort.Location = new System.Drawing.Point(135, 198);
+            this.lblPort.Location = new System.Drawing.Point(169, 198);
             this.lblPort.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblPort.Name = "lblPort";
             this.lblPort.Size = new System.Drawing.Size(180, 13);
@@ -928,7 +938,7 @@
             // 
             // lblAddress
             // 
-            this.lblAddress.Location = new System.Drawing.Point(135, 174);
+            this.lblAddress.Location = new System.Drawing.Point(169, 174);
             this.lblAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblAddress.Name = "lblAddress";
             this.lblAddress.Size = new System.Drawing.Size(180, 13);
@@ -948,7 +958,7 @@
             // 
             // lblProtocol
             // 
-            this.lblProtocol.Location = new System.Drawing.Point(135, 149);
+            this.lblProtocol.Location = new System.Drawing.Point(169, 149);
             this.lblProtocol.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProtocol.Name = "lblProtocol";
             this.lblProtocol.Size = new System.Drawing.Size(180, 13);
@@ -968,7 +978,7 @@
             // 
             // lblType
             // 
-            this.lblType.Location = new System.Drawing.Point(135, 101);
+            this.lblType.Location = new System.Drawing.Point(169, 101);
             this.lblType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblType.Name = "lblType";
             this.lblType.Size = new System.Drawing.Size(180, 13);
@@ -988,7 +998,7 @@
             // 
             // lblDesc
             // 
-            this.lblDesc.Location = new System.Drawing.Point(135, 77);
+            this.lblDesc.Location = new System.Drawing.Point(169, 77);
             this.lblDesc.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblDesc.Name = "lblDesc";
             this.lblDesc.Size = new System.Drawing.Size(180, 13);
@@ -1008,7 +1018,7 @@
             // 
             // lblNm
             // 
-            this.lblNm.Location = new System.Drawing.Point(135, 53);
+            this.lblNm.Location = new System.Drawing.Point(169, 53);
             this.lblNm.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblNm.Name = "lblNm";
             this.lblNm.Size = new System.Drawing.Size(180, 13);
@@ -1028,7 +1038,7 @@
             // 
             // lblId
             // 
-            this.lblId.Location = new System.Drawing.Point(135, 29);
+            this.lblId.Location = new System.Drawing.Point(169, 29);
             this.lblId.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblId.Name = "lblId";
             this.lblId.Size = new System.Drawing.Size(180, 13);
@@ -1099,11 +1109,43 @@
             this.moveDown.UseVisualStyleBackColor = true;
             this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
             // 
+            // editMinRef
+            // 
+            this.editMinRef.AutoSize = true;
+            this.editMinRef.Location = new System.Drawing.Point(360, 270);
+            this.editMinRef.Name = "editMinRef";
+            this.editMinRef.Size = new System.Drawing.Size(47, 13);
+            this.editMinRef.TabIndex = 44;
+            this.editMinRef.TabStop = true;
+            this.editMinRef.Text = "Modifica";
+            this.editMinRef.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editMinRef.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblMinRef
+            // 
+            this.lblMinRef.Location = new System.Drawing.Point(169, 270);
+            this.lblMinRef.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblMinRef.Name = "lblMinRef";
+            this.lblMinRef.Size = new System.Drawing.Size(180, 13);
+            this.lblMinRef.TabIndex = 43;
+            this.lblMinRef.Text = "Nome:";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(27, 270);
+            this.label22.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(128, 13);
+            this.label22.TabIndex = 42;
+            this.label22.Text = "Min. Refr. DataRead:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 463);
+            this.ClientSize = new System.Drawing.Size(732, 494);
             this.Controls.Add(this.moveDown);
             this.Controls.Add(this.moveUp);
             this.Controls.Add(this.statusStrip1);
@@ -1231,6 +1273,9 @@
         private System.Windows.Forms.LinkLabel editIcon;
         private System.Windows.Forms.Label lblIcon;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.LinkLabel editMinRef;
+        private System.Windows.Forms.Label lblMinRef;
+        private System.Windows.Forms.Label label22;
     }
 }
 

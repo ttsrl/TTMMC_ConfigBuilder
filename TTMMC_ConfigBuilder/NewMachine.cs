@@ -25,6 +25,7 @@ namespace TTMMC_ConfigBuilder
         public string Port;
         public string Image;
         public string Icon_;
+        public int MinRefTime;
         public int ModalityLogCheck;
         public int ValueModalityLogCheck;
         public Dictionary<string, List<DataAddressItem>> DatasAddressToRead;
@@ -73,8 +74,9 @@ namespace TTMMC_ConfigBuilder
                 Port = textBox4.Text;
                 Image = (textBox5.Text == "") ? null : textBox5.Text;
                 Icon_ = (textBox6.Text == "") ? null : textBox6.Text;
+                MinRefTime = Convert.ToInt32(numericUpDown2.Value);
                 ModalityLogCheck = comboBox3.SelectedIndex;
-                ValueModalityLogCheck = Convert.ToInt16(numericUpDown1.Value);
+                ValueModalityLogCheck = Convert.ToInt32(numericUpDown1.Value);
                 DialogResult = DialogResult.OK;
             }
             else

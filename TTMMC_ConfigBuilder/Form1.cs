@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -84,7 +85,7 @@ namespace TTMMC_ConfigBuilder
                         if (w == null || l == null)
                             MessageBox.Show("Impossibile caricare un elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         else
-                            file_.AddMachine(m.Value.Type, m.Value.Protocol, m.Value.Group, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, m.Value.Icon, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.ReferenceKeyRead, m.Value.FinishKeyRead, m.Value.FinishKeyWrite);
+                            file_.AddMachine(m.Value.Type, m.Value.Protocol, m.Value.Group, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, m.Value.Icon, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.RefreshRealTimeDatasRead, m.Value.ReferenceKeyRead, m.Value.FinishKeyRead, m.Value.FinishKeyWrite);
                     }
                     reloadListBox1();
                     nuovoToolStripMenuItem.Enabled = false;
@@ -176,7 +177,7 @@ namespace TTMMC_ConfigBuilder
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var r = file_.AddMachine(Enum.GetName(typeof(MachineType), frm.Type), frm.Protocol.Name, frm.Group.Name, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon_, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck);
+                var r = file_.AddMachine(Enum.GetName(typeof(MachineType), frm.Type), frm.Protocol.Name, frm.Group.Name, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon_, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck, frm.MinRefTime);
                 if (r)
                 {
                     listBox1.Items.Add(frm.MachineName);
@@ -252,6 +253,7 @@ namespace TTMMC_ConfigBuilder
                         lblPort.Text = machine.Port;
                         lblImg.Text = machine.Image;
                         lblIcon.Text = machine.Icon;
+                        lblMinRef.Text = machine.MinRefreshReadDatasTime.ToString();
                         lblCountDatasRead.Text = machine.DatasAddressToRead.Count.ToString();
                         lblCountDatasWrite.Text = machine.DatasAddressToWrite.Count.ToString();
                         lblMod.Text = Modality[machine.ModalityLogCheck];
@@ -384,6 +386,15 @@ namespace TTMMC_ConfigBuilder
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
                         {
                             machine.Icon = frmInputTxt.Value;
+                        }
+                    }
+                    else if (nm == "editMinRef")
+                    {
+                        frmInputTxt.LblTxt = "Min. Refresh:";
+                        frmInputTxt.Value = machine.MinRefreshReadDatasTime.ToString();
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.MinRefreshReadDatasTime = Convert.ToInt32(frmInputTxt.Value);
                         }
                     }
                     else if (nm == "editDatasRead")
@@ -544,6 +555,7 @@ namespace TTMMC_ConfigBuilder
                     Type = Enum.GetName(typeof(MachineType), it.Type),
                     Image = it.Image,
                     Icon = it.Icon,
+                    RefreshRealTimeDatasRead = it.MinRefreshReadDatasTime,
                     ModalityLogCheck = it.ModalityLogCheck,
                     ValueModalityLogCheck = it.ValueModalityLogCheck,
                     ReferenceKeyRead = it.ReferenceKeyRead,
@@ -623,6 +635,17 @@ namespace TTMMC_ConfigBuilder
             listBox1.Items.Remove(selected);
             listBox1.Items.Insert(newIndex, selected);
             listBox1.SetSelected(newIndex, true);
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            // Draw the background of the ListBox control for each item.
+            e.DrawBackground();
+            // Define the default color of the brush as black.
+            Brush myBrush = Brushes.Black;
+            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, myBrush, new Rectangle(0, e.Bounds.Y + 3, e.Bounds.Width, e.Bounds.Height), StringFormat.GenericDefault);
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
         }
     }
 }
