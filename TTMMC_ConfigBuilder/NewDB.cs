@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
 {
     public partial class NewDB : Form
     {
+        public string ConnName;
         public string IP;
         public string DB;
         public string Username;
@@ -23,15 +17,11 @@ namespace TTMMC_ConfigBuilder
             InitializeComponent();
         }
 
-        private void NewDB_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "")
+            if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "" && textBox5.Text != "")
             {
+                ConnName = textBox5.Text;
                 IP = textBox1.Text;
                 DB = textBox2.Text;
                 Username = textBox3.Text;
@@ -40,10 +30,7 @@ namespace TTMMC_ConfigBuilder
                 DialogResult = DialogResult.OK;
             }
             else
-            {
                 MessageBox.Show("Inserisci tutti i dati richiesti", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            
         }
 
         private void button2_Click(object sender, EventArgs e)

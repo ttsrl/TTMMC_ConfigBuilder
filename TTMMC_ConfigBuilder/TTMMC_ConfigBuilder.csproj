@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>TTMMC_ConfigBuilder</RootNamespace>
     <AssemblyName>TTMMC_ConfigBuilder</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -67,17 +67,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="editList.cs">
+    <Compile Include="DataItemFormat.cs" />
+    <Compile Include="info.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="editList.Designer.cs">
-      <DependentUpon>editList.cs</DependentUpon>
+    <Compile Include="info.Designer.cs">
+      <DependentUpon>info.cs</DependentUpon>
     </Compile>
-    <Compile Include="inputKey.cs">
+    <Compile Include="inputList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="inputKey.Designer.cs">
-      <DependentUpon>inputKey.cs</DependentUpon>
+    <Compile Include="inputList.Designer.cs">
+      <DependentUpon>inputList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extension.cs" />
+    <Compile Include="inputDataItemFormat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputDataItemFormat.Designer.cs">
+      <DependentUpon>inputDataItemFormat.cs</DependentUpon>
     </Compile>
     <Compile Include="inputTreeView.cs">
       <SubType>Form</SubType>
@@ -117,19 +125,22 @@
     <Compile Include="NewMachine.Designer.cs">
       <DependentUpon>NewMachine.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewMachineDataItem.cs">
+    <Compile Include="inputDataItem.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewMachineDataItem.Designer.cs">
-      <DependentUpon>NewMachineDataItem.cs</DependentUpon>
+    <Compile Include="inputDataItem.Designer.cs">
+      <DependentUpon>inputDataItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="editList.resx">
-      <DependentUpon>editList.cs</DependentUpon>
+    <EmbeddedResource Include="info.resx">
+      <DependentUpon>info.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="inputKey.resx">
-      <DependentUpon>inputKey.cs</DependentUpon>
+    <EmbeddedResource Include="inputList.resx">
+      <DependentUpon>inputList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputDataItemFormat.resx">
+      <DependentUpon>inputDataItemFormat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="inputTreeView.resx">
       <DependentUpon>inputTreeView.cs</DependentUpon>
@@ -149,8 +160,8 @@
     <EmbeddedResource Include="NewMachine.resx">
       <DependentUpon>NewMachine.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewMachineDataItem.resx">
-      <DependentUpon>NewMachineDataItem.cs</DependentUpon>
+    <EmbeddedResource Include="inputDataItem.resx">
+      <DependentUpon>inputDataItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

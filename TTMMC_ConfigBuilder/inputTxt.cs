@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
@@ -22,7 +15,7 @@ namespace TTMMC_ConfigBuilder
 
         private void name_Load(object sender, EventArgs e)
         {
-            label1.Text = LblTxt ?? "Nome:";
+            label1.Text = LblTxt ?? "Name:";
             textBox1.Text = Value;
         }
 
@@ -35,7 +28,7 @@ namespace TTMMC_ConfigBuilder
             }
             else
             {
-                MessageBox.Show("Inserisci tutti i dati richiesti", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Insert all data request.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

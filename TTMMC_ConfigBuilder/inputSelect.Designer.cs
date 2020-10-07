@@ -42,7 +42,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
-            this.button2.Text = "Annulla";
+            this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -63,7 +63,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Nome:";
+            this.label1.Text = "Name:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // comboBox1
@@ -91,7 +91,7 @@
             this.MinimizeBox = false;
             this.Name = "inputSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Seleziona Elemento";
+            this.Text = "Select";
             this.Load += new System.EventHandler(this.inputSelect_Load);
             this.ResumeLayout(false);
 

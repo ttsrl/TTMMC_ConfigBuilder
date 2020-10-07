@@ -1,21 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using System;
 using System.Collections.Generic;
-using static TTMMC_ConfigBuilder.Form1;
-using static TTMMC_ConfigBuilder.inputKey;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace TTMMC_ConfigBuilder
 {
     public class ModelJson
     {
         public Dictionary<string, string> ConnectionStrings { get; set; }
-        public Dictionary<string, MachineJSON> Machines { get; set; }
+        public Dictionary<string, MachineJson> Machines { get; set; }
     }
 
-    public class MachineJSON
+    public class MachineJson
     {
-        private string _referenceKeyR = "";
-        private string _finishKeyR = "";
-        private string _finishKeyW = "";
         private int refTime = 500;
 
         public int Id { get; set; }
@@ -28,31 +25,76 @@ namespace TTMMC_ConfigBuilder
         public string Port { get; set; }
         public string Image { get; set; }
         public string Icon { get; set; }
-        public int RefreshRealTimeDatasRead { get => refTime; set { refTime = (value < 10) ? 10 : value; } }
+        public int RefreshRealTimeDatasRead { get => refTime; set { refTime = (value < 25) ? 25 : value; } }
         public int ModalityLogCheck { get; set; }
         public int ValueModalityLogCheck { get; set; }
-        public string ReferenceKeyRead { get => _referenceKeyR; set => _referenceKeyR = value; }
-        public string FinishKeyRead { get => _finishKeyR; set => _finishKeyR = value; }
-        public string FinishKeyWrite { get => _finishKeyW; set => _finishKeyW = value; }
-        public Dictionary<string, Dictionary<string, DataAddressItem>> DatasAddressToRead { get; set; }
-        public Dictionary<string, Dictionary<string, DataAddressItem>> DatasAddressToWrite { get; set; }
+        public List<DataGroup> DatasRead { get; set; }
+        public List<DataGroup> DatasWrite { get; set; }
     }
 
-    public class DataAddressItem
+    [Serializable]
+    public class DataItem
     {
-        private string dataType { get; set; }
-        private int _scaling = 0;
-        public string Description { get; set; }
-        public string Address { get; set; }
-        public string DataType { get => dataType; set => dataType = value?.ToLower(); }
-        public int Scaling { get => _scaling; set => _scaling = value; }
+        string format = DataItemFormat.Empty.ToString();
+        string address = "";
+        string description = "";
+        string unit = "";
 
-        public DataAddressItem(string address, string description, DataTypes datatype, int scaling)
+        public string Description { get => description; set => description = value; }
+        public string Address { get => address; set { if (!string.IsNullOrEmpty(value)) address = value; } }
+        public string Format { get => format; set { if (!string.IsNullOrEmpty(value)) format = value; } }
+        public string Unit { get => unit; set => unit = value; }
+        public bool IsReferenceKey { get; set; }
+        public bool IsFinishKey { get; set; }
+        public bool Ignore { get; set; }
+
+        public DataItem() { }
+
+        public DataItem(string address)
         {
+            if (string.IsNullOrEmpty(address))
+                throw new System.Exception("parameteres not null or empty");
             Address = address;
-            Description = description;
-            DataType = datatype.ToString();
-            Scaling = scaling;
         }
+
+        public DataItem(string address, string format)
+        {
+            if (string.IsNullOrEmpty(address) || string.IsNullOrEmpty(format))
+                throw new System.Exception("parameteres not null or empty");
+            this.address = address;
+            this.format = format;
+        }
+
+        public DataItem(string address, string format, string description)
+        {
+            if (string.IsNullOrEmpty(address) || string.IsNullOrEmpty(format))
+                throw new System.Exception("parameteres not null or empty");
+            this.address = address;
+            this.format = format;
+            this.description = description;
+        }
+    }
+
+    public class DataGroup : ICloneable
+    {
+        private List<DataItem> items = new List<DataItem>();
+
+        public string Name { get; set; }
+        public List<DataItem> Items { get => items; set => items = value; }
+
+        public object Clone()
+        {
+            var clone = (DataGroup)this.MemberwiseClone(); 
+            var formatter = new BinaryFormatter();
+            using (var stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, this.Items);
+                stream.Seek(0, SeekOrigin.Begin);
+                clone.Items = (List<DataItem>)formatter.Deserialize(stream);
+            }
+            return clone;
+        }
+
+
     }
 }

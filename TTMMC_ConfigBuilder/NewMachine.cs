@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static TTMMC_ConfigBuilder.Form1;
 
@@ -19,8 +14,8 @@ namespace TTMMC_ConfigBuilder
         public string MachineName;
         public string Description;
         public MachineType Type;
-        public FileConfigProtocol Protocol;
-        public FileConfigGroup Group;
+        public string Protocol;
+        public string Group;
         public string Address;
         public string Port;
         public string Image;
@@ -28,8 +23,8 @@ namespace TTMMC_ConfigBuilder
         public int MinRefTime;
         public int ModalityLogCheck;
         public int ValueModalityLogCheck;
-        public Dictionary<string, List<DataAddressItem>> DatasAddressToRead;
-        public Dictionary<string, List<DataAddressItem>> DatasAddressToWrite;
+        public List<DataGroup> DatasRead;
+        public List<DataGroup> DatasWrite;
 
         public NewMachine()
         {
@@ -45,19 +40,12 @@ namespace TTMMC_ConfigBuilder
                     comboBox1.Items.Add(t);
                 }
 
-                foreach (var p in Form1.file_.Protocols)
-                {
-                    comboBox2.Items.Add(p.Name);
-                }
-
-                foreach (var g in Form1.file_.Groups)
-                {
-                    comboBox4.Items.Add(g.Name);
-                }
-
+                comboBox2.Items.AddRange(file_.Protocols.ToArray());
+                comboBox4.Items.AddRange(file_.Groups.ToArray());
                 lblId.Text = (file_.Machines.Count + 1).ToString();
 
-                DatasAddressToRead = new Dictionary<string, List<DataAddressItem>>();
+                DatasRead = new List<DataGroup>();
+                DatasWrite = new List<DataGroup>();
             }
         }
 
@@ -68,8 +56,8 @@ namespace TTMMC_ConfigBuilder
                 MachineName = textBox1.Text;
                 Description = textBox2.Text;
                 Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString());
-                Protocol = Form1.file_.GetProtocol(comboBox2.SelectedItem.ToString());
-                Group = Form1.file_.GetGroup(comboBox4.SelectedItem.ToString());
+                Protocol = file_.GetProtocol(comboBox2.SelectedItem.ToString());
+                Group = file_.GetGroup(comboBox4.SelectedItem.ToString());
                 Address = textBox3.Text;
                 Port = textBox4.Text;
                 Image = (textBox5.Text == "") ? null : textBox5.Text;
@@ -81,7 +69,7 @@ namespace TTMMC_ConfigBuilder
             }
             else
             {
-                MessageBox.Show("Inserisci tutti i dati richiesti", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Insert all data request", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             
         }
@@ -91,7 +79,7 @@ namespace TTMMC_ConfigBuilder
             DialogResult = DialogResult.Cancel;
         }
 
-        private void editDatasWrite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void editDatas_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var nm = ((LinkLabel)sender).Name ?? "";
             if (!string.IsNullOrEmpty(nm))
@@ -99,23 +87,19 @@ namespace TTMMC_ConfigBuilder
                 var frmTreview = new inputTreeView();
                 if (nm == "addDatasRead")
                 {
-                    //copia
-                    var newDatasToRead = new Dictionary<string, List<DataAddressItem>>();
-                    frmTreview.datasAddress = newDatasToRead;
+                    var cloneDataRead = DatasRead.Clone().ToList();
+                    frmTreview.DataRead = true;
+                    frmTreview.datas = cloneDataRead;
                     if (frmTreview.ShowDialog() == DialogResult.OK)
-                    {
-                        DatasAddressToRead = frmTreview.datasAddress;
-                    }
+                        DatasRead = frmTreview.datas;
                 }
                 else if (nm == "addDatasWrite")
                 {
-                    //copia
-                    var newDatasToWrite = new Dictionary<string, List<DataAddressItem>>();
-                    frmTreview.datasAddress = newDatasToWrite;
+                    var cloneDataWrite = DatasWrite.Clone().ToList();
+                    frmTreview.DataRead = false;
+                    frmTreview.datas = cloneDataWrite;
                     if (frmTreview.ShowDialog() == DialogResult.OK)
-                    {
-                        DatasAddressToWrite = frmTreview.datasAddress;
-                    }
+                        DatasWrite = frmTreview.datas;
                 }
             }
         }
@@ -123,10 +107,8 @@ namespace TTMMC_ConfigBuilder
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
             var txt = comboBox3.SelectedItem.ToString();
-            if(txt == "Key > 0 Ogni X Volte" || txt == "Key > Prec. Ogni X Volte")
-            {
+            if(txt == "KeyGreater0EveryXTimes" || txt == "KeyGreaterLastEveryXTimes")
                 numericUpDown1.Enabled = true;
-            }
             else
             {
                 numericUpDown1.Enabled = false;

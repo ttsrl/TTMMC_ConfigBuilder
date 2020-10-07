@@ -14,19 +14,6 @@ namespace TTMMC_ConfigBuilder
         public static FileConfig file_;
         public List<string> Modality;
 
-        public enum DataTypes
-        {
-            SHORT,
-            USHORT,
-            INT,
-            UINT,
-            DINT,
-            UDINT,
-            REAL,
-            DOUBLE,
-            STRING
-        }
-
         public Form1()
         {
             InitializeComponent();
@@ -41,27 +28,30 @@ namespace TTMMC_ConfigBuilder
             Modality.Add("Key > Prec. Ogni X Volte");
         }
 
-
         #region MENU
 
-        private void NuovoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var fnm = new inputTxt();
             fnm.Value = "appsettings";
+            fnm.Text = "New File";
             if(fnm.ShowDialog() == DialogResult.OK)
             {
                 file_ = new FileConfig(fnm.Value);
-                nuovoToolStripMenuItem.Enabled = false;
-                aggiungiToolStripMenuItem.Enabled = true;
-                modificaToolStripMenuItem.Enabled = true;
-                apriToolStripMenuItem.Enabled = false;
-                esportaToolStripMenuItem.Enabled = true;
-                chiudiStripMenuItem2.Enabled = true;
+                newToolStripMenuItem.Enabled = false;
+                addToolStripMenuItem.Enabled = true;
+                editToolStripMenuItem.Enabled = true;
+                openToolStripMenuItem.Enabled = false;
+                saveToolStripMenuItem.Enabled = true;
+                closeToolStripMenuItem.Enabled = true;
                 listBox1.Enabled = true;
+                listBox2.Enabled = true;
+                moveUp.Enabled = true;
+                moveDown.Enabled = true;
             }
         }
 
-        private void ApriToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var inp = import.ShowDialog();
             if(inp == DialogResult.OK)
@@ -74,53 +64,52 @@ namespace TTMMC_ConfigBuilder
                     var json = JsonConvert.DeserializeObject<ModelJson>(read);
                     file_ = new FileConfig(import.SafeFileName);
                     //load data
-                    if (json.ConnectionStrings.ContainsKey("DefaultConnection"))
+                    foreach (var it in json.ConnectionStrings)
                     {
-                        file_.AddDatabase(json.ConnectionStrings["DefaultConnection"]);
+                        file_.AddDatabase(it.Key, it.Value);
                     }
                     foreach (var m in json.Machines)
                     {
-                        var l = m.Value.DatasAddressToRead?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
-                        var w = m.Value.DatasAddressToWrite?.ToDictionary(k => k.Key, v => v.Value.Select(x => x.Value).ToList());
-                        if (w == null || l == null)
-                            MessageBox.Show("Impossibile caricare un elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        else
-                            file_.AddMachine(m.Value.Type, m.Value.Protocol, m.Value.Group, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, m.Value.Icon, l, w, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.RefreshRealTimeDatasRead, m.Value.ReferenceKeyRead, m.Value.FinishKeyRead, m.Value.FinishKeyWrite);
+                        file_.AddMachine(m.Value.Type, m.Value.Protocol, m.Value.Group, m.Value.ReferenceName, m.Value.Description, m.Value.Address, m.Value.Port, m.Value.Image, m.Value.Icon, m.Value.DatasRead, m.Value.DatasWrite, m.Value.ModalityLogCheck, m.Value.ValueModalityLogCheck, m.Value.RefreshRealTimeDatasRead);
                     }
-                    reloadListBox1();
-                    nuovoToolStripMenuItem.Enabled = false;
-                    aggiungiToolStripMenuItem.Enabled = true;
-                    modificaToolStripMenuItem.Enabled = true;
-                    apriToolStripMenuItem.Enabled = false;
-                    esportaToolStripMenuItem.Enabled = true;
-                    chiudiStripMenuItem2.Enabled = true;
+                    newToolStripMenuItem.Enabled = false;
+                    addToolStripMenuItem.Enabled = true;
+                    editToolStripMenuItem.Enabled = true;
+                    openToolStripMenuItem.Enabled = false;
+                    saveToolStripMenuItem.Enabled = true;
+                    closeToolStripMenuItem.Enabled = true;
                     listBox1.Enabled = true;
-                    tsslNElem.Text = (file_.Machines.Count + ((file_.DB is FileConfigDB) ? 1 : 0)).ToString();
-                    tsslNProt.Text = file_.Protocols.Count.ToString();
-                    tsslNGroup.Text = file_.Groups.Count.ToString();
+                    listBox2.Enabled = true;
+                    moveUp.Enabled = true;
+                    moveDown.Enabled = true;
+                    reloadLabel();
+                    reloadListBox1();
+                    reloadListBox2();
                 }
             }
         }
 
-        private void chiudiStripMenuItem2_Click(object sender, EventArgs e)
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             file_ = null;
-            tsslNElem.Text = "0";
-            tsslNProt.Text = "0";
-            tsslNGroup.Text = "0";
+            reloadLabel();
             reloadListBox1();
-            nuovoToolStripMenuItem.Enabled = true;
-            aggiungiToolStripMenuItem.Enabled = false;
-            modificaToolStripMenuItem.Enabled = false;
-            apriToolStripMenuItem.Enabled = true;
-            esportaToolStripMenuItem.Enabled = false;
-            chiudiStripMenuItem2.Enabled = false;
+            reloadListBox2();
+            newToolStripMenuItem.Enabled = true;
+            addToolStripMenuItem.Enabled = false;
+            editToolStripMenuItem.Enabled = false;
+            openToolStripMenuItem.Enabled = true;
+            saveToolStripMenuItem.Enabled = false;
+            closeToolStripMenuItem.Enabled = false;
             listBox1.Enabled = false;
+            listBox2.Enabled = false;
             machineDetails.Visible = false;
             databaseDetails.Visible = false;
+            moveUp.Enabled = false;
+            moveDown.Enabled = false;
         }
 
-        private void esportaToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             export.FileName = file_.Name;
             var fs = export.ShowDialog();
@@ -133,28 +122,28 @@ namespace TTMMC_ConfigBuilder
             }
         }
 
-        private void esciToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void ProtocolloToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ProtocolToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var frm = new inputTxt();
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 file_.AddProtocol(frm.Value);
-                tsslNProt.Text = (int.Parse(tsslNProt.Text) + 1).ToString();
+                reloadLabel();
             }
         }
 
-        private void gruppoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GroupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var frm = new inputTxt();
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 file_.AddGroup(frm.Value);
-                tsslNGroup.Text = (int.Parse(tsslNGroup.Text) + 1).ToString();
+                reloadLabel();
             }
         }
 
@@ -163,104 +152,109 @@ namespace TTMMC_ConfigBuilder
             var frm = new NewDB();
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                file_.AddDatabase(frm.IP, frm.DB, frm.Username, frm.Password, frm.RequestSecurityInfo);
-                databaseToolStripMenuItem.Enabled = false;
-                listBox1.Items.Add("Database");
-                tsslNElem.Text = (int.Parse(tsslNElem.Text) + 1).ToString();
+                file_.AddDatabase(frm.ConnName, frm.IP, frm.DB, frm.Username, frm.Password, frm.RequestSecurityInfo);
+                reloadListBox1();
+                reloadLabel();
             }
         }
 
-        private void MacchinaToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MachineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var frm = new NewMachine();
             if(frm.ShowDialog() == DialogResult.OK)
             {
                 var adrss = frm.Address;
                 adrss = adrss.Replace("opc.tcp://", "");
-                var r = file_.AddMachine(Enum.GetName(typeof(MachineType), frm.Type), frm.Protocol.Name, frm.Group.Name, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon_, frm.DatasAddressToRead, frm.DatasAddressToWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck, frm.MinRefTime);
+                var r = file_.AddMachine(Enum.GetName(typeof(MachineType), frm.Type), frm.Protocol, frm.Group, frm.MachineName, frm.Description, adrss, frm.Port, frm.Image, frm.Icon_, frm.DatasRead, frm.DatasWrite, frm.ModalityLogCheck, frm.ValueModalityLogCheck, frm.MinRefTime);
                 if (r)
                 {
-                    listBox1.Items.Add(frm.MachineName);
-                    tsslNElem.Text = (int.Parse(tsslNElem.Text) + 1).ToString();
+                    reloadListBox2();
+                    reloadLabel();
                 }
                 else
-                {
                     MessageBox.Show("Impossibile aggiungere la macchina", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
             }
         }
 
-        private void eliminaToolStripMenuItem_Click(object sender, EventArgs e)
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (listBox1.SelectedItem.ToString() != "Database")
-                file_.RemoveMachine(listBox1.SelectedItem.ToString());
+
+            if(((ListBox)sender).Name == "listBox1")
+                file_.RemoveDatabase(listBox1.SelectedItem.ToString());
             else
+                file_.RemoveMachine(listBox2.SelectedItem.ToString());
+            reloadListBox1();
+            reloadListBox2();
+            reloadLabel();
+        }
+
+        private void ProtocolsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            inputList frm = new inputList();
+            var oldList = file_.Protocols.Clone().ToList();
+            frm.List = oldList;
+            frm.Text = "Edit Protocols";
+            if (frm.ShowDialog() == DialogResult.OK)
             {
-                file_.RemoveDatabase();
-                databaseToolStripMenuItem.Enabled = true;
+                foreach (var act in frm.Actions)
+                {
+                    if (act.Action == inputList.iLAction.iLActions.Add)
+                        file_.AddProtocol(act.NewElement);
+                    else if (act.Action == inputList.iLAction.iLActions.Edit)
+                        file_.ReplaceProtocol(act.OldElement, act.NewElement);
+                    else if (act.Action == inputList.iLAction.iLActions.Delete)
+                        file_.RemoveProtocol(act.OldElement);
+                }
+                reloadLabel();
             }
-            tsslNElem.Text = (int.Parse(tsslNElem.Text) - 1).ToString();
-            listBox1.Items.Remove(listBox1.SelectedItem.ToString());
         }
 
-        private void protocolliToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GroupsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editList frm = new editList();
-            frm.TypeList = typeof(FileConfigProtocol);
-            frm.List = file_.Protocols.Select(p => p.Name).ToList();
-            frm.ShowDialog();
-            tsslNProt.Text = file_.Protocols.Count.ToString();
+            inputList frm = new inputList();
+            var oldList = file_.Groups.Clone().ToList();
+            frm.List = oldList;
+            frm.Text = "Edit Groups";
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                foreach (var act in frm.Actions)
+                {
+                    if (act.Action == inputList.iLAction.iLActions.Add)
+                        file_.AddGroup(act.NewElement);
+                    else if (act.Action == inputList.iLAction.iLActions.Edit)
+                        file_.ReplaceGroup(act.OldElement, act.NewElement);
+                    else if (act.Action == inputList.iLAction.iLActions.Delete)
+                        file_.RemoveGroup(act.OldElement);
+                }
+                reloadLabel();
+            }
         }
 
-        private void gruppiToolStripMenuItem_Click(object sender, EventArgs e)
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editList frm = new editList();
-            frm.TypeList = typeof(FileConfigGroup);
-            frm.List = file_.Groups.Select(p => p.Name).ToList();
-            frm.ShowDialog();
-            tsslNGroup.Text = file_.Groups.Count.ToString();
+            var f = new info();
+            f.ShowDialog();
         }
 
         #endregion
+
+        #region LISTS
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string curItem = listBox1.SelectedItem?.ToString();
             if (curItem != null)
             {
-                if (curItem == "Database")
+                var db = file_.GetDB(curItem);
+                if(db is FileConfigDB)
                 {
-                    ipLbl.Text = file_.DB.IP;
-                    dbLbl.Text = file_.DB.Database;
-                    usernameLbl.Text = file_.DB.Username;
-                    passwordLbl.Text = "**********";
-                    reqinfoLbl.Text = file_.DB.PersisteSecurityInfo.ToString();
+                    ipLbl.Text = db.IP;
+                    dbLbl.Text = db.Database ?? "";
+                    usernameLbl.Text = db.Username ?? "";
+                    passwordLbl.Text = db.Password ?? "";
+                    reqinfoLbl.Text = db.PersistSecurityInfo.ToString();
                     databaseDetails.Visible = true;
                     machineDetails.Visible = false;
-                }
-                else
-                {
-                    var machine = file_.GetMachine(curItem);
-                    if (machine is FileConfigMachine)
-                    {
-                        lblId.Text = machine.Id.ToString();
-                        lblNm.Text = machine.ReferenceName;
-                        lblDesc.Text = machine.Description;
-                        lblType.Text = (machine.Type == null) ? "" : Enum.GetName(typeof(MachineType), machine.Type);
-                        lblProtocol.Text = machine.Protocol?.Name ?? "";
-                        lblGroup.Text = machine.Group?.Name ?? "";
-                        lblAddress.Text = machine.Address;
-                        lblPort.Text = machine.Port;
-                        lblImg.Text = machine.Image;
-                        lblIcon.Text = machine.Icon;
-                        lblMinRef.Text = machine.MinRefreshReadDatasTime.ToString();
-                        lblCountDatasRead.Text = machine.DatasAddressToRead.Count.ToString();
-                        lblCountDatasWrite.Text = machine.DatasAddressToWrite.Count.ToString();
-                        lblMod.Text = Modality[machine.ModalityLogCheck];
-                        lblXMod.Text = machine.ValueModalityLogCheck.ToString();
-                        databaseDetails.Visible = false;
-                        machineDetails.Visible = true;
-                    }
                 }
             }
             else
@@ -268,36 +262,105 @@ namespace TTMMC_ConfigBuilder
                 databaseDetails.Visible = false;
                 machineDetails.Visible = false;
             }
-            
         }
 
-        private void listBox1_MouseDown(object sender, MouseEventArgs e)
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            listBox1.SelectedIndex = listBox1.IndexFromPoint(e.Location);
-            if (listBox1.SelectedIndex != -1)
+            string curItem = listBox2.SelectedItem?.ToString();
+            if (curItem != null)
             {
-                if(e.Button == MouseButtons.Right)
+                var machine = file_.GetMachine(curItem);
+                if (machine is FileConfigMachine)
                 {
-                    listBox1.ContextMenuStrip = menuStripList;
-                }
-                else
-                {
-                    listBox1.ContextMenuStrip = null;
+                    lblId.Text = machine.Id.ToString();
+                    lblNm.Text = machine.ReferenceName;
+                    lblDesc.Text = machine.Description;
+                    lblType.Text = (machine.Type == null) ? "" : Enum.GetName(typeof(MachineType), machine.Type);
+                    lblProtocol.Text = machine.Protocol ?? "";
+                    lblGroup.Text = machine.Group ?? "";
+                    lblAddress.Text = machine.Address;
+                    lblPort.Text = machine.Port;
+                    lblImg.Text = machine.Image;
+                    lblIcon.Text = machine.Icon;
+                    lblMinRef.Text = machine.MinRefreshReadDatasTime.ToString();
+                    lblCountDatasRead.Text = machine.DatasRead.Count.ToString();
+                    lblCountDatasWrite.Text = machine.DatasWrite.Count.ToString();
+                    lblMod.Text = Modality[machine.ModalityLogCheck];
+                    lblXMod.Text = machine.ValueModalityLogCheck.ToString();
+                    databaseDetails.Visible = false;
+                    machineDetails.Visible = true;
                 }
             }
             else
             {
-                listBox1.ContextMenuStrip = null;
+                databaseDetails.Visible = false;
+                machineDetails.Visible = false;
             }
 
         }
+
+        private void listBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                int index = this.listBox1.IndexFromPoint(e.Location);
+                if (index != ListBox.NoMatches)
+                {
+                    listBox1.SelectedIndex = index;
+                    listBox1.ContextMenuStrip = menuStripList;
+                }
+                else
+                    listBox1.ContextMenuStrip = null;
+            }
+            else
+                listBox1.ContextMenuStrip = null;
+        }
+
+        private void listBox2_MouseDown(object sender, MouseEventArgs e)
+        {
+            var indx = listBox2.IndexFromPoint(e.Location);
+            if (listBox2.SelectedIndex >= 0 && indx != 65535)
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    listBox2.SelectedIndex = indx;
+                    listBox2.ContextMenuStrip = menuStripList;
+                }
+                else
+                    listBox2.ContextMenuStrip = null;
+            }
+            else
+                listBox2.ContextMenuStrip = null;
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0)
+                return;
+            e.DrawBackground();
+            Brush myBrush = Brushes.Black;
+            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, myBrush, new Rectangle(0, e.Bounds.Y + 3, e.Bounds.Width, e.Bounds.Height), StringFormat.GenericDefault);
+            e.DrawFocusRectangle();
+        }
+
+        private void listBox2_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0)
+                return;
+            e.DrawBackground();
+            Brush myBrush = Brushes.Black;
+            e.Graphics.DrawString(listBox2.Items[e.Index].ToString(), e.Font, myBrush, new Rectangle(0, e.Bounds.Y + 3, e.Bounds.Width, e.Bounds.Height), StringFormat.GenericDefault);
+            e.DrawFocusRectangle();
+        }
+
+        #endregion
 
         private void edit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var nm = ((LinkLabel)sender).Name ?? "";
             if (!string.IsNullOrEmpty(nm))
             {
-                var machine = (file_ is FileConfig) ? file_.GetMachine(listBox1.SelectedItem?.ToString()) : null;
+                var machine = (file_ is FileConfig) ? file_.GetMachine(listBox2.SelectedItem?.ToString()) : null;
                 if (machine is FileConfigMachine)
                 {
                     var frmInputTxt = new inputTxt();
@@ -305,163 +368,113 @@ namespace TTMMC_ConfigBuilder
                     var frmTreview = new inputTreeView();
                     if (nm == "editName")
                     {
-                        frmInputTxt.LblTxt = "Nome:";
+                        frmInputTxt.LblTxt = "Name:";
                         frmInputTxt.Value = machine.ReferenceName;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
                         {
                             machine.ReferenceName = frmInputTxt.Value;
-                            listBox1.Items[listBox1.SelectedIndex] = frmInputTxt.Value;
+                            listBox2.Items[listBox2.SelectedIndex] = frmInputTxt.Value;
                         }
                     }
                     else if (nm == "editDesc")
                     {
-                        frmInputTxt.LblTxt = "Descrizione:";
+                        frmInputTxt.LblTxt = "Description:";
                         frmInputTxt.Value = machine.Description;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
-                        {
                             machine.Description = frmInputTxt.Value;
-                        }
                     }
                     else if (nm == "editType")
                     {
-                        frmSelect.LblTxt = "Tipologia:";
+                        frmSelect.LblTxt = "Type:";
                         frmSelect.List = Enum.GetNames(typeof(MachineType)).ToList();
                         frmSelect.Value = machine.Type.ToString();
                         if (frmSelect.ShowDialog() == DialogResult.OK)
-                        {
                             machine.Type = (MachineType)Enum.Parse(typeof(MachineType), frmSelect.Value);
-                        }
                     }
                     else if (nm == "editGroup")
                     {
-                        frmSelect.LblTxt = "Gruppo:";
-                        frmSelect.List = file_.Groups.Select(it => it.Name).ToList();
-                        frmSelect.Value = machine.Group.Name;
+                        frmSelect.LblTxt = "Group:";
+                        frmSelect.List = file_.Groups.ToList();
+                        frmSelect.Value = machine.Group;
                         if (frmSelect.ShowDialog() == DialogResult.OK)
-                        {
                             machine.Group = file_.GetGroup(frmSelect.Value);
-                        }
                     }
                     else if (nm == "editProtocol")
                     {
-                        frmSelect.LblTxt = "Protocollo:";
-                        frmSelect.List = file_.Protocols.Select(it => it.Name).ToList();
-                        frmSelect.Value = machine.Protocol.Name;
+                        frmSelect.LblTxt = "Protocol:";
+                        frmSelect.List = file_.Protocols.ToList();
+                        frmSelect.Value = machine.Protocol;
                         if (frmSelect.ShowDialog() == DialogResult.OK)
-                        {
                             machine.Protocol = file_.GetProtocol(frmSelect.Value);
-                        }
                     }
                     else if (nm == "editAddress")
                     {
-                        frmInputTxt.LblTxt = "Indirizzo:";
+                        frmInputTxt.LblTxt = "Address:";
                         frmInputTxt.Value = machine.Address;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
-                        {
                             machine.Address = frmInputTxt.Value;
-                        }
                     }
                     else if (nm == "editPort")
                     {
-                        frmInputTxt.LblTxt = "Porta:";
+                        frmInputTxt.LblTxt = "Port:";
                         frmInputTxt.Value = machine.Port;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
-                        {
                             machine.Port = frmInputTxt.Value;
-                        }
                     }
                     else if (nm == "editImg")
                     {
-                        frmInputTxt.LblTxt = "Immagine:";
+                        frmInputTxt.LblTxt = "Image:";
                         frmInputTxt.Value = machine.Image;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
-                        {
                             machine.Image = frmInputTxt.Value;
-                        }
                     }
                     else if (nm == "editIcon")
                     {
-                        frmInputTxt.LblTxt = "Icona:";
+                        frmInputTxt.LblTxt = "Icon:";
                         frmInputTxt.Value = machine.Icon;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
-                        {
                             machine.Icon = frmInputTxt.Value;
-                        }
                     }
                     else if (nm == "editMinRef")
                     {
                         frmInputTxt.LblTxt = "Min. Refresh:";
                         frmInputTxt.Value = machine.MinRefreshReadDatasTime.ToString();
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
-                        {
                             machine.MinRefreshReadDatasTime = Convert.ToInt32(frmInputTxt.Value);
-                        }
                     }
                     else if (nm == "editDatasRead")
                     {
-                        //copia
-                        var newDatasToRead = new Dictionary<string, List<DataAddressItem>>();
-                        foreach (var it in machine.DatasAddressToRead)
-                        {
-                            var list = new List<DataAddressItem>();
-                            foreach (var itl in it.Value)
-                            {
-                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())), itl.Scaling);
-                                list.Add(dr);
-                            }
-                            newDatasToRead.Add(it.Key, list);
-                        }
-                        frmTreview.Read = true;
-                        frmTreview.Machine = machine;
-                        frmTreview.datasAddress = newDatasToRead;
+                        var cloneDataRead = machine.DatasRead.Clone().ToList();
+                        frmTreview.DataRead = true;
+                        frmTreview.datas = cloneDataRead;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
-                        {
-                            machine.DatasAddressToRead = frmTreview.datasAddress;
-                        }
+                            machine.DatasRead = frmTreview.datas;
                     }
                     else if (nm == "editDatasWrite")
                     {
-                        //copia
-                        var newDatasToWrite = new Dictionary<string, List<DataAddressItem>>();
-                        foreach (var it in machine.DatasAddressToWrite)
-                        {
-                            var list = new List<DataAddressItem>();
-                            foreach (var itl in it.Value)
-                            {
-                                var dr = new DataAddressItem(itl.Address, itl.Description, (DataTypes)(Enum.Parse(typeof(DataTypes), itl.DataType.ToUpper())), itl.Scaling);
-                                list.Add(dr);
-                            }
-                            newDatasToWrite.Add(it.Key, list);
-                        }
-                        frmTreview.Read = false;
-                        frmTreview.Machine = machine;
-                        frmTreview.datasAddress = newDatasToWrite;
+                        var cloneDataWrite = machine.DatasWrite.Clone().ToList();
+                        frmTreview.DataRead = false;
+                        frmTreview.datas = cloneDataWrite;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
-                        {
-                            machine.DatasAddressToWrite = frmTreview.datasAddress;
-                        }
+                            machine.DatasWrite = frmTreview.datas;
                     }
                     else if (nm == "editMod")
                     {
-                        frmSelect.LblTxt = "Modalita Record:";
+                        frmSelect.LblTxt = "Log Modality:";
                         frmSelect.List = Modality;
                         frmSelect.Value = Modality[machine.ModalityLogCheck];
                         if (frmSelect.ShowDialog() == DialogResult.OK)
-                        {
                             machine.ModalityLogCheck = Modality.IndexOf(frmSelect.Value);
-                        }
                     }
                     else if (nm == "editXMod")
                     {
-                        frmInputTxt.LblTxt = "Ogni Volte:";
+                        frmInputTxt.LblTxt = "X Time Modality:";
                         frmInputTxt.Value = machine.ValueModalityLogCheck.ToString();
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
-                        {
                             machine.ValueModalityLogCheck = Convert.ToInt32(frmInputTxt.Value);
-                        }
                     }
                     //refresh
-                    listBox1_SelectedIndexChanged(listBox1.SelectedItem, new EventArgs());
+                    listBox2_SelectedIndexChanged(listBox2.SelectedItem, new EventArgs());
                 }
             }
             
@@ -472,58 +485,46 @@ namespace TTMMC_ConfigBuilder
             var nm = ((LinkLabel)sender).Name ?? "";
             if (!string.IsNullOrEmpty(nm))
             {
-                if (file_ is FileConfig && file_.DB is FileConfigDB)
+                var db = (file_ is FileConfig) ? file_.GetDB(listBox1.SelectedItem?.ToString()) : null;
+                if (db is FileConfigDB)
                 {
                     var frm = new inputTxt();
                     var frmS = new inputSelect();
                     if (nm == "editHost")
                     {
                         frm.LblTxt = "Host:";
-                        frm.Value = file_.DB.IP;
+                        frm.Value = db.IP;
                         if (frm.ShowDialog() == DialogResult.OK)
-                        {
-                            file_.DB.IP = frm.Value;
-                        }
+                            db.IP = frm.Value;
                     }
                     else if (nm == "editDb")
                     {
                         frm.LblTxt = "Database:";
-                        frm.Value = file_.DB.Database;
+                        frm.Value = db.Database;
                         if (frm.ShowDialog() == DialogResult.OK)
-                        {
-                            file_.DB.Database = frm.Value;
-                        }
+                            db.Database = frm.Value;
                     }
                     else if (nm == "editUsrn")
                     {
                         frm.LblTxt = "Username:";
-                        frm.Value = file_.DB.Username;
+                        frm.Value = db.Username;
                         if (frm.ShowDialog() == DialogResult.OK)
-                        {
-                            file_.DB.Username = frm.Value;
-                        }
+                            db.Username = frm.Value;
                     }
                     else if (nm == "editPass")
                     {
                         frm.LblTxt = "Password:";
-                        frm.Value = file_.DB.Password;
+                        frm.Value = db.Password;
                         if (frm.ShowDialog() == DialogResult.OK)
-                        {
-                            file_.DB.Password = frm.Value;
-                        }
+                            db.Password = frm.Value;
                     }
                     else if (nm == "editSecInfo")
                     {
-                        var l = new List<string>();
-                        l.Add("True");
-                        l.Add("False");
                         frmS.LblTxt = "Security Info:";
-                        frmS.List = l;
-                        frmS.Value = file_.DB.PersisteSecurityInfo.ToString();
+                        frmS.List = new List<string> { "True", "False" };
+                        frmS.Value = db.PersistSecurityInfo.ToString();
                         if (frmS.ShowDialog() == DialogResult.OK)
-                        {
-                            file_.DB.PersisteSecurityInfo = Boolean.Parse(frmS.Value);
-                        }
+                            db.PersistSecurityInfo = Boolean.Parse(frmS.Value);
                     }
                     //refresh
                     listBox1_SelectedIndexChanged(listBox1.SelectedItem, new EventArgs());
@@ -533,47 +534,46 @@ namespace TTMMC_ConfigBuilder
 
         private void saver_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            var db = new Dictionary<string, string>();
-            if (file_.DB is FileConfigDB)
+            var dbs = new Dictionary<string, string>();
+            foreach (var db in file_.DBs)
             {
-                var cns = "Data Source=" + file_.DB.IP + ";Initial Catalog=" + file_.DB.Database + ";Persist Security Info=" + file_.DB.PersisteSecurityInfo.ToString() + ";User ID=" + file_.DB.Username + ";Password=" + file_.DB.Password;
-                db.Add("DefaultConnection", cns);
+                var cns = "Data Source=" + db.Value.IP + ";Initial Catalog=" + db.Value.Database + ";Persist Security Info=" + db.Value.PersistSecurityInfo.ToString() + ";User ID=" + db.Value.Username + ";Password=" + db.Value.Password;
+                dbs.Add(db.Key, cns);
             }
-            var machines = new Dictionary<string, MachineJSON>();
+            var machines = new Dictionary<string, MachineJson>();
             var c = 0;
             foreach (var it in file_.Machines)
             {
-                var nm = new MachineJSON
+                var nm = new MachineJson
                 {
                     Id = it.Id,
                     Address = it.Address,
                     Description = it.Description,
                     ReferenceName = it.ReferenceName,
-                    Group = it.Group.Name,
+                    Group = it.Group,
                     Port = it.Port,
-                    Protocol = it.Protocol.Name,
+                    Protocol = it.Protocol,
                     Type = Enum.GetName(typeof(MachineType), it.Type),
                     Image = it.Image,
                     Icon = it.Icon,
                     RefreshRealTimeDatasRead = it.MinRefreshReadDatasTime,
                     ModalityLogCheck = it.ModalityLogCheck,
                     ValueModalityLogCheck = it.ValueModalityLogCheck,
-                    ReferenceKeyRead = it.ReferenceKeyRead,
-                    FinishKeyRead = it.FinishKeyRead,
-                    FinishKeyWrite = it.FinishKeyWrite,
-                    DatasAddressToRead = it.DatasAddressToRead.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s)),
-                    DatasAddressToWrite = it.DatasAddressToWrite.ToDictionary(k => k.Key, k => k.Value.Select((s, i) => new { s, i }).ToDictionary(x => x.i.ToString(), x => x.s))
+                    DatasRead = it.DatasRead,
+                    DatasWrite = it.DatasWrite
                 };
                 machines.Add(c.ToString(), nm);
                 c++;
             }
             var model = new ModelJson
             {
-                ConnectionStrings = db,
+                ConnectionStrings = dbs,
                 Machines = machines
             };
             var json = JsonConvert.SerializeObject(model, Formatting.Indented);
             var stw = new StreamWriter(export.FileName);
+            stw.Write("//#################################\r\n//##  TTMMC - ConfigurationFile  ##\r\n//##     ConfigBuider v. 2.0     ##\r\n//##      " + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "       ##\r\n//#################################");
+            stw.Write("\r\n\r\n\r\n");
             stw.Write(json);
             stw.Close();
         }
@@ -586,25 +586,9 @@ namespace TTMMC_ConfigBuilder
             MessageBox.Show("File Esportato correttamente!", "Fine", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void reloadListBox1()
-        {
-            var list = new List<string>();
-            if (file_ is FileConfig)
-            {
-                if (file_.DB is FileConfigDB)
-                {
-                    list.Add("Database");
-                }
-                list.AddRange(file_.Machines.Select(x => x.ReferenceName));
-            }
-            listBox1.ClearSelected();
-            listBox1.Items.Clear();
-            listBox1.Items.AddRange(list.ToArray());
-        }
-
         private void moveUp_Click(object sender, EventArgs e)
         {
-            string curItem = listBox1.SelectedItem?.ToString();
+            string curItem = listBox2.SelectedItem?.ToString();
             if (curItem != null)
             {
                 var res = file_.MoveUpMachine(curItem);
@@ -615,7 +599,7 @@ namespace TTMMC_ConfigBuilder
 
         private void moveDown_Click(object sender, EventArgs e)
         {
-            string curItem = listBox1.SelectedItem?.ToString();
+            string curItem = listBox2.SelectedItem?.ToString();
             if (curItem != null)
             {
                 var res = file_.MoveDownMachine(curItem);
@@ -626,26 +610,52 @@ namespace TTMMC_ConfigBuilder
 
         private void moveListBoxItem(int direction)
         {
-            if (listBox1.SelectedItem == null || listBox1.SelectedIndex < 0)
+            if (listBox2.SelectedItem == null || listBox2.SelectedIndex < 0)
                 return;
-            int newIndex = listBox1.SelectedIndex + direction;
-            if (newIndex < 0 || newIndex >= listBox1.Items.Count)
+            int newIndex = listBox2.SelectedIndex + direction;
+            if (newIndex < 0 || newIndex >= listBox2.Items.Count)
                 return;
-            object selected = listBox1.SelectedItem;
-            listBox1.Items.Remove(selected);
-            listBox1.Items.Insert(newIndex, selected);
-            listBox1.SetSelected(newIndex, true);
+            object selected = listBox2.SelectedItem;
+            listBox2.Items.Remove(selected);
+            listBox2.Items.Insert(newIndex, selected);
+            listBox2.SetSelected(newIndex, true);
         }
 
-        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+
+        private void reloadListBox1()
         {
-            // Draw the background of the ListBox control for each item.
-            e.DrawBackground();
-            // Define the default color of the brush as black.
-            Brush myBrush = Brushes.Black;
-            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, myBrush, new Rectangle(0, e.Bounds.Y + 3, e.Bounds.Width, e.Bounds.Height), StringFormat.GenericDefault);
-            // If the ListBox has focus, draw a focus rectangle around the selected item.
-            e.DrawFocusRectangle();
+            listBox1.ClearSelected();
+            listBox1.Items.Clear();
+            if (file_ == null)
+                return;
+            var list = new List<string>();
+            list.AddRange(file_.DBs.Keys);
+            listBox1.Items.AddRange(list.ToArray());
         }
+
+        private void reloadListBox2()
+        {
+            listBox2.ClearSelected();
+            listBox2.Items.Clear();
+            if (file_ == null)
+                return;
+            var list = new List<string>();
+            list.AddRange(file_.Machines.Select(m => m.ReferenceName));
+            listBox2.Items.AddRange(list.ToArray());
+        }
+
+        private void reloadLabel()
+        {
+            if (file_ == null)
+            {
+                tsslNElem.Text = tsslNProt.Text = tsslNGroup.Text = "0";
+                return;
+            }
+
+            tsslNElem.Text = (file_.Machines.Count + file_.DBs.Count).ToString();
+            tsslNProt.Text = file_.Protocols.Count.ToString();
+            tsslNGroup.Text = file_.Groups.Count.ToString();
+        }
+
     }
 }
