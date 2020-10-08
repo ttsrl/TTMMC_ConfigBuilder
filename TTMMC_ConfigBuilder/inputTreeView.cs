@@ -132,7 +132,8 @@ namespace TTMMC_ConfigBuilder
                     var exist = datas.ContainsDataGroup(elm.Parent.Parent.Text);
                     if (exist)
                     {
-                        var item = datas.GetDataGroup(elm.Parent.Parent.Text).Items[int.Parse(elm.Parent.Text)];
+                        var datag = datas.GetDataGroup(elm.Parent.Parent.Text);
+                        var item = datag.Items[int.Parse(elm.Parent.Text)];
                         var indx = elm.Parent.Nodes.IndexOf(elm);
                         if (indx == 0)
                         {
@@ -180,13 +181,19 @@ namespace TTMMC_ConfigBuilder
                         else if (indx == 4)
                         {
                             bool inv = !item.IsReferenceKey;
-                            item.IsReferenceKey = inv;
+                            if (!inv)
+                                item.IsReferenceKey = false;
+                            else
+                                datag.SetReferenceKey(item);
                             elm.Text = "IsReferenceKey: " + item.IsReferenceKey.ToString();
                         }
                         else if (indx == 5)
                         {
                             bool inv = !item.IsFinishKey;
-                            item.IsFinishKey = inv;
+                            if (!inv)
+                                item.IsFinishKey = false;
+                            else
+                                datag.SetFinishKey(item);
                             elm.Text = "IsKeyFinish: " + item.IsFinishKey.ToString();
                         }
                         else if (indx == 6)

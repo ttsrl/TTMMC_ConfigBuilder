@@ -82,6 +82,59 @@ namespace TTMMC_ConfigBuilder
         public string Name { get; set; }
         public List<DataItem> Items { get => items; set => items = value; }
 
+        public DataItem GetReferenceKey()
+        {
+            foreach (var di in items)
+            {
+                if (di.IsReferenceKey)
+                    return di;
+            }
+            return null;
+        }
+
+        public bool SetReferenceKey(DataItem item)
+        {
+            if (!items.Contains(item))
+                return false;
+            try
+            {
+                foreach (var di in items)
+                {
+                    di.IsReferenceKey = false;
+                }
+                item.IsReferenceKey = true;
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public DataItem GetFinishKey()
+        {
+            foreach (var di in items)
+            {
+                if (di.IsFinishKey)
+                    return di;
+            }
+            return null;
+        }
+
+        public bool SetFinishKey(DataItem item)
+        {
+            if (!items.Contains(item))
+                return false;
+            try
+            {
+                foreach (var di in items)
+                {
+                    di.IsFinishKey = false;
+                }
+                item.IsFinishKey = true;
+                return true;
+            }
+            catch { return false; }
+        }
+
+
         public object Clone()
         {
             var clone = (DataGroup)this.MemberwiseClone(); 
