@@ -6,27 +6,15 @@ using static TTMMC_ConfigBuilder.Form1;
 
 namespace TTMMC_ConfigBuilder
 {
-    public partial class NewMachine : Form
+    public partial class newMachine : Form
     {
-        private string _nmEditLbl;
-        private string _nmEditLbl1;
 
-        public string MachineName;
-        public string Description;
-        public MachineType Type;
-        public string Protocol;
-        public string Group;
-        public string Address;
-        public string Port;
-        public string Image;
-        public string Icon_;
-        public int MinRefTime;
-        public int ModalityLogCheck;
-        public int ValueModalityLogCheck;
-        public List<DataGroup> DatasRead;
-        public List<DataGroup> DatasWrite;
+        public Machine Machine;
 
-        public NewMachine()
+        private List<DataGroup> datas;
+        private RecordingDetails recordingDetails;
+
+        public newMachine()
         {
             InitializeComponent();
         }
@@ -41,37 +29,71 @@ namespace TTMMC_ConfigBuilder
                 }
 
                 comboBox2.Items.AddRange(file_.Protocols.ToArray());
+                comboBox3.Items.Add("--");
+                comboBox3.Items.AddRange(file_.Machines.Select(m => m.ReferenceName).ToArray());
+                comboBox3.SelectedItem = "--";
                 comboBox4.Items.AddRange(file_.Groups.ToArray());
                 lblId.Text = (file_.Machines.Count + 1).ToString();
 
-                DatasRead = new List<DataGroup>();
-                DatasWrite = new List<DataGroup>();
+                Machine = new Machine();
+                datas = new List<DataGroup>();
+                recordingDetails = new RecordingDetails();
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "" && textBox4.Text != "" && comboBox1.Text != "" && comboBox2.Text != "" && comboBox3.Text != "")
+            if (textBox1.Text == "" || textBox2.Text == "" || comboBox1.Text == "")
             {
-                MachineName = textBox1.Text;
-                Description = textBox2.Text;
-                Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString());
-                Protocol = file_.GetProtocol(comboBox2.SelectedItem.ToString());
-                Group = file_.GetGroup(comboBox4.SelectedItem.ToString());
-                Address = textBox3.Text;
-                Port = textBox4.Text;
-                Image = (textBox5.Text == "") ? null : textBox5.Text;
-                Icon_ = (textBox6.Text == "") ? null : textBox6.Text;
-                MinRefTime = Convert.ToInt32(numericUpDown2.Value);
-                ModalityLogCheck = comboBox3.SelectedIndex;
-                ValueModalityLogCheck = Convert.ToInt32(numericUpDown1.Value);
-                DialogResult = DialogResult.OK;
+                MessageBox.Show("Insert all data request", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (comboBox3.Text == "--" && (comboBox2.Text == "" || textBox3.Text == "" || textBox4.Text == ""))
+            {
+                MessageBox.Show("Insert all data request", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if(comboBox3.SelectedItem.ToString() != "--")
+            {
+                Machine = new Machine
+                {
+                    ReferenceName = textBox1.Text,
+                    Description = textBox2.Text,
+                    Type = comboBox1.SelectedItem.ToString(),
+                    Group = file_.GetGroup(comboBox4.SelectedItem.ToString()),
+                    Protocol = "",
+                    Address = "",
+                    Port = "",
+                    ShareEngine = file_.GetMachine(comboBox3.Text).Id,
+                    Image = (textBox5.Text == "") ? null : textBox5.Text,
+                    Icon = (textBox6.Text == "") ? null : textBox6.Text,
+                    RefreshRealTimeDatasRead = Convert.ToInt32(numericUpDown2.Value),
+                    Datas = datas,
+                    RecordingDetails = recordingDetails
+                };
             }
             else
             {
-                MessageBox.Show("Insert all data request", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Machine = new Machine
+                {
+                    ReferenceName = textBox1.Text,
+                    Description = textBox2.Text,
+                    Type = comboBox1.SelectedItem.ToString(),
+                    Group = file_.GetGroup(comboBox4.SelectedItem.ToString()),
+                    Protocol = file_.GetProtocol(comboBox2.SelectedItem.ToString()),
+                    Address = textBox3.Text,
+                    Port = textBox4.Text,
+                    ShareEngine = -1,
+                    Image = (textBox5.Text == "") ? null : textBox5.Text,
+                    Icon = (textBox6.Text == "") ? null : textBox6.Text,
+                    RefreshRealTimeDatasRead = Convert.ToInt32(numericUpDown2.Value),
+                    Datas = datas,
+                    RecordingDetails = recordingDetails
+                };
             }
-            
+            DialogResult = DialogResult.OK;
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -85,34 +107,51 @@ namespace TTMMC_ConfigBuilder
             if (!string.IsNullOrEmpty(nm))
             {
                 var frmTreview = new inputTreeView();
-                if (nm == "addDatasRead")
+                if (nm == "addDatas")
                 {
-                    var cloneDataRead = DatasRead.Clone().ToList();
-                    frmTreview.DataRead = true;
-                    frmTreview.datas = cloneDataRead;
+                    var cloneDataRead = datas.Clone().ToList();
+                    frmTreview.Datas = cloneDataRead;
                     if (frmTreview.ShowDialog() == DialogResult.OK)
-                        DatasRead = frmTreview.datas;
+                        datas = frmTreview.Datas;
                 }
-                else if (nm == "addDatasWrite")
+            }
+        }
+
+        private void addRecording_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var nm = ((LinkLabel)sender).Name ?? "";
+            if (!string.IsNullOrEmpty(nm))
+            {
+                var frmTreview = new inputTreeView();
+                if (nm == "addRecording")
                 {
-                    var cloneDataWrite = DatasWrite.Clone().ToList();
-                    frmTreview.DataRead = false;
-                    frmTreview.datas = cloneDataWrite;
-                    if (frmTreview.ShowDialog() == DialogResult.OK)
-                        DatasWrite = frmTreview.datas;
+                    var obj = (RecordingDetails)recordingDetails.Clone();
+                    var frmR = new inputRecording();
+                    frmR.Recording = obj;
+                    frmR.Datas = datas;
+                    if (frmR.ShowDialog() == DialogResult.OK)
+                        recordingDetails = frmR.Recording;
                 }
             }
         }
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var txt = comboBox3.SelectedItem.ToString();
-            if(txt == "KeyGreater0EveryXTimes" || txt == "KeyGreaterLastEveryXTimes")
-                numericUpDown1.Enabled = true;
+            var share = comboBox3.SelectedItem.ToString() != "--";
+            if (share)
+            {
+                comboBox2.SelectedItem = null;
+                comboBox2.Enabled = false;
+                textBox3.Text = "";
+                textBox3.Enabled = false;
+                textBox4.Text = "";
+                textBox4.Enabled = false;
+            }
             else
             {
-                numericUpDown1.Enabled = false;
-                numericUpDown1.Value = 1;
+                comboBox2.Enabled = true;
+                textBox3.Enabled = true;
+                textBox4.Enabled = true;
             }
         }
     }

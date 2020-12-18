@@ -27,9 +27,7 @@ namespace TTMMC_ConfigBuilder
                 this.DialogResult = DialogResult.OK;
             }
             else
-            {
                 MessageBox.Show("Insert all data request.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
         }
 
         private void button2_Click(object sender, EventArgs e)

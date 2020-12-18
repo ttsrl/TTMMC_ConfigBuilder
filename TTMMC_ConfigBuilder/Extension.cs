@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 
 namespace TTMMC_ConfigBuilder
 {
@@ -29,54 +28,6 @@ namespace TTMMC_ConfigBuilder
             return null;
         }
 
-        public static DataItem GetReferenceKey(this List<DataGroup> list)
-        {
-            foreach (var g in list)
-            {
-                foreach (var it in g.Items)
-                {
-                    if (it.IsReferenceKey)
-                        return it;
-                }
-            }
-            return null;
-        }
-
-        public static DataItem GetFinishKey(this List<DataGroup> list)
-        {
-            foreach (var g in list)
-            {
-                foreach (var it in g.Items)
-                {
-                    if (it.IsFinishKey)
-                        return it;
-                }
-            }
-            return null;
-        }
-
-        public static void ClearReferenceKey(this List<DataGroup> list)
-        {
-            foreach (var g in list)
-            {
-                foreach (var it in g.Items)
-                {
-                    it.IsReferenceKey = false;
-                }
-            }
-        }
-
-        public static void ClearFinishKey(this List<DataGroup> list)
-        {
-            foreach (var g in list)
-            {
-                foreach (var it in g.Items)
-                {
-                    it.IsFinishKey = false;
-                }
-            }
-        }
-
         public static bool RemoveDataGroup(this List<DataGroup> list, string name)
         {
             foreach (var g in list)
@@ -86,6 +37,7 @@ namespace TTMMC_ConfigBuilder
             }
             return false;
         }
+
 
         public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
         {

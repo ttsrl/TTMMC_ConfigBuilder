@@ -74,6 +74,24 @@
     <Compile Include="info.Designer.cs">
       <DependentUpon>info.cs</DependentUpon>
     </Compile>
+    <Compile Include="inputLogarithmConfront.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputLogarithmConfront.Designer.cs">
+      <DependentUpon>inputLogarithmConfront.cs</DependentUpon>
+    </Compile>
+    <Compile Include="inputLogarithmVar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputLogarithmVar.Designer.cs">
+      <DependentUpon>inputLogarithmVar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="inputGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputGroup.Designer.cs">
+      <DependentUpon>inputGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="inputList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,6 +104,12 @@
     </Compile>
     <Compile Include="inputDataItemFormat.Designer.cs">
       <DependentUpon>inputDataItemFormat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="inputRecording.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputRecording.Designer.cs">
+      <DependentUpon>inputRecording.cs</DependentUpon>
     </Compile>
     <Compile Include="inputTreeView.cs">
       <SubType>Form</SubType>
@@ -119,11 +143,11 @@
     <Compile Include="NewDB.Designer.cs">
       <DependentUpon>NewDB.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewMachine.cs">
+    <Compile Include="newMachine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewMachine.Designer.cs">
-      <DependentUpon>NewMachine.cs</DependentUpon>
+    <Compile Include="newMachine.Designer.cs">
+      <DependentUpon>newMachine.cs</DependentUpon>
     </Compile>
     <Compile Include="inputDataItem.cs">
       <SubType>Form</SubType>
@@ -136,11 +160,23 @@
     <EmbeddedResource Include="info.resx">
       <DependentUpon>info.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="inputLogarithmConfront.resx">
+      <DependentUpon>inputLogarithmConfront.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputLogarithmVar.resx">
+      <DependentUpon>inputLogarithmVar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputGroup.resx">
+      <DependentUpon>inputGroup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="inputList.resx">
       <DependentUpon>inputList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="inputDataItemFormat.resx">
       <DependentUpon>inputDataItemFormat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputRecording.resx">
+      <DependentUpon>inputRecording.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="inputTreeView.resx">
       <DependentUpon>inputTreeView.cs</DependentUpon>
@@ -157,8 +193,8 @@
     <EmbeddedResource Include="NewDB.resx">
       <DependentUpon>NewDB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewMachine.resx">
-      <DependentUpon>NewMachine.cs</DependentUpon>
+    <EmbeddedResource Include="newMachine.resx">
+      <DependentUpon>newMachine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="inputDataItem.resx">
       <DependentUpon>inputDataItem.cs</DependentUpon>

@@ -4,25 +4,21 @@ using System.Linq;
 
 namespace TTMMC_ConfigBuilder
 {
-    public enum MachineType
-    {
-        Machinary,
-        UtilityMachine
-    }
 
     public class FileConfig
     {
         private List<string> protocols = new List<string>();
         private List<string> groups = new List<string>();
-        private List<FileConfigMachine> machines = new List<FileConfigMachine>();
-        private Dictionary<string, FileConfigDB> dbs = new Dictionary<string, FileConfigDB>();
+        private List<Machine> machines = new List<Machine>();
+        private Dictionary<string, DB> dbs = new Dictionary<string, DB>();
         private string _name;
 
         public string Name { get => _name; set => _name = value.Replace(".json", ""); }
         public List<string> Protocols { get => protocols; }
         public List<string> Groups { get => groups; }
-        public List<FileConfigMachine> Machines { get => machines; }
-        public Dictionary<string, FileConfigDB> DBs { get => dbs; }
+        public List<Machine> Machines { get => machines; }
+        public Dictionary<string, DB> DBs { get => dbs; }
+
 
         public FileConfig(string name)
         {
@@ -45,7 +41,7 @@ namespace TTMMC_ConfigBuilder
         {
             if (string.IsNullOrEmpty(ip) || string.IsNullOrEmpty(database) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return;
-            var db_ = new FileConfigDB()
+            var db_ = new DB()
             {
                 IP = ip,
                 Database = database,
@@ -60,7 +56,7 @@ namespace TTMMC_ConfigBuilder
         {
             if (!string.IsNullOrEmpty(connectionString))
             {
-                var db_ = new FileConfigDB();
+                var db_ = new DB();
                 var split = connectionString.Split(new char[] { ';' });
                 foreach (var str in split)
                 {
@@ -89,47 +85,26 @@ namespace TTMMC_ConfigBuilder
             return dbs.Remove(name);
         }
 
-        public bool AddMachine(string type, string protocol, string group, string name, string descr, string address, string port, string image, string icon, List<DataGroup> datasRead, List<DataGroup> datasWrite, int modality, int valuex, int refreshReadTimer)
+        public bool AddMachine(Machine machine)
         {
-            if ( !string.IsNullOrEmpty(protocol) && !string.IsNullOrEmpty(port) && !string.IsNullOrEmpty(address) )
+            if (string.IsNullOrEmpty(machine.Group) || string.IsNullOrEmpty(machine.Type) || ( machine.ShareEngine == -1 && (string.IsNullOrEmpty(machine.Protocol) || string.IsNullOrEmpty(machine.Address) || string.IsNullOrEmpty(machine.Port))))
+                return false;
+            var gr = groups.Where(g => g == (machine.Group ?? "")).FirstOrDefault();
+            if (gr == null)
             {
-                var gr = groups.Where(g => g == (group ?? "")).FirstOrDefault();
-                if (gr == null)
-                {
-                    AddGroup(group);
-                    gr = GetGroup(group);
-                }
-                var pr = protocols.Where(p => p == protocol).FirstOrDefault();
-                if (pr == null)
-                {
-                    AddProtocol(protocol);
-                    pr = GetProtocol(protocol);
-                }
-                MachineType ty;
-                var try_ = Enum.TryParse(type, out ty);
-                if (gr != null && pr != null)
-                {
-                    var m = new FileConfigMachine
-                    {
-                        Id = machines.Count + 1,
-                        Type = (!try_) ? null : (MachineType?)ty,
-                        Protocol = pr,
-                        Address = address,
-                        Description = descr,
-                        Group = gr,
-                        Port = port,
-                        ReferenceName = name,
-                        Image = image,
-                        Icon = icon,
-                        MinRefreshReadDatasTime = refreshReadTimer,
-                        ModalityLogCheck = modality,
-                        ValueModalityLogCheck = valuex,
-                        DatasRead = datasRead ?? new List<DataGroup>(),
-                        DatasWrite = datasWrite ?? new List<DataGroup>()
-                    };
-                    machines.Add(m);
-                    return true;
-                }
+                AddGroup(machine.Group);
+                gr = GetGroup(machine.Group);
+            }
+            var pr = protocols.Where(p => p == machine.Protocol).FirstOrDefault();
+            if (pr == null)
+            {
+                AddProtocol(machine.Protocol);
+                pr = GetProtocol(machine.Protocol);
+            }
+            if (gr != null && pr != null)
+            {
+                machines.Add(machine);
+                return true;
             }
             return false;
         }
@@ -138,7 +113,7 @@ namespace TTMMC_ConfigBuilder
         {
             try
             {
-                FileConfigMachine ma = GetMachine(name);
+                Machine ma = GetMachine(name);
                 if (ma == null)
                     return false;
                 var indx = machines.IndexOf(ma);
@@ -157,7 +132,7 @@ namespace TTMMC_ConfigBuilder
         {
             try
             {
-                FileConfigMachine ma = GetMachine(name);
+                Machine ma = GetMachine(name);
                 if (ma == null)
                     return false;
                 var indx = machines.IndexOf(ma);
@@ -299,7 +274,7 @@ namespace TTMMC_ConfigBuilder
             return (index < groups.Count) ? groups[index] : null;
         }
 
-        public FileConfigMachine GetMachine(string name)
+        public Machine GetMachine(string name)
         {
             foreach (var m in machines)
             {
@@ -309,12 +284,12 @@ namespace TTMMC_ConfigBuilder
             return null;
         }
 
-        public FileConfigMachine GetMachine(int index)
+        public Machine GetMachine(int index)
         {
             return (index < machines.Count) ? machines[index] : null;
         }
 
-        public FileConfigDB GetDB(string name)
+        public DB GetDB(string name)
         {
             foreach (var m in dbs)
             {
@@ -324,41 +299,13 @@ namespace TTMMC_ConfigBuilder
             return null;
         }
 
-        public FileConfigDB GetDB(int index)
+        public DB GetDB(int index)
         {
             var k = dbs.Keys.ToList()[index];
             return (string.IsNullOrEmpty(k)) ? null : dbs[k];
         }
-    }
 
-    public class FileConfigDB
-    {
-        public string IP { get; set; }
-        public string Database { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool PersistSecurityInfo { get; set; }
-    }
 
-    public class FileConfigMachine
-    {
-        private int minRefreshTime = 500;
-
-        public int Id { get; set; }
-        public MachineType? Type { get; set; }
-        public string ReferenceName { get; set; }
-        public string Description { get; set; }
-        public string Protocol { get; set; }
-        public string Group { get; set; }
-        public string Address { get; set; }
-        public string Port { get; set; }
-        public string Image { get; set; }
-        public string Icon { get; set; }
-        public int MinRefreshReadDatasTime { get => minRefreshTime; set => minRefreshTime = value; }
-        public int ModalityLogCheck { get; set; }
-        public int ValueModalityLogCheck { get; set; }
-        public List<DataGroup> DatasRead { get; set; }
-        public List<DataGroup> DatasWrite { get; set; }
     }
 
 }

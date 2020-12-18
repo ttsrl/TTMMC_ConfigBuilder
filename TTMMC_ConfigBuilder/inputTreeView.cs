@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
@@ -10,8 +11,7 @@ namespace TTMMC_ConfigBuilder
     {
 
         private string _nmEditLbl;
-        public bool DataRead { get; set; }
-        public List<DataGroup> datas = new List<DataGroup>();
+        public List<DataGroup> Datas = new List<DataGroup>();
 
         public inputTreeView()
         {
@@ -21,8 +21,11 @@ namespace TTMMC_ConfigBuilder
         private void editTreeView_Load(object sender, EventArgs e)
         {
             treeView1.BeginUpdate();
-            var nodes = new List<TreeNode>();
-            foreach (var it in datas)
+            //load nodes
+            var nodesR = new List<TreeNode>();
+            var nodesW = new List<TreeNode>();
+            var nodesRW = new List<TreeNode>();
+            foreach (var it in Datas)
             {
                 var snodes = new List<TreeNode>();
                 var c = 0;
@@ -33,18 +36,28 @@ namespace TTMMC_ConfigBuilder
                     subnodes.Add(new TreeNode("Description: " + dataIt.Description));
                     subnodes.Add(new TreeNode("Format: " + dataIt.Format));
                     subnodes.Add(new TreeNode("Unit: " + dataIt.Unit));
-                    subnodes.Add(new TreeNode("IsReferenceKey: " + dataIt.IsReferenceKey.ToString()));
-                    subnodes.Add(new TreeNode("IsFinishKey: " + dataIt.IsFinishKey.ToString()));
-                    subnodes.Add(new TreeNode("Ignore: " + dataIt.Ignore.ToString()));
+                    subnodes.Add(new TreeNode("IgnoreRealtime: " + dataIt.IgnoreRealtime.ToString()));
+                    subnodes.Add(new TreeNode("IgnoreInLogs: " + dataIt.IgnoreInLogs.ToString()));
                     var node = new TreeNode(c.ToString(), subnodes.ToArray());
                     node.ForeColor = defineColor(dataIt);
                     snodes.Add(node);
                     c++;
                 }
                 var nodeg = new TreeNode(it.Name, snodes.ToArray());
-                nodes.Add(nodeg);
+                if (it.Mode == DataGroupMode.Read)
+                    nodesR.Add(nodeg);
+                else if (it.Mode == DataGroupMode.Write)
+                    nodesW.Add(nodeg);
+                else if (it.Mode == DataGroupMode.ReadAndWrite)
+                    nodesRW.Add(nodeg);
+                //nodeg.ForeColor = defineColor(it);
             }
-            treeView1.Nodes.AddRange(nodes.ToArray());
+            var nodeR = new TreeNode("READ", nodesR.ToArray());
+            var nodeW = new TreeNode("WRITE", nodesRW.ToArray());
+            var nodeRW = new TreeNode("READ/WRITE", nodesW.ToArray());
+            treeView1.Nodes.Add(nodeR);
+            treeView1.Nodes.Add(nodeW);
+            treeView1.Nodes.Add(nodeRW);
             foreach (TreeNode tn in treeView1.Nodes)
             {
                 if (tn.Level == 0)
@@ -60,11 +73,11 @@ namespace TTMMC_ConfigBuilder
             var elm = ((TreeView)sender).SelectedNode;
             if (elm is TreeNode)
             {
-                if (elm.Level == 1 || elm.Level == 2)
+                if (elm.Level == 2 || elm.Level == 3)
                 {
                     e.CancelEdit = true;
                 }
-                else if (elm.Level == 0)
+                else if (elm.Level == 1)
                 {
                     _nmEditLbl = elm.Text;
                 }
@@ -77,16 +90,16 @@ namespace TTMMC_ConfigBuilder
             var elm = e.Node;
             if (elm is TreeNode && !string.IsNullOrEmpty(e.Label))
             {
-                if (elm.Level == 0)
+                if (elm.Level == 1)
                 {
-                    var existOld = datas.ContainsDataGroup(_nmEditLbl);
+                    var existOld = Datas.ContainsDataGroup(_nmEditLbl);
                     if (existOld)
                     {
-                        var existk = datas.ContainsDataGroup(e.Label);
+                        var existk = Datas.ContainsDataGroup(e.Label);
                         var index = treeView1.Nodes.IndexOf(elm);
-                        if (!existk || datas.ElementAt(index).Name == e.Label)
+                        if (!existk || Datas.ElementAt(index).Name == e.Label)
                         {
-                            var it = existOld ? datas.GetDataGroup(_nmEditLbl) : null;
+                            var it = existOld ? Datas.GetDataGroup(_nmEditLbl) : null;
                             if(it != null)
                             {
                                 it.Name = e.Label;
@@ -107,16 +120,16 @@ namespace TTMMC_ConfigBuilder
             var elm = e.Node;
             if (elm is TreeNode)
             {
-                if (elm.Level == 0)
+                if (elm.Level == 1)
                 {
-                    var existOld = datas.ContainsDataGroup(elm.Text);
+                    var existOld = Datas.ContainsDataGroup(elm.Text);
                     if (existOld)
                     {
                         var frm = new inputTxt();
                         frm.Value = elm.Text;
                         if (frm.ShowDialog() == DialogResult.OK)
                         {
-                            var it = existOld ? datas.GetDataGroup(elm.Text) : null;
+                            var it = existOld ? Datas.GetDataGroup(elm.Text) : null;
                             if (it != null)
                             {
                                 it.Name = frm.Value;
@@ -127,12 +140,12 @@ namespace TTMMC_ConfigBuilder
                     else
                         MessageBox.Show("Impossibile trovare l' elemento selezionato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                else if (elm.Level == 2)
+                else if (elm.Level == 3)
                 {
-                    var exist = datas.ContainsDataGroup(elm.Parent.Parent.Text);
+                    var exist = Datas.ContainsDataGroup(elm.Parent.Parent.Text);
                     if (exist)
                     {
-                        var datag = datas.GetDataGroup(elm.Parent.Parent.Text);
+                        var datag = Datas.GetDataGroup(elm.Parent.Parent.Text);
                         var item = datag.Items[int.Parse(elm.Parent.Text)];
                         var indx = elm.Parent.Nodes.IndexOf(elm);
                         if (indx == 0)
@@ -180,29 +193,18 @@ namespace TTMMC_ConfigBuilder
                         }
                         else if (indx == 4)
                         {
-                            bool inv = !item.IsReferenceKey;
-                            if (!inv)
-                                item.IsReferenceKey = false;
-                            else
-                                datag.SetReferenceKey(item);
-                            elm.Text = "IsReferenceKey: " + item.IsReferenceKey.ToString();
+                            bool inv = !item.IgnoreRealtime;
+                            item.IgnoreRealtime = inv;
+                            elm.Text = "IgnoreRealtime: " + item.IgnoreRealtime.ToString();
                         }
                         else if (indx == 5)
                         {
-                            bool inv = !item.IsFinishKey;
-                            if (!inv)
-                                item.IsFinishKey = false;
-                            else
-                                datag.SetFinishKey(item);
-                            elm.Text = "IsKeyFinish: " + item.IsFinishKey.ToString();
+                            bool inv = !item.IgnoreInLogs;
+                            item.IgnoreInLogs = inv;
+                            elm.Text = "IgnoreInLogs: " + item.IgnoreInLogs.ToString();
                         }
-                        else if (indx == 6)
-                        {
-                            bool inv = !item.Ignore;
-                            item.Ignore = inv;
-                            elm.Text = "Ignore: " + item.Ignore.ToString();
-                        }
-                        elm.Parent.ForeColor = defineColor(item);
+                        elm.Parent.Parent.ForeColor = defineColor(item);
+                        //elm.Parent.Parent.Parent.ForeColor = defineColor(datag);
                     }
                     else
                         MessageBox.Show("Impossibile trovare l' elemento selezionato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -212,15 +214,17 @@ namespace TTMMC_ConfigBuilder
 
         private void addGroup_Click(object sender, EventArgs e)
         {
-            var frm = new inputTxt();
+            treeView1.SelectedNode = null;
+            var frm = new inputGroup();
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                var exist = datas.ContainsDataGroup(frm.Value);
+                var exist = Datas.ContainsDataGroup(frm.GroupName);
                 if (!exist)
                 {
-                    var node = treeView1.Nodes.Add(frm.Value);
+                    var nodeM = (frm.Mode == DataGroupMode.Read) ? treeView1.Nodes[0] : ((frm.Mode == DataGroupMode.Write) ? treeView1.Nodes[1] : treeView1.Nodes[2]);
+                    var node = nodeM.Nodes.Add(frm.GroupName);
                     treeView1.SelectedNode = node;
-                    datas.Add(new DataGroup { Name = frm.Value });
+                    Datas.Add(new DataGroup { Name = frm.GroupName, Mode = frm.Mode });
                     addData_Click(sender, new EventArgs());
                 }
                 else
@@ -233,12 +237,11 @@ namespace TTMMC_ConfigBuilder
             var node = treeView1.SelectedNode;
             if (node != null)
             {
-                if (node.Level == 0)
+                if (node.Level == 1)
                 {
+                    var group = Datas.GetDataGroup(node.Text);
                     var frm = new inputDataItem();
-                    frm.DataRead = this.DataRead;
-                    frm.ReferenceKeyAlreadyPresent = datas.GetReferenceKey() != null;
-                    frm.FinishKeyAlreadyPresent = datas.GetFinishKey() != null;
+                    frm.DataRead = group.Mode == DataGroupMode.Read || group.Mode == DataGroupMode.ReadAndWrite;
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
                         treeView1.BeginUpdate();
@@ -252,27 +255,17 @@ namespace TTMMC_ConfigBuilder
                         node.Nodes[index].Nodes[2].ToolTipText = frm.Format;
                         node.Nodes[index].Nodes.Add("Unit: " + frm.Unit);
                         node.Nodes[index].Nodes[3].ToolTipText = frm.Unit;
-                        node.Nodes[index].Nodes.Add("IsReferenceKey: " + frm.IsReferenceKey);
-                        node.Nodes[index].Nodes[4].ToolTipText = frm.IsReferenceKey.ToString();
-                        node.Nodes[index].Nodes.Add("IsFinishKey: " + frm.IsFinishKey);
-                        node.Nodes[index].Nodes[5].ToolTipText = frm.IsFinishKey.ToString();
-                        node.Nodes[index].Nodes.Add("Ignore: " + frm.Ignore);
-                        node.Nodes[index].Nodes[6].ToolTipText = frm.Ignore.ToString();
+                        node.Nodes[index].Nodes.Add("IgnoreRealtime: " + frm.IgnoreRealtime);
+                        node.Nodes[index].Nodes[4].ToolTipText = frm.IgnoreRealtime.ToString();
+                        node.Nodes[index].Nodes.Add("IgnoreInLogs: " + frm.IgnoreInLogs);
+                        node.Nodes[index].Nodes[5].ToolTipText = frm.IgnoreInLogs.ToString();
                         treeView1.EndUpdate();
-                        var itemList = datas.GetDataGroup(node.Text);
                         var di = new DataItem(frm.Address, frm.Format, frm.Description);
-                        di.Ignore = frm.Ignore;
-                        if (frm.IsReferenceKey)
-                        {
-                            datas.ClearReferenceKey();
-                            di.IsFinishKey = frm.IsReferenceKey;
-                        }
-                        if (frm.IsFinishKey)
-                        {
-                            datas.ClearFinishKey();
-                            di.IsFinishKey = frm.IsFinishKey;
-                        }
-                        itemList.Items.Add(di);
+                        di.IgnoreRealtime = frm.IgnoreRealtime;
+                        di.IgnoreInLogs = frm.IgnoreInLogs;
+                        group.Items.Add(di);
+                        node.Nodes[index].ForeColor = defineColor(di);
+                        //node.Nodes[index].Parent.ForeColor = defineColor(group);
                     }
                 }
             }
@@ -284,18 +277,18 @@ namespace TTMMC_ConfigBuilder
             if (node != null)
             {
                 var lvl = node.Level;
-                if (lvl == 2 | lvl == 1)
+                if (lvl == 3 || lvl == 2)
                 {
-                    var subitem = (lvl == 2) ? node.Parent : node;
+                    var subitem = (lvl == 3) ? node.Parent : node;
                     if (subitem.Parent.Nodes.Count == 1)
                     {
-                        datas.RemoveDataGroup(subitem.Parent.Text);
+                        Datas.RemoveDataGroup(subitem.Parent.Text);
                         treeView1.Nodes.Remove(subitem.Parent);
                     }
                     else
                     {
                         var subItPar = subitem.Parent;
-                        var it = datas.GetDataGroup(subItPar.Text);
+                        var it = Datas.GetDataGroup(subItPar.Text);
                         it.Items.RemoveAt(int.Parse(subitem.Text));
                         treeView1.Nodes.Remove(subitem);
                         //rename
@@ -305,9 +298,9 @@ namespace TTMMC_ConfigBuilder
                         }
                     }
                 }
-                else //lvl 0
+                else if (lvl == 1)
                 {
-                    var res = datas.RemoveDataGroup(node.Text);
+                    var res = Datas.RemoveDataGroup(node.Text);
                     if (res)
                         treeView1.Nodes.Remove(node);
                     else
@@ -335,14 +328,34 @@ namespace TTMMC_ConfigBuilder
 
         private Color defineColor(DataItem item)
         {
-            if (item.Ignore)
+            if (item.IgnoreInLogs)
                 return Color.Red;
-            if (item.IsReferenceKey)
-                return Color.Blue;
-            if (item.IsFinishKey)
-                return Color.Green;
+            if (item.IgnoreRealtime)
+                return Color.Orange;
             return Color.Black;
         }
 
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            var node = treeView1.SelectedNode;
+            if(node != null)
+            {
+                var lvl = node.Level;
+                if(lvl == 1)
+                    addData.Enabled = true;
+                else
+                    addData.Enabled = false;
+
+                if (lvl == 1 || lvl == 3)
+                    edit.Enabled = true;
+                else
+                    edit.Enabled = false;
+
+                if (lvl == 1 || lvl == 2 || lvl == 3)
+                    delete.Enabled = true;
+                else
+                    delete.Enabled = false;
+            }
+        }
     }
 }

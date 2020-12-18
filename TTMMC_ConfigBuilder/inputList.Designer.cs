@@ -39,9 +39,9 @@
             // btt_ok
             // 
             this.btt_ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btt_ok.Location = new System.Drawing.Point(251, 309);
+            this.btt_ok.Location = new System.Drawing.Point(251, 311);
             this.btt_ok.Name = "btt_ok";
-            this.btt_ok.Size = new System.Drawing.Size(75, 23);
+            this.btt_ok.Size = new System.Drawing.Size(75, 28);
             this.btt_ok.TabIndex = 8;
             this.btt_ok.Text = "OK";
             this.btt_ok.UseVisualStyleBackColor = true;
@@ -51,7 +51,7 @@
             // 
             this.btt_edit.Location = new System.Drawing.Point(236, 80);
             this.btt_edit.Name = "btt_edit";
-            this.btt_edit.Size = new System.Drawing.Size(90, 23);
+            this.btt_edit.Size = new System.Drawing.Size(90, 28);
             this.btt_edit.TabIndex = 11;
             this.btt_edit.Text = "Edit";
             this.btt_edit.UseVisualStyleBackColor = true;
@@ -61,7 +61,7 @@
             // 
             this.btt_delete.Location = new System.Drawing.Point(236, 126);
             this.btt_delete.Name = "btt_delete";
-            this.btt_delete.Size = new System.Drawing.Size(90, 23);
+            this.btt_delete.Size = new System.Drawing.Size(90, 28);
             this.btt_delete.TabIndex = 12;
             this.btt_delete.Text = "Delete";
             this.btt_delete.UseVisualStyleBackColor = true;
@@ -79,7 +79,7 @@
             // 
             this.btt_add.Location = new System.Drawing.Point(237, 35);
             this.btt_add.Name = "btt_add";
-            this.btt_add.Size = new System.Drawing.Size(90, 23);
+            this.btt_add.Size = new System.Drawing.Size(90, 28);
             this.btt_add.TabIndex = 14;
             this.btt_add.Text = "Add";
             this.btt_add.UseVisualStyleBackColor = true;
@@ -88,9 +88,9 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(12, 309);
+            this.button1.Location = new System.Drawing.Point(12, 311);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 28);
             this.button1.TabIndex = 15;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
@@ -101,7 +101,7 @@
             this.AcceptButton = this.btt_ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(339, 344);
+            this.ClientSize = new System.Drawing.Size(339, 351);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btt_add);
             this.Controls.Add(this.listBox1);

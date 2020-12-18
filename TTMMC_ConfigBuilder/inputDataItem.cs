@@ -5,17 +5,15 @@ namespace TTMMC_ConfigBuilder
 {
     public partial class inputDataItem : Form
     {
+
         public bool DataRead { get; set; }
-        public bool ReferenceKeyAlreadyPresent { get; set; }
-        public bool FinishKeyAlreadyPresent { get; set; }
 
         public string Description { get; set; }
         public string Address { get; set; }
         public string Format { get; set; }
         public string Unit { get; set; }
-        public bool IsReferenceKey { get; set; }
-        public bool IsFinishKey { get; set; }
-        public bool Ignore { get; set; }
+        public bool IgnoreRealtime { get; set; }
+        public bool IgnoreInLogs { get; set; }
 
         public inputDataItem()
         {
@@ -29,16 +27,15 @@ namespace TTMMC_ConfigBuilder
             textBox2.Text = Description;
             textBox3.Text = Format;
             textBox4.Text = Unit;
-            checkBox2.Checked = IsFinishKey;
             if (!DataRead)
             {
-                checkBox1.Checked = checkBox1.Enabled = false;
                 checkBox3.Checked = checkBox3.Enabled = false;
+                checkBox4.Checked = checkBox3.Enabled = false;
             }
             else
             {
-                checkBox1.Checked = IsReferenceKey;
-                checkBox3.Checked = Ignore;
+                checkBox3.Checked = IgnoreRealtime;
+                checkBox4.Checked = IgnoreInLogs;
             }
         }
 
@@ -50,9 +47,8 @@ namespace TTMMC_ConfigBuilder
                 Address = textBox2.Text;
                 Format = textBox3.Text;
                 Unit = textBox4.Text;
-                IsReferenceKey = checkBox1.Checked;
-                IsFinishKey = checkBox2.Checked;
-                Ignore = checkBox3.Checked;
+                IgnoreRealtime = checkBox3.Checked;
+                IgnoreInLogs = checkBox4.Checked;
                 this.DialogResult = DialogResult.OK;
             }
             else
@@ -72,22 +68,5 @@ namespace TTMMC_ConfigBuilder
                 textBox3.Text = frm.Format;
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ReferenceKeyAlreadyPresent && checkBox1.Checked)
-            {
-                if (MessageBox.Show("Reference key already present in other data item of the same type. Overwrite?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                    checkBox1.Checked = false;
-            }
-        }
-
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (FinishKeyAlreadyPresent && checkBox2.Checked)
-            {
-                if (MessageBox.Show("Finish key already present in other data item of the same type. Overwrite?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                    checkBox2.Checked = false;
-            }
-        }
     }
 }
