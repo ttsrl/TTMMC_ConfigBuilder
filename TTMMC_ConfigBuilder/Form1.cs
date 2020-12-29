@@ -273,12 +273,13 @@ namespace TTMMC_ConfigBuilder
                     lblId.Text = machine.Id.ToString();
                     lblNm.Text = machine.ReferenceName;
                     lblDesc.Text = machine.Description;
-                    lblType.Text = string.IsNullOrEmpty(machine.Type) ? "--" : machine.Type;
+                    lblType.Text = Enum.GetName(typeof(MachineType), machine.Type);
                     lblProtocol.Text = string.IsNullOrEmpty(machine.Protocol) ? "--" : machine.Protocol;
                     lblGroup.Text = string.IsNullOrEmpty(machine.Group) ? "--" : machine.Group;
                     lblShare.Text = machine.ShareEngine == -1 ? "--" : file_.GetMachine(machine.Id).ReferenceName;
                     lblAddress.Text = string.IsNullOrEmpty(machine.Address) ? "--" : machine.Address;
                     lblPort.Text = string.IsNullOrEmpty(machine.Port) ? "--" : machine.Port;
+                    lblRoot.Text = string.IsNullOrEmpty(machine.RootPath) ? "--" : machine.RootPath;
                     lblImg.Text = machine.Image;
                     lblIcon.Text = machine.Icon;
                     lblMinRef.Text = machine.RefreshRealTimeDatasRead.ToString();
@@ -396,9 +397,9 @@ namespace TTMMC_ConfigBuilder
                     {
                         frmSelect.LblTxt = "Type:";
                         frmSelect.List = Enum.GetNames(typeof(MachineType)).ToList();
-                        frmSelect.Value = machine.Type;
+                        frmSelect.Value = Enum.GetName(typeof(MachineType), machine.Type);
                         if (frmSelect.ShowDialog() == DialogResult.OK)
-                            machine.Type = frmSelect.Value;
+                            machine.Type = (MachineType)Enum.Parse(typeof(MachineType), frmSelect.Value);
                     }
                     else if (nm == "editGroup")
                     {
@@ -413,7 +414,7 @@ namespace TTMMC_ConfigBuilder
                         frmSelect.LblTxt = "ShareEngine:";
                         var l = new List<string>();
                         l.Add("--");
-                        l.AddRange(file_.Machines.Select(m => m.ReferenceName).ToList());
+                        l.AddRange(file_.Machines.Where(m => m.Type == machine.Type).Select(m => m.ReferenceName).ToList());
                         l.Remove(machine.ReferenceName);
                         frmSelect.List = l;
                         frmSelect.Value = (machine.ShareEngine == -1) ? "--" : file_.GetMachine(machine.ShareEngine).ReferenceName;
@@ -423,6 +424,7 @@ namespace TTMMC_ConfigBuilder
                             machine.Protocol = "";
                             machine.Address = "";
                             machine.Port = "";
+                            machine.RootPath = "";
                         }
                     }
                     else if (nm == "editProtocol")
@@ -446,6 +448,13 @@ namespace TTMMC_ConfigBuilder
                         frmInputTxt.Value = machine.Port;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
                             machine.Port = frmInputTxt.Value;
+                    }
+                    else if (nm == "editRoot")
+                    {
+                        frmInputTxt.LblTxt = "RootPath:";
+                        frmInputTxt.Value = machine.RootPath;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                            machine.RootPath = frmInputTxt.Value;
                     }
                     else if (nm == "editImg")
                     {

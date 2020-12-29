@@ -87,7 +87,7 @@ namespace TTMMC_ConfigBuilder
 
         public bool AddMachine(Machine machine)
         {
-            if (string.IsNullOrEmpty(machine.Group) || string.IsNullOrEmpty(machine.Type) || ( machine.ShareEngine == -1 && (string.IsNullOrEmpty(machine.Protocol) || string.IsNullOrEmpty(machine.Address) || string.IsNullOrEmpty(machine.Port))))
+            if (string.IsNullOrEmpty(machine.Group) || ( machine.ShareEngine == -1 && (string.IsNullOrEmpty(machine.Protocol) || string.IsNullOrEmpty(machine.Address) || string.IsNullOrEmpty(machine.Port))))
                 return false;
             var gr = groups.Where(g => g == (machine.Group ?? "")).FirstOrDefault();
             if (gr == null)

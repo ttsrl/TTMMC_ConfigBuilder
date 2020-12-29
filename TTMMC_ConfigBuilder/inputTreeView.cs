@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
@@ -193,18 +192,29 @@ namespace TTMMC_ConfigBuilder
                         }
                         else if (indx == 4)
                         {
+                            var frm = new inputSelect();
+                            frm.List = Enum.GetNames(typeof(DataType)).ToList();
+                            frm.LblTxt = "Type:";
+                            frm.Value = Enum.GetName(typeof(DataType), item.Type);
+                            if (frm.ShowDialog() == DialogResult.OK)
+                            {
+                                item.Type = (DataType)Enum.Parse(typeof(DataType), frm.Value);
+                                elm.Text = "Type: " + item.Unit;
+                            }
+                        }
+                        else if (indx == 5)
+                        {
                             bool inv = !item.IgnoreRealtime;
                             item.IgnoreRealtime = inv;
                             elm.Text = "IgnoreRealtime: " + item.IgnoreRealtime.ToString();
                         }
-                        else if (indx == 5)
+                        else if (indx == 6)
                         {
                             bool inv = !item.IgnoreInLogs;
                             item.IgnoreInLogs = inv;
                             elm.Text = "IgnoreInLogs: " + item.IgnoreInLogs.ToString();
                         }
                         elm.Parent.Parent.ForeColor = defineColor(item);
-                        //elm.Parent.Parent.Parent.ForeColor = defineColor(datag);
                     }
                     else
                         MessageBox.Show("Impossibile trovare l' elemento selezionato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -255,12 +265,15 @@ namespace TTMMC_ConfigBuilder
                         node.Nodes[index].Nodes[2].ToolTipText = frm.Format;
                         node.Nodes[index].Nodes.Add("Unit: " + frm.Unit);
                         node.Nodes[index].Nodes[3].ToolTipText = frm.Unit;
+                        node.Nodes[index].Nodes.Add("Type: " + frm.Type);
+                        node.Nodes[index].Nodes[4].ToolTipText = frm.Type;
                         node.Nodes[index].Nodes.Add("IgnoreRealtime: " + frm.IgnoreRealtime);
-                        node.Nodes[index].Nodes[4].ToolTipText = frm.IgnoreRealtime.ToString();
+                        node.Nodes[index].Nodes[5].ToolTipText = frm.IgnoreRealtime.ToString();
                         node.Nodes[index].Nodes.Add("IgnoreInLogs: " + frm.IgnoreInLogs);
-                        node.Nodes[index].Nodes[5].ToolTipText = frm.IgnoreInLogs.ToString();
+                        node.Nodes[index].Nodes[6].ToolTipText = frm.IgnoreInLogs.ToString();
                         treeView1.EndUpdate();
                         var di = new DataItem(frm.Address, frm.Format, frm.Description);
+                        di.Type = (DataType)Enum.Parse(typeof(DataType), frm.Type);
                         di.IgnoreRealtime = frm.IgnoreRealtime;
                         di.IgnoreInLogs = frm.IgnoreInLogs;
                         group.Items.Add(di);

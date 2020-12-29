@@ -29,9 +29,6 @@ namespace TTMMC_ConfigBuilder
                 }
 
                 comboBox2.Items.AddRange(file_.Protocols.ToArray());
-                comboBox3.Items.Add("--");
-                comboBox3.Items.AddRange(file_.Machines.Select(m => m.ReferenceName).ToArray());
-                comboBox3.SelectedItem = "--";
                 comboBox4.Items.AddRange(file_.Groups.ToArray());
                 lblId.Text = (file_.Machines.Count + 1).ToString();
 
@@ -60,11 +57,12 @@ namespace TTMMC_ConfigBuilder
                 {
                     ReferenceName = textBox1.Text,
                     Description = textBox2.Text,
-                    Type = comboBox1.SelectedItem.ToString(),
+                    Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString()),
                     Group = file_.GetGroup(comboBox4.SelectedItem.ToString()),
                     Protocol = "",
                     Address = "",
                     Port = "",
+                    RootPath = "",
                     ShareEngine = file_.GetMachine(comboBox3.Text).Id,
                     Image = (textBox5.Text == "") ? null : textBox5.Text,
                     Icon = (textBox6.Text == "") ? null : textBox6.Text,
@@ -79,11 +77,12 @@ namespace TTMMC_ConfigBuilder
                 {
                     ReferenceName = textBox1.Text,
                     Description = textBox2.Text,
-                    Type = comboBox1.SelectedItem.ToString(),
+                    Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString()),
                     Group = file_.GetGroup(comboBox4.SelectedItem.ToString()),
                     Protocol = file_.GetProtocol(comboBox2.SelectedItem.ToString()),
                     Address = textBox3.Text,
                     Port = textBox4.Text,
+                    RootPath = textBox7.Text,
                     ShareEngine = -1,
                     Image = (textBox5.Text == "") ? null : textBox5.Text,
                     Icon = (textBox6.Text == "") ? null : textBox6.Text,
@@ -153,6 +152,17 @@ namespace TTMMC_ConfigBuilder
                 textBox3.Enabled = true;
                 textBox4.Enabled = true;
             }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex < 0)
+                return;
+            var ty = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString());
+            comboBox3.Items.Clear();
+            comboBox3.Items.Add("--");
+            comboBox3.Items.AddRange(file_.Machines.Where(m => m.Type == ty).Select(m => m.ReferenceName).ToArray());
+            comboBox3.SelectedItem = "--";
         }
     }
 }

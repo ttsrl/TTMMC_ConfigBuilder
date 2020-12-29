@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
@@ -14,6 +15,7 @@ namespace TTMMC_ConfigBuilder
         public string Unit { get; set; }
         public bool IgnoreRealtime { get; set; }
         public bool IgnoreInLogs { get; set; }
+        public string Type { get; set; }
 
         public inputDataItem()
         {
@@ -27,6 +29,8 @@ namespace TTMMC_ConfigBuilder
             textBox2.Text = Description;
             textBox3.Text = Format;
             textBox4.Text = Unit;
+            comboBox1.SelectedIndex = 0;
+            comboBox1.Items.AddRange(Enum.GetNames(typeof(DataType)));
             if (!DataRead)
             {
                 checkBox3.Checked = checkBox3.Enabled = false;
@@ -49,6 +53,7 @@ namespace TTMMC_ConfigBuilder
                 Unit = textBox4.Text;
                 IgnoreRealtime = checkBox3.Checked;
                 IgnoreInLogs = checkBox4.Checked;
+                Type = comboBox1.Text;
                 this.DialogResult = DialogResult.OK;
             }
             else

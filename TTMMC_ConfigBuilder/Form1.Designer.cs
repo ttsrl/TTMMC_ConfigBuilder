@@ -82,6 +82,9 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.machineDetails = new System.Windows.Forms.GroupBox();
+            this.editRoot = new System.Windows.Forms.LinkLabel();
+            this.lblRoot = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
             this.editShare = new System.Windows.Forms.LinkLabel();
             this.lblShare = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -593,6 +596,9 @@
             // 
             // machineDetails
             // 
+            this.machineDetails.Controls.Add(this.editRoot);
+            this.machineDetails.Controls.Add(this.lblRoot);
+            this.machineDetails.Controls.Add(this.label23);
             this.machineDetails.Controls.Add(this.editShare);
             this.machineDetails.Controls.Add(this.lblShare);
             this.machineDetails.Controls.Add(this.label19);
@@ -642,6 +648,38 @@
             this.machineDetails.Text = "  Machine Details  ";
             this.machineDetails.Visible = false;
             // 
+            // editRoot
+            // 
+            this.editRoot.AutoSize = true;
+            this.editRoot.Location = new System.Drawing.Point(360, 247);
+            this.editRoot.Name = "editRoot";
+            this.editRoot.Size = new System.Drawing.Size(25, 13);
+            this.editRoot.TabIndex = 50;
+            this.editRoot.TabStop = true;
+            this.editRoot.Text = "Edit";
+            this.editRoot.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editRoot.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            // 
+            // lblRoot
+            // 
+            this.lblRoot.Location = new System.Drawing.Point(169, 247);
+            this.lblRoot.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblRoot.Name = "lblRoot";
+            this.lblRoot.Size = new System.Drawing.Size(180, 13);
+            this.lblRoot.TabIndex = 49;
+            this.lblRoot.Text = "Nome:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Location = new System.Drawing.Point(27, 247);
+            this.label23.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(64, 13);
+            this.label23.TabIndex = 48;
+            this.label23.Text = "RootPath:";
+            // 
             // editShare
             // 
             this.editShare.AutoSize = true;
@@ -677,7 +715,7 @@
             // editMinRef
             // 
             this.editMinRef.AutoSize = true;
-            this.editMinRef.Location = new System.Drawing.Point(360, 294);
+            this.editMinRef.Location = new System.Drawing.Point(360, 321);
             this.editMinRef.Name = "editMinRef";
             this.editMinRef.Size = new System.Drawing.Size(25, 13);
             this.editMinRef.TabIndex = 44;
@@ -688,7 +726,7 @@
             // 
             // lblMinRef
             // 
-            this.lblMinRef.Location = new System.Drawing.Point(169, 294);
+            this.lblMinRef.Location = new System.Drawing.Point(169, 321);
             this.lblMinRef.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMinRef.Name = "lblMinRef";
             this.lblMinRef.Size = new System.Drawing.Size(180, 13);
@@ -699,7 +737,7 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(27, 294);
+            this.label22.Location = new System.Drawing.Point(27, 321);
             this.label22.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(108, 13);
@@ -709,7 +747,7 @@
             // editIcon
             // 
             this.editIcon.AutoSize = true;
-            this.editIcon.Location = new System.Drawing.Point(360, 270);
+            this.editIcon.Location = new System.Drawing.Point(360, 297);
             this.editIcon.Name = "editIcon";
             this.editIcon.Size = new System.Drawing.Size(25, 13);
             this.editIcon.TabIndex = 41;
@@ -720,7 +758,7 @@
             // 
             // lblIcon
             // 
-            this.lblIcon.Location = new System.Drawing.Point(169, 270);
+            this.lblIcon.Location = new System.Drawing.Point(169, 297);
             this.lblIcon.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblIcon.Name = "lblIcon";
             this.lblIcon.Size = new System.Drawing.Size(180, 13);
@@ -731,7 +769,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(27, 270);
+            this.label21.Location = new System.Drawing.Point(27, 297);
             this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(36, 13);
@@ -773,7 +811,7 @@
             // editRecording
             // 
             this.editRecording.AutoSize = true;
-            this.editRecording.Location = new System.Drawing.Point(360, 318);
+            this.editRecording.Location = new System.Drawing.Point(360, 345);
             this.editRecording.Name = "editRecording";
             this.editRecording.Size = new System.Drawing.Size(25, 13);
             this.editRecording.TabIndex = 32;
@@ -784,7 +822,7 @@
             // 
             // lblRecording
             // 
-            this.lblRecording.Location = new System.Drawing.Point(169, 318);
+            this.lblRecording.Location = new System.Drawing.Point(169, 345);
             this.lblRecording.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblRecording.Name = "lblRecording";
             this.lblRecording.Size = new System.Drawing.Size(180, 13);
@@ -795,7 +833,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(27, 318);
+            this.label18.Location = new System.Drawing.Point(27, 345);
             this.label18.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(108, 13);
@@ -805,7 +843,7 @@
             // editDatas
             // 
             this.editDatas.AutoSize = true;
-            this.editDatas.Location = new System.Drawing.Point(360, 342);
+            this.editDatas.Location = new System.Drawing.Point(360, 369);
             this.editDatas.Name = "editDatas";
             this.editDatas.Size = new System.Drawing.Size(25, 13);
             this.editDatas.TabIndex = 26;
@@ -816,7 +854,7 @@
             // 
             // lblCountDatas
             // 
-            this.lblCountDatas.Location = new System.Drawing.Point(169, 342);
+            this.lblCountDatas.Location = new System.Drawing.Point(169, 369);
             this.lblCountDatas.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCountDatas.Name = "lblCountDatas";
             this.lblCountDatas.Size = new System.Drawing.Size(180, 13);
@@ -827,7 +865,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(27, 342);
+            this.label16.Location = new System.Drawing.Point(27, 369);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(44, 13);
@@ -837,7 +875,7 @@
             // editImg
             // 
             this.editImg.AutoSize = true;
-            this.editImg.Location = new System.Drawing.Point(360, 246);
+            this.editImg.Location = new System.Drawing.Point(360, 273);
             this.editImg.Name = "editImg";
             this.editImg.Size = new System.Drawing.Size(25, 13);
             this.editImg.TabIndex = 23;
@@ -920,7 +958,7 @@
             // 
             // lblImg
             // 
-            this.lblImg.Location = new System.Drawing.Point(169, 246);
+            this.lblImg.Location = new System.Drawing.Point(169, 273);
             this.lblImg.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblImg.Name = "lblImg";
             this.lblImg.Size = new System.Drawing.Size(180, 13);
@@ -931,7 +969,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(27, 246);
+            this.label15.Location = new System.Drawing.Point(27, 273);
             this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(45, 13);
@@ -1279,6 +1317,9 @@
         private System.Windows.Forms.LinkLabel editShare;
         private System.Windows.Forms.Label lblShare;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.LinkLabel editRoot;
+        private System.Windows.Forms.Label lblRoot;
+        private System.Windows.Forms.Label label23;
     }
 }
 

@@ -31,9 +31,21 @@ namespace TTMMC_ConfigBuilder
 
     public enum DataGroupMode
     {
-        Read,
-        Write,
-        ReadAndWrite
+        Read = 1,
+        Write = 2,
+        ReadAndWrite = 4
+    }
+
+    public enum DataType
+    {
+        AUTO,
+        INT,
+        UINT,
+        DINT,
+        UDINT,
+        REAL,
+        LREAL,
+        STRING
     }
 
     public class ModelJson
@@ -50,7 +62,7 @@ namespace TTMMC_ConfigBuilder
         private RecordingDetails recDetails = new RecordingDetails();
 
         public int Id { get; set; }
-        public string Type { get; set; }
+        public MachineType Type { get; set; }
         public string ReferenceName { get; set; }
         public string Description { get; set; }
         public string Group { get; set; }
@@ -58,6 +70,7 @@ namespace TTMMC_ConfigBuilder
         public string Protocol { get; set; }
         public string Address { get; set; }
         public string Port { get; set; }
+        public string RootPath { get; set; }
         public string Image { get; set; }
         public string Icon { get; set; }
         public int RefreshRealTimeDatasRead { get => refTime; set { refTime = (value < 25) ? 25 : value; } }
@@ -189,11 +202,13 @@ namespace TTMMC_ConfigBuilder
         bool ignoreR = false;
         bool ignoreL = false;
         List<bool> attribs = new List<bool>();
+        DataType type = DataType.AUTO;
 
         public string Description { get => description; set => description = value; }
         public string Address { get => address; set { if (!string.IsNullOrEmpty(value)) address = value; } }
         public string Format { get => format; set { if (!string.IsNullOrEmpty(value)) format = value; } }
         public string Unit { get => unit; set => unit = value; }
+        public DataType Type { get => type; set => type = value; }
 
         [JsonIgnore]
         public bool IgnoreRealtime { get => ignoreR; set { ignoreR = value; attribs[0] = value; } }
