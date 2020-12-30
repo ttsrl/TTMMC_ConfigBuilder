@@ -55,6 +55,7 @@ namespace TTMMC_ConfigBuilder
             {
                 Machine = new Machine
                 {
+                    Id = file_.Machines.Count + 1,
                     ReferenceName = textBox1.Text,
                     Description = textBox2.Text,
                     Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString()),
@@ -75,6 +76,7 @@ namespace TTMMC_ConfigBuilder
             {
                 Machine = new Machine
                 {
+                    Id = file_.Machines.Count + 1,
                     ReferenceName = textBox1.Text,
                     Description = textBox2.Text,
                     Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString()),
