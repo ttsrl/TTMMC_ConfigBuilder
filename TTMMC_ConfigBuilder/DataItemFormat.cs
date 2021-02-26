@@ -4,7 +4,7 @@ using System.Configuration;
 
 namespace TTMMC_ConfigBuilder
 {
-    public class DataItemFormat
+    public struct DataItemFormat
     {
 
         public enum Divisors
@@ -17,28 +17,156 @@ namespace TTMMC_ConfigBuilder
             Point
         }
 
-        private char fillZeroChar = '#';
-        private static string emptyFormat = "-";
-
         private Divisors thousandsD;
         private Divisors decimalsD;
-        private int digits = 1;
-        private int decimals = 0;
-        private bool fillZero = false;
-        private bool empty = false;
+        private int digits;
+        private int decimals;
+        private bool fillZero;
+        private bool empty;
 
         public Divisors ThousandsDivisor { get => thousandsD; set => thousandsAssign(value); }
-        public Divisors  DecimalsDivisor { get => decimalsD; set => decimalsAssign(value); }
-        public int Digits { get => digits; set { digits = (value <= 0) ? digits : value; } }
-        public int Decimals { get => decimals; set { decimals = (value < 0 || value >= digits || decimalsD == Divisors.Null) ? 0 : value; } }
+        public Divisors DecimalsDivisor { get => decimalsD; set => decimalsAssign(value); }
+        public int Digits { get => digits; }
+        public int Decimals { get => decimals; }
         public bool FillZero { get => fillZero; set => fillZero = value; }
-        public bool IsEmpty { get => empty; set => empty = value; }
+        public bool IsEmpty { get => empty; set { setEmpty(value); empty = value; } }
+
+        public DataItemFormat(int digits, int decimals)
+        {
+            fillZero = false;
+            empty = false;
+
+            if (digits <= 0)
+                this.digits = 1;
+            else
+                this.digits = digits;
+            if (decimals < 0 || decimals >= digits)
+                this.decimals = 0;
+            else
+                this.decimals = decimals;
+            decimalsD = Divisors.Point;
+            thousandsD = Divisors.Null;
+        }
 
         public static DataItemFormat Empty { get; } = new DataItemFormat() { IsEmpty = true };
 
+        public string GetFormat()
+        {
+            if (empty)
+                return "-";
+            var str = thousandsD.GetDescription() + new String('0', digits - decimals);
+            if (decimals > 0)
+                str += decimalsD.GetDescription() + new String('0', decimals);
+            if (fillZero)
+                str = '#'.ToString() + str;
+            return str;
+        }
+
+        public override string ToString()
+        {
+            return GetFormat();
+        }
+
+        public static DataItemFormat Parse(string format)
+        {
+            try
+            {
+                if (format == "-")
+                    return new DataItemFormat() { IsEmpty = true };
+                var fillZ = format.Substring(0, 1) == "#";
+                var thD = parseThousandsD(format);
+                var digits = countDigits(format);
+                var decD = parseDecimalsD(format);
+                var decimals = countDecimals(format);
+                return new DataItemFormat(digits, decimals) { FillZero = fillZ, ThousandsDivisor = thD, DecimalsDivisor = decD, IsEmpty = false };
+            }
+            catch { throw new Exception("parsing error"); };
+        }
+
+        public static string SetToData(string format, object data)
+        {
+            try
+            {
+                var di = Parse(format);
+                return di.SetToData(data);
+            }
+            catch { return null; }
+        }
+
+        public string SetToData(object data)
+        {
+            if (empty)
+                return data.ToString();
+            var dt = data.GetType();
+            if (dt == typeof(ushort) || dt == typeof(short) || dt == typeof(uint) || dt == typeof(int) || dt == typeof(ulong) || dt == typeof(long))
+                return setToDataInt(data);
+            else if (dt == typeof(float) || dt == typeof(double) || dt == typeof(decimal))
+                return setToDataDouble(data);
+            else
+                return data.ToString();
+        }
+
+
+        private string setToDataInt(object data)
+        {
+            try
+            {
+                int thousands = digits - decimals;
+                double val = 0.0;
+                bool tryd = double.TryParse(data.ToString(), out val);
+                if (tryd)
+                {
+                    var valDec = (decimals > 0) ? val / getDivisor(decimals) : val;
+                    string strFormat = (fillZero) ? new String('0', thousands) : "0";
+                    strFormat += (decimals > 0) ? decimalsD.GetDescription() + new string('0', decimals) : "";
+                    string maxFormat = new string('9', thousands);
+                    maxFormat += (decimals > 0) ? "," + new string('9', decimals) : "";
+                    var maxD = double.Parse(maxFormat);
+                    if (valDec > maxD)
+                        return strFormat.Replace('0', '#');
+                    var fin = valDec.ToString(strFormat);
+                    fin = fin.Replace(",", decimalsD.GetDescription());
+                    if (thousandsD != Divisors.Null)
+                        fin = getThousands(fin);
+                    return fin;
+                }
+                else
+                    return null;
+            }
+            catch { return null; }
+        }
+
+        private string setToDataDouble(object data)
+        {
+            try
+            {
+                int thousands = digits - decimals;
+                double val = 0.0;
+                bool tryd = double.TryParse(data.ToString(), out val);
+                if (tryd)
+                {
+                    string strFormat = (fillZero) ? new String('0', thousands) : "0";
+                    strFormat += (decimals > 0) ? decimalsD.GetDescription() + new string('0', decimals) : "";
+                    string maxFormat = new string('9', thousands);
+                    maxFormat += (decimals > 0) ? "," + new string('9', decimals) : "";
+                    var maxD = double.Parse(maxFormat);
+                    if (val > maxD)
+                        return strFormat.Replace('0', '#');
+                    var fin = val.ToString(strFormat);
+                    fin = fin.Replace(",", decimalsD.GetDescription());
+                    if (thousandsD != Divisors.Null)
+                        fin = getThousands(fin);
+                    return fin;
+                }
+                else
+                    return null;
+            }
+            catch { return null; }
+        }
+
         private void thousandsAssign(Divisors divisor)
         {
-            if(divisor == Divisors.Null)
+            if (divisor == Divisors.Null)
             {
                 thousandsD = divisor;
                 return;
@@ -70,37 +198,28 @@ namespace TTMMC_ConfigBuilder
             decimalsD = divisor;
         }
 
-        public string GetFormat()
+        private int getDivisor(int decimals)
         {
-            if (empty)
-                return emptyFormat;
-            var str = thousandsD.GetDescription() + new String('0', digits - decimals);
-            if (decimals > 0)
-                str += decimalsD.GetDescription() + new String('0', decimals);
-            if (fillZero)
-                str = fillZeroChar.ToString() + str;
-            return str;
+            return Convert.ToInt32(Math.Pow(10, decimals));
         }
 
-        public override string ToString()
+        private string getThousands(string number)
         {
-            return GetFormat();
-        }
-
-        public static DataItemFormat Parse(string format)
-        {
-            try
+            string out_ = "";
+            var start = (decimalsD.GetDescription() != "" && number.Contains(decimalsD.GetDescription())) ? number.IndexOf(decimalsD.GetDescription()) - 1 : number.Length - 1;
+            int count = 0;
+            for (var x = start; x >= 0; x--)
             {
-                if (format == emptyFormat)
-                    return new DataItemFormat() { IsEmpty = true };
-                var fillZ = format.Substring(0, 1) == "#";
-                var thD = parseThousandsD(format);
-                var digits = countDigits(format);
-                var decD = parseDecimalsD(format);
-                var decimals = countDecimals(format);
-                return new DataItemFormat() { FillZero = fillZ, ThousandsDivisor = thD, Digits = digits, DecimalsDivisor = decD, Decimals = decimals, IsEmpty = false };
+                if (count == 3)
+                {
+                    out_ = number[x] + "," + out_;
+                    count = 0;
+                }
+                else
+                    out_ = number[x] + out_;
+                count++;
             }
-            catch { throw new Exception("parsing error"); };
+            return out_ + number.Substring(start + 1);
         }
 
         private static Divisors parseThousandsD(string format)
@@ -144,12 +263,12 @@ namespace TTMMC_ConfigBuilder
         private static int countDigits(string format)
         {
             int res = 0;
-            foreach(var c in format)
+            foreach (var c in format)
             {
                 if (c == '0')
                     res += 1;
             }
-            if(res == 0)
+            if (res == 0)
                 throw new Exception("count digits error");
             return res;
         }
@@ -176,5 +295,17 @@ namespace TTMMC_ConfigBuilder
             catch { throw new Exception("parse decimals divisor count"); }
         }
 
+        private void setEmpty(bool empty)
+        {
+            if (empty)
+            {
+                digits = 1;
+                decimals = 0;
+                decimalsD = Divisors.Point;
+                thousandsD = Divisors.Null;
+            }
+        }
+
     }
+
 }

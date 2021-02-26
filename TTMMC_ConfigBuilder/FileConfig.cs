@@ -289,6 +289,12 @@ namespace TTMMC_ConfigBuilder
             return (index < machines.Count) ? machines[index] : null;
         }
 
+        public Machine GetMachineById(int id)
+        {
+            var mt = machines.Where(m => m.Id == id).FirstOrDefault();
+            return mt;
+        }
+
         public DB GetDB(string name)
         {
             foreach (var m in dbs)

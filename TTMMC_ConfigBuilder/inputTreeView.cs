@@ -35,8 +35,9 @@ namespace TTMMC_ConfigBuilder
                     subnodes.Add(new TreeNode("Description: " + dataIt.Description));
                     subnodes.Add(new TreeNode("Format: " + dataIt.Format));
                     subnodes.Add(new TreeNode("Unit: " + dataIt.Unit));
-                    subnodes.Add(new TreeNode("IgnoreRealtime: " + dataIt.IgnoreRealtime.ToString()));
-                    subnodes.Add(new TreeNode("IgnoreInLogs: " + dataIt.IgnoreInLogs.ToString()));
+                    subnodes.Add(new TreeNode("Type: " + dataIt.Type));
+                    subnodes.Add(new TreeNode("Realtime: " + dataIt.Realtime.ToString()));
+                    subnodes.Add(new TreeNode("Logs: " + dataIt.Logs.ToString()));
                     var node = new TreeNode(c.ToString(), subnodes.ToArray());
                     node.ForeColor = defineColor(dataIt);
                     snodes.Add(node);
@@ -47,7 +48,7 @@ namespace TTMMC_ConfigBuilder
                     nodesR.Add(nodeg);
                 else if (it.Mode == DataGroupMode.Write)
                     nodesW.Add(nodeg);
-                else if (it.Mode == DataGroupMode.ReadAndWrite)
+                else
                     nodesRW.Add(nodeg);
                 //nodeg.ForeColor = defineColor(it);
             }
@@ -199,20 +200,20 @@ namespace TTMMC_ConfigBuilder
                             if (frm.ShowDialog() == DialogResult.OK)
                             {
                                 item.Type = (DataType)Enum.Parse(typeof(DataType), frm.Value);
-                                elm.Text = "Type: " + item.Unit;
+                                elm.Text = "Type: " + item.Type;
                             }
                         }
                         else if (indx == 5)
                         {
-                            bool inv = !item.IgnoreRealtime;
-                            item.IgnoreRealtime = inv;
-                            elm.Text = "IgnoreRealtime: " + item.IgnoreRealtime.ToString();
+                            bool inv = !item.Realtime;
+                            item.Realtime = inv;
+                            elm.Text = "Realtime: " + item.Realtime.ToString();
                         }
                         else if (indx == 6)
                         {
-                            bool inv = !item.IgnoreInLogs;
-                            item.IgnoreInLogs = inv;
-                            elm.Text = "IgnoreInLogs: " + item.IgnoreInLogs.ToString();
+                            bool inv = !item.Logs;
+                            item.Logs = inv;
+                            elm.Text = "Logs: " + item.Logs.ToString();
                         }
                         elm.Parent.Parent.ForeColor = defineColor(item);
                     }
@@ -251,7 +252,7 @@ namespace TTMMC_ConfigBuilder
                 {
                     var group = Datas.GetDataGroup(node.Text);
                     var frm = new inputDataItem();
-                    frm.DataRead = group.Mode == DataGroupMode.Read || group.Mode == DataGroupMode.ReadAndWrite;
+                    frm.DataRead = group.Mode.HasFlag(DataGroupMode.Read);
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
                         treeView1.BeginUpdate();
@@ -267,15 +268,15 @@ namespace TTMMC_ConfigBuilder
                         node.Nodes[index].Nodes[3].ToolTipText = frm.Unit;
                         node.Nodes[index].Nodes.Add("Type: " + frm.Type);
                         node.Nodes[index].Nodes[4].ToolTipText = frm.Type;
-                        node.Nodes[index].Nodes.Add("IgnoreRealtime: " + frm.IgnoreRealtime);
-                        node.Nodes[index].Nodes[5].ToolTipText = frm.IgnoreRealtime.ToString();
-                        node.Nodes[index].Nodes.Add("IgnoreInLogs: " + frm.IgnoreInLogs);
-                        node.Nodes[index].Nodes[6].ToolTipText = frm.IgnoreInLogs.ToString();
+                        node.Nodes[index].Nodes.Add("Realtime: " + frm.Realtime);
+                        node.Nodes[index].Nodes[5].ToolTipText = frm.Realtime.ToString();
+                        node.Nodes[index].Nodes.Add("Logs: " + frm.Logs);
+                        node.Nodes[index].Nodes[6].ToolTipText = frm.Logs.ToString();
                         treeView1.EndUpdate();
                         var di = new DataItem(frm.Address, frm.Format, frm.Description);
                         di.Type = (DataType)Enum.Parse(typeof(DataType), frm.Type);
-                        di.IgnoreRealtime = frm.IgnoreRealtime;
-                        di.IgnoreInLogs = frm.IgnoreInLogs;
+                        di.Realtime = frm.Realtime;
+                        di.Logs = frm.Logs;
                         group.Items.Add(di);
                         node.Nodes[index].ForeColor = defineColor(di);
                         //node.Nodes[index].Parent.ForeColor = defineColor(group);
@@ -341,9 +342,9 @@ namespace TTMMC_ConfigBuilder
 
         private Color defineColor(DataItem item)
         {
-            if (item.IgnoreInLogs)
+            if (!item.Logs)
                 return Color.Red;
-            if (item.IgnoreRealtime)
+            if (!item.Realtime)
                 return Color.Orange;
             return Color.Black;
         }

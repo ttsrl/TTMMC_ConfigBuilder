@@ -276,7 +276,7 @@ namespace TTMMC_ConfigBuilder
                     lblType.Text = Enum.GetName(typeof(MachineType), machine.Type);
                     lblProtocol.Text = string.IsNullOrEmpty(machine.Protocol) ? "--" : machine.Protocol;
                     lblGroup.Text = string.IsNullOrEmpty(machine.Group) ? "--" : machine.Group;
-                    lblShare.Text = machine.ShareEngine == -1 ? "--" : file_.GetMachine(machine.Id).ReferenceName;
+                    lblShare.Text = machine.ShareEngine == -1 ? "--" : file_.GetMachineById(machine.ShareEngine).ReferenceName;
                     lblAddress.Text = string.IsNullOrEmpty(machine.Address) ? "--" : machine.Address;
                     lblPort.Text = string.IsNullOrEmpty(machine.Port) ? "--" : machine.Port;
                     lblRoot.Text = string.IsNullOrEmpty(machine.RootPath) ? "--" : machine.RootPath;
@@ -576,6 +576,7 @@ namespace TTMMC_ConfigBuilder
                         Port = it.Port,
                         Protocol = it.Protocol,
                         ShareEngine = it.ShareEngine,
+                        RootPath = it.RootPath,
                         Type = it.Type,
                         Image = it.Image,
                         Icon = it.Icon,

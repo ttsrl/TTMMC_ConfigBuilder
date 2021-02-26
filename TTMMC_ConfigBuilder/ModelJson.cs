@@ -29,6 +29,7 @@ namespace TTMMC_ConfigBuilder
         LastDataItemRecValue
     }
 
+    [Flags]
     public enum DataGroupMode
     {
         Read = 1,
@@ -36,9 +37,20 @@ namespace TTMMC_ConfigBuilder
         ReadAndWrite = 4
     }
 
+    [Flags]
+    public enum DataItemAttribute
+    {
+        Realtime = 1,
+        Logs = 2
+    }
+
     public enum DataType
     {
         AUTO,
+        BYTE,
+        UBYTE,
+        SHORT,
+        USHORT,
         INT,
         UINT,
         DINT,
@@ -199,9 +211,8 @@ namespace TTMMC_ConfigBuilder
         string address = "";
         string description = "";
         string unit = "";
-        bool ignoreR = false;
-        bool ignoreL = false;
-        List<bool> attribs = new List<bool>();
+        bool realt = true;
+        bool logs = true;
         DataType type = DataType.AUTO;
 
         public string Description { get => description; set => description = value; }
@@ -211,23 +222,27 @@ namespace TTMMC_ConfigBuilder
         public DataType Type { get => type; set => type = value; }
 
         [JsonIgnore]
-        public bool IgnoreRealtime { get => ignoreR; set { ignoreR = value; attribs[0] = value; } }
+        public bool Realtime { get => realt; set => realt = value; }
         [JsonIgnore]
-        public bool IgnoreInLogs { get => ignoreL; set { ignoreL = value; attribs[1] = value; } }
+        public bool Logs { get => logs; set => logs = value; }
 
-        public List<bool> Attributes { get => attribs; }
-
-        public DataItem() 
+        public List<bool> Attributes
         {
-            assignAttribs();
+            get => new List<bool>() { realt, logs };
+            set
+            {
+                realt = value[2];
+                logs = value[3];
+            }
         }
+
+        public DataItem() { }
 
         public DataItem(string address)
         {
             if (string.IsNullOrEmpty(address))
                 throw new System.Exception("parameters not null or empty");
-            Address = address;
-            assignAttribs();
+            this.address = address;
         }
 
         public DataItem(string address, string format)
@@ -236,7 +251,6 @@ namespace TTMMC_ConfigBuilder
                 throw new System.Exception("parameters not null or empty");
             this.address = address;
             this.format = format;
-            assignAttribs();
         }
 
         public DataItem(string address, string format, string description)
@@ -246,13 +260,16 @@ namespace TTMMC_ConfigBuilder
             this.address = address;
             this.format = format;
             this.description = description;
-            assignAttribs();
         }
 
-        private void assignAttribs()
+        public DataItemAttribute GetAttributes()
         {
-            attribs.Add(ignoreR);
-            attribs.Add(ignoreL);
+            DataItemAttribute outs = 0;
+            if (realt)
+                outs = outs | DataItemAttribute.Realtime;
+            if (logs)
+                outs = outs | DataItemAttribute.Logs;
+            return outs;
         }
     }
 
@@ -262,12 +279,16 @@ namespace TTMMC_ConfigBuilder
         private DataGroupMode mode = DataGroupMode.Read;
 
         public string Name { get; set; }
-        public List<DataItem> Items { get => items; set => items = value; }
+        public List<DataItem> Items
+        {
+            get => items;
+            set => items = value;
+        }
         public DataGroupMode Mode { get => mode; set => mode = value; }
 
         public object Clone()
         {
-            var clone = (DataGroup)this.MemberwiseClone(); 
+            var clone = (DataGroup)this.MemberwiseClone();
             var formatter = new BinaryFormatter();
             using (var stream = new MemoryStream())
             {

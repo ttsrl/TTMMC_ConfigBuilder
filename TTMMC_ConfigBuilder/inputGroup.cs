@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
 {
     public partial class inputGroup : Form
     {
+
+        private DataGroupMode mode = DataGroupMode.Read;
+
         public string GroupName { get; set; }
-        public DataGroupMode Mode { get; set; }
+        public DataGroupMode Mode { get => mode; set => mode = value; }
 
 
         public inputGroup()
@@ -24,7 +20,8 @@ namespace TTMMC_ConfigBuilder
         private void inputGroup_Load(object sender, EventArgs e)
         {
             textBox1.Text = GroupName;
-            comboBox1.SelectedIndex = (int)Mode;
+            comboBox1.Items.AddRange(Enum.GetNames(typeof(DataGroupMode)));
+            comboBox1.SelectedItem = Enum.GetName(typeof(DataGroupMode), mode);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -32,7 +29,7 @@ namespace TTMMC_ConfigBuilder
             if(textBox1.Text != "" && comboBox1.Text != "")
             {
                 GroupName = textBox1.Text;
-                Mode = (DataGroupMode)comboBox1.SelectedIndex;
+                Mode = (DataGroupMode)Enum.Parse(typeof(DataGroupMode), comboBox1.Text);
                 this.DialogResult = DialogResult.OK;
             }
             else

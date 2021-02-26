@@ -17,28 +17,45 @@ namespace TTMMC_ConfigBuilder
             label1.Text = format;
             comboBox1.Items.AddRange(Enum.GetNames(typeof(DataItemFormat.Divisors)));
             comboBox2.Items.AddRange(Enum.GetNames(typeof(DataItemFormat.Divisors)));
+            comboBox2.SelectedIndex = (int)dataItemFormat.ThousandsDivisor;
+            comboBox1.SelectedIndex = (int)dataItemFormat.DecimalsDivisor;
+            comboBox1.Enabled = false;
+            comboBox2.Enabled = false;
+            numericUpDown1.Enabled = false;
+            numericUpDown2.Enabled = false;
+            checkBox1.Enabled = false;
+            checkBox2.Checked = true;
         }
 
         private void loadFormat(string f)
         {
             dataItemFormat = DataItemFormat.Parse(f);
-            numericUpDown1.Value = dataItemFormat.Digits;
-            numericUpDown2.Value = dataItemFormat.Decimals;
-            comboBox2.SelectedIndex = (int)dataItemFormat.ThousandsDivisor;
-            comboBox1.SelectedIndex = (int)dataItemFormat.DecimalsDivisor;
-            checkBox1.Checked = dataItemFormat.FillZero;
+            if (!dataItemFormat.IsEmpty)
+            {
+                numericUpDown1.ValueChanged -= numericUpDown1_ValueChanged;
+                numericUpDown1.Value = dataItemFormat.Digits;
+                numericUpDown2.ValueChanged -= numericUpDown2_ValueChanged;
+                numericUpDown2.Value = dataItemFormat.Decimals;
+                comboBox2.SelectedIndex = (int)dataItemFormat.ThousandsDivisor;
+                comboBox1.SelectedIndex = (int)dataItemFormat.DecimalsDivisor;
+                checkBox1.Checked = dataItemFormat.FillZero;
+                numericUpDown1.ValueChanged += numericUpDown1_ValueChanged;
+                numericUpDown2.ValueChanged += numericUpDown2_ValueChanged;
+            }
             checkBox2.Checked = dataItemFormat.IsEmpty;
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            dataItemFormat.Digits = Convert.ToInt32(numericUpDown1.Value);
+            dataItemFormat = new DataItemFormat(Convert.ToInt32(numericUpDown1.Value), Convert.ToInt32(numericUpDown2.Value))
+            { DecimalsDivisor = dataItemFormat.DecimalsDivisor, ThousandsDivisor = dataItemFormat.ThousandsDivisor, FillZero = dataItemFormat.FillZero, IsEmpty = dataItemFormat.IsEmpty };
             label1.Text = dataItemFormat.ToString();
         }
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
-            dataItemFormat.Decimals = Convert.ToInt32(numericUpDown2.Value);
+            dataItemFormat = new DataItemFormat(Convert.ToInt32(numericUpDown1.Value), Convert.ToInt32(numericUpDown2.Value))
+            { DecimalsDivisor = dataItemFormat.DecimalsDivisor, ThousandsDivisor = dataItemFormat.ThousandsDivisor, FillZero = dataItemFormat.FillZero, IsEmpty = dataItemFormat.IsEmpty };
             numericUpDown2.Value = dataItemFormat.Decimals;
             label1.Text = dataItemFormat.ToString();
         }
@@ -68,6 +85,22 @@ namespace TTMMC_ConfigBuilder
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
             dataItemFormat.IsEmpty = checkBox2.Checked;
+            if (checkBox2.Checked)
+            {
+                comboBox1.Enabled = false;
+                comboBox2.Enabled = false;
+                numericUpDown1.Enabled = false;
+                numericUpDown2.Enabled = false;
+                checkBox1.Enabled = false;
+            }
+            else
+            {
+                comboBox1.Enabled = true;
+                comboBox2.Enabled = true;
+                numericUpDown1.Enabled = true;
+                numericUpDown2.Enabled = true;
+                checkBox1.Enabled = true;
+            }
             label1.Text = dataItemFormat.ToString();
         }
 
@@ -81,5 +114,6 @@ namespace TTMMC_ConfigBuilder
         {
             DialogResult = DialogResult.Cancel;
         }
+
     }
 }
