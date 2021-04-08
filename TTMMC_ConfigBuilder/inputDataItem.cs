@@ -5,6 +5,8 @@ namespace TTMMC_ConfigBuilder
 {
     public partial class inputDataItem : Form
     {
+        private bool relt = true;
+        private bool logs = true;
 
         public bool DataRead { get; set; }
 
@@ -12,8 +14,8 @@ namespace TTMMC_ConfigBuilder
         public string Address { get; set; }
         public string Format { get; set; }
         public string Unit { get; set; }
-        public bool Realtime { get; set; }
-        public bool Logs { get; set; }
+        public bool Realtime { get => relt; set => relt = value; }
+        public bool Logs { get => logs; set => logs = value; }
         public string Type { get; set; }
 
         public inputDataItem()
@@ -46,8 +48,8 @@ namespace TTMMC_ConfigBuilder
         {
             if (textBox1.Text != "" && textBox2.Text != "" && textBox3.Text != "")
             {
-                Description = textBox1.Text;
-                Address = textBox2.Text;
+                Address = textBox1.Text;
+                Description = textBox2.Text;
                 Format = textBox3.Text;
                 Unit = textBox4.Text;
                 Realtime = checkBox3.Checked;

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using TTMMC_ConfigBuilder.Properties;
 
 namespace TTMMC_ConfigBuilder
 {
@@ -20,7 +21,7 @@ namespace TTMMC_ConfigBuilder
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            includeStandardObjToolStripMenuItem.Checked = Settings.Default.includeStandardOb;
         }
 
         #region MENU
@@ -67,6 +68,7 @@ namespace TTMMC_ConfigBuilder
                     {
                         file_.AddMachine(m.Value);
                     }
+                    file_.Vpn = json.Vpn;
                     newToolStripMenuItem.Enabled = false;
                     addToolStripMenuItem.Enabled = true;
                     editToolStripMenuItem.Enabled = true;
@@ -144,7 +146,7 @@ namespace TTMMC_ConfigBuilder
 
         private void DatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var frm = new NewDB();
+            var frm = new newDB();
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 file_.AddDatabase(frm.ConnName, frm.IP, frm.DB, frm.Username, frm.Password, frm.RequestSecurityInfo);
@@ -176,7 +178,6 @@ namespace TTMMC_ConfigBuilder
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             if(((ListBox)sender).Name == "listBox1")
                 file_.RemoveDatabase(listBox1.SelectedItem.ToString());
             else
@@ -280,9 +281,13 @@ namespace TTMMC_ConfigBuilder
                     lblAddress.Text = string.IsNullOrEmpty(machine.Address) ? "--" : machine.Address;
                     lblPort.Text = string.IsNullOrEmpty(machine.Port) ? "--" : machine.Port;
                     lblRoot.Text = string.IsNullOrEmpty(machine.RootPath) ? "--" : machine.RootPath;
+                    lblOnlineDI.Text = string.IsNullOrEmpty(machine.OnlineDataItem) ? "--" : machine.OnlineDataItem;
+                    lblReadMode.Text = Enum.GetName(typeof(ReadMode), machine.ReadMode) == "Null" ? "--" : Enum.GetName(typeof(ReadMode), machine.ReadMode);
                     lblImg.Text = machine.Image;
                     lblIcon.Text = machine.Icon;
-                    lblMinRef.Text = machine.RefreshRealTimeDatasRead.ToString();
+                    lblMinRef.Text = machine.CallRealtimeDatasReadInterval.ToString();
+                    lblContRead.Text = Enum.GetName(typeof(ReadMode), machine.ReadMode) != "Continuous" ? "--" : machine.ReadingContinuousInterval.ToString();
+                    editContRead.Enabled = Enum.GetName(typeof(ReadMode), machine.ReadMode) == "Continuous";
                     lblCountDatas.Text = machine.Datas.Count.ToString();
                     lblRecording.Text = "";
                     databaseDetails.Visible = false;
@@ -292,12 +297,16 @@ namespace TTMMC_ConfigBuilder
                         editAddress.Enabled = true;
                         editPort.Enabled = true;
                         editProtocol.Enabled = true;
+                        editRoot.Enabled = true;
+                        editReadMode.Enabled = true;
                     }
                     else
                     {
                         editAddress.Enabled = false;
                         editPort.Enabled = false;
                         editProtocol.Enabled = false;
+                        editRoot.Enabled = false;
+                        editReadMode.Enabled = false;
                     }
                 }
             }
@@ -311,13 +320,18 @@ namespace TTMMC_ConfigBuilder
 
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            int index = this.listBox1.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
             {
-                int index = this.listBox1.IndexFromPoint(e.Location);
-                if (index != ListBox.NoMatches)
+                if (e.Button == MouseButtons.Right)
                 {
                     listBox1.SelectedIndex = index;
                     listBox1.ContextMenuStrip = menuStripList;
+                }
+                else if (e.Button == MouseButtons.Left)
+                {
+                    listBox1.ContextMenuStrip = null;
+                    listBox2.SelectedIndex = -1;
                 }
                 else
                     listBox1.ContextMenuStrip = null;
@@ -328,13 +342,18 @@ namespace TTMMC_ConfigBuilder
 
         private void listBox2_MouseDown(object sender, MouseEventArgs e)
         {
-            var indx = listBox2.IndexFromPoint(e.Location);
-            if (listBox2.SelectedIndex >= 0 && indx != 65535)
+            int index = this.listBox2.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
             {
                 if (e.Button == MouseButtons.Right)
                 {
-                    listBox2.SelectedIndex = indx;
+                    listBox2.SelectedIndex = index;
                     listBox2.ContextMenuStrip = menuStripList;
+                }
+                else if (e.Button == MouseButtons.Left) 
+                {
+                    listBox2.ContextMenuStrip = null;
+                    listBox1.SelectedIndex = -1;
                 }
                 else
                     listBox2.ContextMenuStrip = null;
@@ -425,6 +444,21 @@ namespace TTMMC_ConfigBuilder
                             machine.Address = "";
                             machine.Port = "";
                             machine.RootPath = "";
+                            machine.ReadMode = ReadMode.Null;
+                        }
+                    }
+                    else if (nm == "editReadMode")
+                    {
+                        frmSelect.LblTxt = "ReadMode:";
+                        var modes = Enum.GetNames(typeof(ReadMode)).ToList();
+                        modes.RemoveAt(0);
+                        frmSelect.List = modes;
+                        frmSelect.Value = Enum.GetName(typeof(MachineType), machine.ReadMode);
+                        if (frmSelect.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.ReadMode = (ReadMode)Enum.Parse(typeof(ReadMode), frmSelect.Value);
+                            if(machine.ReadMode != ReadMode.Continuous)
+                                machine.ReadingContinuousInterval = 1000;
                         }
                     }
                     else if (nm == "editProtocol")
@@ -456,6 +490,13 @@ namespace TTMMC_ConfigBuilder
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
                             machine.RootPath = frmInputTxt.Value;
                     }
+                    else if (nm == "editOnline")
+                    {
+                        frmInputTxt.LblTxt = "Online DataItem:";
+                        frmInputTxt.Value = machine.OnlineDataItem;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                            machine.OnlineDataItem = frmInputTxt.Value;
+                    }
                     else if (nm == "editImg")
                     {
                         frmInputTxt.LblTxt = "Image:";
@@ -472,14 +513,22 @@ namespace TTMMC_ConfigBuilder
                     }
                     else if (nm == "editMinRef")
                     {
-                        frmInputTxt.LblTxt = "Min. Refresh:";
-                        frmInputTxt.Value = machine.RefreshRealTimeDatasRead.ToString();
+                        frmInputTxt.LblTxt = "Call Realtime Int.:";
+                        frmInputTxt.Value = machine.CallRealtimeDatasReadInterval.ToString();
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
-                            machine.RefreshRealTimeDatasRead = Convert.ToInt32(frmInputTxt.Value);
+                            machine.CallRealtimeDatasReadInterval = Convert.ToInt32(frmInputTxt.Value);
+                    }
+                    else if (nm == "editContRead")
+                    {
+                        frmInputTxt.LblTxt = "Continuous Read Int.:";
+                        frmInputTxt.Value = machine.ReadingContinuousInterval.ToString();
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                            machine.ReadingContinuousInterval = Convert.ToInt32(frmInputTxt.Value);
                     }
                     else if (nm == "editDatas")
                     {
                         var cloneDataRead = machine.Datas.Clone().ToList();
+                        frmTreview.Text = "Edit Datas - " + machine.ReferenceName;
                         frmTreview.Datas = cloneDataRead;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
                             machine.Datas = frmTreview.Datas;
@@ -576,22 +625,39 @@ namespace TTMMC_ConfigBuilder
                         Port = it.Port,
                         Protocol = it.Protocol,
                         ShareEngine = it.ShareEngine,
+                        ReadMode = it.ReadMode,
                         RootPath = it.RootPath,
+                        OnlineDataItem = it.OnlineDataItem,
                         Type = it.Type,
                         Image = it.Image,
                         Icon = it.Icon,
-                        RefreshRealTimeDatasRead = it.RefreshRealTimeDatasRead,
+                        CallRealtimeDatasReadInterval = it.CallRealtimeDatasReadInterval,
+                        ReadingContinuousInterval = it.ReadingContinuousInterval,
                         RecordingDetails = it.RecordingDetails,
                         Datas = it.Datas
                     };
                     machines.Add(c.ToString(), nm);
                     c++;
                 }
-                var model = new ModelJson
+                object model = null;
+                if (includeStandardObjToolStripMenuItem.Checked)
                 {
-                    ConnectionStrings = dbs,
-                    Machines = machines
-                };
+                    model = new ModelJsonWithStandardOb
+                    {
+                        ConnectionStrings = dbs,
+                        Machines = machines,
+                        Vpn = file_.Vpn
+                    };
+                }
+                else
+                {
+                    model = new ModelJson
+                    {
+                        ConnectionStrings = dbs,
+                        Machines = machines,
+                        Vpn = file_.Vpn
+                    };
+                }
                 var json = JsonConvert.SerializeObject(model, Formatting.Indented);
                 var stw = new StreamWriter(export.FileName);
                 stw.Write("//#################################\r\n//##  TTMMC - ConfigurationFile  ##\r\n//##     ConfigBuider v. 2.0     ##\r\n//##      " + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "       ##\r\n//#################################");
@@ -649,7 +715,6 @@ namespace TTMMC_ConfigBuilder
             listBox2.SetSelected(newIndex, true);
         }
 
-
         private void reloadListBox1()
         {
             listBox1.ClearSelected();
@@ -683,6 +748,26 @@ namespace TTMMC_ConfigBuilder
             tsslNElem.Text = (file_.Machines.Count + file_.DBs.Count).ToString();
             tsslNProt.Text = file_.Protocols.Count.ToString();
             tsslNGroup.Text = file_.Groups.Count.ToString();
+        }
+
+        private void VPNToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            var frm = new editVPN();
+            var objs = new List<string>();
+            objs.AddRange(file_.DBs.Select(it => it.Key));
+            objs.AddRange(file_.Machines.Where(it => it.ShareEngine == -1).Select(it => it.ReferenceName));
+            frm.Objects = objs;
+            if(file_.Vpn != null)
+            frm.List = file_.Vpn.Clone().ToList();
+            if (frm.ShowDialog() == DialogResult.OK)
+                file_.Vpn = frm.List;
+        }
+
+        private void includeStandardObjToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.Default.includeStandardOb = includeStandardObjToolStripMenuItem.Checked;
+            Settings.Default.Save();
+            Settings.Default.Reload();
         }
     }
 }

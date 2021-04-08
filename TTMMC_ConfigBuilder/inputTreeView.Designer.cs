@@ -37,13 +37,17 @@
             this.label9 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.moveDown = new System.Windows.Forms.Button();
+            this.moveUp = new System.Windows.Forms.Button();
+            this.copy = new System.Windows.Forms.Button();
+            this.paste = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // edit
             // 
-            this.edit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.edit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.edit.Enabled = false;
-            this.edit.Location = new System.Drawing.Point(449, 172);
+            this.edit.Location = new System.Drawing.Point(517, 172);
             this.edit.Margin = new System.Windows.Forms.Padding(2);
             this.edit.Name = "edit";
             this.edit.Size = new System.Drawing.Size(90, 28);
@@ -54,9 +58,9 @@
             // 
             // addData
             // 
-            this.addData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.addData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.addData.Enabled = false;
-            this.addData.Location = new System.Drawing.Point(449, 94);
+            this.addData.Location = new System.Drawing.Point(517, 94);
             this.addData.Margin = new System.Windows.Forms.Padding(2);
             this.addData.Name = "addData";
             this.addData.Size = new System.Drawing.Size(90, 28);
@@ -74,18 +78,19 @@
             this.treeView1.Location = new System.Drawing.Point(12, 34);
             this.treeView1.Margin = new System.Windows.Forms.Padding(2);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(422, 433);
+            this.treeView1.Size = new System.Drawing.Size(445, 433);
             this.treeView1.TabIndex = 31;
             this.treeView1.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_BeforeLabelEdit);
             this.treeView1.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_AfterLabelEdit);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
+            this.treeView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.treeView1_KeyUp);
             // 
             // delete
             // 
-            this.delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delete.Enabled = false;
-            this.delete.Location = new System.Drawing.Point(449, 254);
+            this.delete.Location = new System.Drawing.Point(517, 254);
             this.delete.Margin = new System.Windows.Forms.Padding(2);
             this.delete.Name = "delete";
             this.delete.Size = new System.Drawing.Size(90, 28);
@@ -96,8 +101,8 @@
             // 
             // addGroup
             // 
-            this.addGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addGroup.Location = new System.Drawing.Point(449, 57);
+            this.addGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.addGroup.Location = new System.Drawing.Point(517, 57);
             this.addGroup.Margin = new System.Windows.Forms.Padding(2);
             this.addGroup.Name = "addGroup";
             this.addGroup.Size = new System.Drawing.Size(90, 28);
@@ -130,7 +135,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(449, 475);
+            this.button1.Location = new System.Drawing.Point(517, 475);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(90, 28);
@@ -139,12 +144,69 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // moveDown
+            // 
+            this.moveDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.moveDown.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("moveDown.BackgroundImage")));
+            this.moveDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.moveDown.Enabled = false;
+            this.moveDown.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.moveDown.Location = new System.Drawing.Point(469, 87);
+            this.moveDown.Name = "moveDown";
+            this.moveDown.Size = new System.Drawing.Size(30, 28);
+            this.moveDown.TabIndex = 35;
+            this.moveDown.UseVisualStyleBackColor = true;
+            this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
+            // 
+            // moveUp
+            // 
+            this.moveUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.moveUp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("moveUp.BackgroundImage")));
+            this.moveUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.moveUp.Enabled = false;
+            this.moveUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.moveUp.Location = new System.Drawing.Point(469, 33);
+            this.moveUp.Name = "moveUp";
+            this.moveUp.Size = new System.Drawing.Size(30, 28);
+            this.moveUp.TabIndex = 34;
+            this.moveUp.UseVisualStyleBackColor = true;
+            this.moveUp.Click += new System.EventHandler(this.moveUp_Click);
+            // 
+            // copy
+            // 
+            this.copy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.copy.Enabled = false;
+            this.copy.Location = new System.Drawing.Point(517, 317);
+            this.copy.Margin = new System.Windows.Forms.Padding(2);
+            this.copy.Name = "copy";
+            this.copy.Size = new System.Drawing.Size(90, 28);
+            this.copy.TabIndex = 36;
+            this.copy.Text = "Copia";
+            this.copy.UseVisualStyleBackColor = true;
+            this.copy.Click += new System.EventHandler(this.copy_Click);
+            // 
+            // paste
+            // 
+            this.paste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.paste.Location = new System.Drawing.Point(517, 349);
+            this.paste.Margin = new System.Windows.Forms.Padding(2);
+            this.paste.Name = "paste";
+            this.paste.Size = new System.Drawing.Size(90, 28);
+            this.paste.TabIndex = 37;
+            this.paste.Text = "Incolla";
+            this.paste.UseVisualStyleBackColor = true;
+            this.paste.Click += new System.EventHandler(this.paste_Click);
+            // 
             // inputTreeView
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(550, 511);
+            this.ClientSize = new System.Drawing.Size(618, 511);
+            this.Controls.Add(this.paste);
+            this.Controls.Add(this.copy);
+            this.Controls.Add(this.moveDown);
+            this.Controls.Add(this.moveUp);
             this.Controls.Add(this.edit);
             this.Controls.Add(this.addData);
             this.Controls.Add(this.treeView1);
@@ -153,7 +215,6 @@
             this.Controls.Add(this.label9);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -176,5 +237,9 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button moveDown;
+        private System.Windows.Forms.Button moveUp;
+        private System.Windows.Forms.Button copy;
+        private System.Windows.Forms.Button paste;
     }
 }

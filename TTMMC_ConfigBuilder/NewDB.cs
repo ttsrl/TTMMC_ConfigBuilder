@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
 {
-    public partial class NewDB : Form
+    public partial class newDB : Form
     {
         public string ConnName;
         public string IP;
@@ -12,7 +12,7 @@ namespace TTMMC_ConfigBuilder
         public string Password;
         public bool RequestSecurityInfo;
 
-        public NewDB()
+        public newDB()
         {
             InitializeComponent();
         }

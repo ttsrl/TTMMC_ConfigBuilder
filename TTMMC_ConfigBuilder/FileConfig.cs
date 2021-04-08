@@ -12,12 +12,14 @@ namespace TTMMC_ConfigBuilder
         private List<Machine> machines = new List<Machine>();
         private Dictionary<string, DB> dbs = new Dictionary<string, DB>();
         private string _name;
+        private List<VpnItem> vpn = new List<VpnItem>();
 
         public string Name { get => _name; set => _name = value.Replace(".json", ""); }
         public List<string> Protocols { get => protocols; }
         public List<string> Groups { get => groups; }
         public List<Machine> Machines { get => machines; }
         public Dictionary<string, DB> DBs { get => dbs; }
+        public List<VpnItem> Vpn { get => vpn; set => vpn = value; }
 
 
         public FileConfig(string name)
@@ -310,7 +312,6 @@ namespace TTMMC_ConfigBuilder
             var k = dbs.Keys.ToList()[index];
             return (string.IsNullOrEmpty(k)) ? null : dbs[k];
         }
-
 
     }
 

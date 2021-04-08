@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace TTMMC_ConfigBuilder
 {
+
     public enum MachineType
     {
         Machinary,
@@ -60,15 +61,35 @@ namespace TTMMC_ConfigBuilder
         STRING
     }
 
+    public enum ReadMode
+    {
+        Null,
+        Continuous,
+        AtCallRead
+    }
+
     public class ModelJson
     {
         public Dictionary<string, string> ConnectionStrings { get; set; }
         public Dictionary<string, Machine> Machines { get; set; }
+        public List<VpnItem> Vpn { get; set; }
+    }
+
+    public class ModelJsonWithStandardOb
+    {
+        private Logging logging = new Logging();
+        public Logging Logging { get => logging; set => logging = value; }
+        public string AllowedHosts = "*";
+
+        public Dictionary<string, string> ConnectionStrings { get; set; }
+        public Dictionary<string, Machine> Machines { get; set; }
+        public List<VpnItem> Vpn { get; set; }
     }
 
     public class Machine
     {
         private int refTime = 500;
+        private int readTime = 1000;
         private int shareEngine = -1;
         private List<DataGroup> datas = new List<DataGroup>();
         private RecordingDetails recDetails = new RecordingDetails();
@@ -79,13 +100,16 @@ namespace TTMMC_ConfigBuilder
         public string Description { get; set; }
         public string Group { get; set; }
         public int ShareEngine { get => shareEngine; set => shareEngine = value; }
+        public ReadMode ReadMode { get; set; }
         public string Protocol { get; set; }
         public string Address { get; set; }
         public string Port { get; set; }
         public string RootPath { get; set; }
+        public string OnlineDataItem { get; set; }
         public string Image { get; set; }
         public string Icon { get; set; }
-        public int RefreshRealTimeDatasRead { get => refTime; set { refTime = (value < 25) ? 25 : value; } }
+        public int CallRealtimeDatasReadInterval { get => refTime; set { refTime = (value < 50) ? 50 : value; } }
+        public int ReadingContinuousInterval { get => readTime; set { readTime = (value < 100) ? 100 : value; } }
         public RecordingDetails RecordingDetails { get => recDetails; set => recDetails = value; }
         public List<DataGroup> Datas { get => datas; set => datas = value; }
 
@@ -98,6 +122,61 @@ namespace TTMMC_ConfigBuilder
         public string Username { get; set; }
         public string Password { get; set; }
         public bool PersistSecurityInfo { get; set; }
+
+        public static DB Parse(string connectionString)
+        {
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                var db_ = new DB();
+                var split = connectionString.Split(new char[] { ';' });
+                foreach (var str in split)
+                {
+                    var val = str.Split(new char[] { '=' });
+                    if (string.IsNullOrEmpty(val[1]))
+                        continue;
+                    var p = val[0].Replace(" ", "");
+                    if (p == "DataSource")
+                        db_.IP = val[1];
+                    else if (p == "InitialCatalog")
+                        db_.Database = val[1];
+                    else if (p == "PersistSecurityInfo")
+                        db_.PersistSecurityInfo = Boolean.Parse(val[1]);
+                    else if (p == "UserID")
+                        db_.Username = val[1];
+                    else if (p == "Password")
+                        db_.Password = val[1];
+                }
+                if (!string.IsNullOrEmpty(db_.IP) && !string.IsNullOrEmpty(db_.Username) && !string.IsNullOrEmpty(db_.Password))
+                    return db_;
+            }
+            return null;
+        }
+
+        public override string ToString()
+        {
+            return "Data Source=" + IP + ";Initial Catalog=" + Database + ";Persist Security Info=" + PersistSecurityInfo.ToString() + ";User ID=" + Username + ";Password=" + Password;
+        }
+    }
+
+    [Serializable]
+    public class VpnItem : ICloneable
+    {
+        public string ReferenceName { get; set; }
+        public string Ip { get; set; }
+
+        public VpnItem() { }
+
+        public VpnItem(string refName, string ip)
+        {
+            ReferenceName = refName;
+            Ip = ip;
+        }
+
+        public object Clone()
+        {
+            var clone = (VpnItem)this.MemberwiseClone();
+            return clone;
+        }
     }
 
     [Serializable]
@@ -203,7 +282,6 @@ namespace TTMMC_ConfigBuilder
         }
     }
 
-
     [Serializable]
     public class DataItem
     {
@@ -273,6 +351,7 @@ namespace TTMMC_ConfigBuilder
         }
     }
 
+    [Serializable]
     public class DataGroup : ICloneable
     {
         private List<DataItem> items = new List<DataItem>();
@@ -300,5 +379,20 @@ namespace TTMMC_ConfigBuilder
         }
 
 
+    }
+
+
+    public class Logging
+    {
+        private LogLevel ll = new LogLevel();
+        public LogLevel LogLevel { get => ll; set => ll = value; }
+    }
+
+    public class LogLevel
+    {
+        public string Default = "Information";
+        public string Microsoft = "Warning";
+        [JsonProperty("Microsoft.Hosting.Lifetime")]
+        public string MicrosoftH = "Information";
     }
 }

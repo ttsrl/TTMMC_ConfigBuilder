@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(inputList));
             this.btt_ok = new System.Windows.Forms.Button();
             this.btt_edit = new System.Windows.Forms.Button();
             this.btt_delete = new System.Windows.Forms.Button();
@@ -39,7 +40,7 @@
             // btt_ok
             // 
             this.btt_ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btt_ok.Location = new System.Drawing.Point(251, 311);
+            this.btt_ok.Location = new System.Drawing.Point(247, 311);
             this.btt_ok.Name = "btt_ok";
             this.btt_ok.Size = new System.Drawing.Size(75, 28);
             this.btt_ok.TabIndex = 8;
@@ -88,7 +89,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(12, 311);
+            this.button1.Location = new System.Drawing.Point(8, 311);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 28);
             this.button1.TabIndex = 15;
@@ -101,7 +102,7 @@
             this.AcceptButton = this.btt_ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(339, 351);
+            this.ClientSize = new System.Drawing.Size(335, 351);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btt_add);
             this.Controls.Add(this.listBox1);
@@ -109,6 +110,7 @@
             this.Controls.Add(this.btt_edit);
             this.Controls.Add(this.btt_ok);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "inputList";

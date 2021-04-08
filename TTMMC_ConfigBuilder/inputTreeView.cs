@@ -19,53 +19,7 @@ namespace TTMMC_ConfigBuilder
 
         private void editTreeView_Load(object sender, EventArgs e)
         {
-            treeView1.BeginUpdate();
-            //load nodes
-            var nodesR = new List<TreeNode>();
-            var nodesW = new List<TreeNode>();
-            var nodesRW = new List<TreeNode>();
-            foreach (var it in Datas)
-            {
-                var snodes = new List<TreeNode>();
-                var c = 0;
-                foreach (var dataIt in it.Items)
-                {
-                    var subnodes = new List<TreeNode>();
-                    subnodes.Add(new TreeNode("Address: " + dataIt.Address));
-                    subnodes.Add(new TreeNode("Description: " + dataIt.Description));
-                    subnodes.Add(new TreeNode("Format: " + dataIt.Format));
-                    subnodes.Add(new TreeNode("Unit: " + dataIt.Unit));
-                    subnodes.Add(new TreeNode("Type: " + dataIt.Type));
-                    subnodes.Add(new TreeNode("Realtime: " + dataIt.Realtime.ToString()));
-                    subnodes.Add(new TreeNode("Logs: " + dataIt.Logs.ToString()));
-                    var node = new TreeNode(c.ToString(), subnodes.ToArray());
-                    node.ForeColor = defineColor(dataIt);
-                    snodes.Add(node);
-                    c++;
-                }
-                var nodeg = new TreeNode(it.Name, snodes.ToArray());
-                if (it.Mode == DataGroupMode.Read)
-                    nodesR.Add(nodeg);
-                else if (it.Mode == DataGroupMode.Write)
-                    nodesW.Add(nodeg);
-                else
-                    nodesRW.Add(nodeg);
-                //nodeg.ForeColor = defineColor(it);
-            }
-            var nodeR = new TreeNode("READ", nodesR.ToArray());
-            var nodeW = new TreeNode("WRITE", nodesRW.ToArray());
-            var nodeRW = new TreeNode("READ/WRITE", nodesW.ToArray());
-            treeView1.Nodes.Add(nodeR);
-            treeView1.Nodes.Add(nodeW);
-            treeView1.Nodes.Add(nodeRW);
-            foreach (TreeNode tn in treeView1.Nodes)
-            {
-                if (tn.Level == 0)
-                {
-                    tn.Expand();
-                }
-            }
-            treeView1.EndUpdate();
+            treeviewLoad();
         }
 
         private void treeView1_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
@@ -223,10 +177,78 @@ namespace TTMMC_ConfigBuilder
             }
         }
 
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            var node = treeView1.SelectedNode;
+            if (node != null)
+            {
+                var lvl = node.Level;
+                if (lvl == 1)
+                    addData.Enabled = true;
+                else
+                    addData.Enabled = false;
+
+                if (lvl == 1 || lvl == 3)
+                    edit.Enabled = true;
+                else
+                    edit.Enabled = false;
+
+                if (lvl == 1 || lvl == 2 || lvl == 3)
+                    delete.Enabled = true;
+                else
+                    delete.Enabled = false;
+
+                if (lvl == 0 || lvl == 1 || lvl == 2)
+                    copy.Enabled = true;
+                else
+                    copy.Enabled = false;
+
+                if (lvl == 1)
+                {
+                    moveUp.Enabled = true;
+                    moveDown.Enabled = true;
+                }
+                else
+                {
+                    moveUp.Enabled = false;
+                    moveDown.Enabled = false;
+                }
+            }
+            else
+            {
+                edit.Enabled = false;
+                delete.Enabled = false;
+                copy.Enabled = false;
+                moveUp.Enabled = false;
+                moveDown.Enabled = false;
+            }
+        }
+
+        private void treeView1_KeyUp(object sender, KeyEventArgs e)
+        {
+            var node = treeView1.SelectedNode;
+            if (node != null)
+            {
+                if (e.KeyCode == Keys.Delete)
+                    delete_Click(sender, new EventArgs());
+            }
+        }
+
         private void addGroup_Click(object sender, EventArgs e)
         {
+            TreeNode modeNode = null;
+            if (treeView1.SelectedNode != null)
+            {
+                modeNode = treeView1.SelectedNode;
+                while (modeNode.Level > 0)
+                {
+                    modeNode = modeNode.Parent;
+                }
+            }
             treeView1.SelectedNode = null;
             var frm = new inputGroup();
+            if(modeNode != null)
+                frm.Mode = (modeNode.Text == "READ") ? DataGroupMode.Read : ((modeNode.Text == "WRITE") ? DataGroupMode.Write : DataGroupMode.ReadAndWrite);
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 var exist = Datas.ContainsDataGroup(frm.GroupName);
@@ -274,6 +296,7 @@ namespace TTMMC_ConfigBuilder
                         node.Nodes[index].Nodes[6].ToolTipText = frm.Logs.ToString();
                         treeView1.EndUpdate();
                         var di = new DataItem(frm.Address, frm.Format, frm.Description);
+                        di.Unit = frm.Unit;
                         di.Type = (DataType)Enum.Parse(typeof(DataType), frm.Type);
                         di.Realtime = frm.Realtime;
                         di.Logs = frm.Logs;
@@ -316,7 +339,13 @@ namespace TTMMC_ConfigBuilder
                 {
                     var res = Datas.RemoveDataGroup(node.Text);
                     if (res)
+                    {
+                        var prev = node.GetPreviusNode();
                         treeView1.Nodes.Remove(node);
+                        treeView1.SelectedNode = null;
+                        Application.DoEvents();
+                        treeView1.SelectedNode = prev;
+                    }
                     else
                         MessageBox.Show("Impossibile cancellare questo elemento", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
@@ -349,27 +378,263 @@ namespace TTMMC_ConfigBuilder
             return Color.Black;
         }
 
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        private void moveGroupUp(DataGroup item)
+        {
+            if (item == null)
+                return;
+            var dgsByMode = Datas.Where(g => g.Mode == item.Mode);
+            var actTotIndx = Datas.IndexOf(item);
+            var befElmtByMode = 0;
+            var actIndx = 0;
+            foreach(var gr in Datas)
+            {
+                if(gr.Mode == item.Mode && actIndx < actTotIndx)
+                    befElmtByMode = actIndx;
+                actIndx ++;
+            }
+            var saveIt = Datas[actTotIndx];
+            Datas.RemoveAt(actTotIndx);
+            Datas.Insert(befElmtByMode, saveIt);
+        }
+
+        private void moveGroupDown(DataGroup item)
+        {
+            if (item == null)
+                return;
+            var dgsByMode = Datas.Where(g => g.Mode == item.Mode);
+            var actTotIndx = Datas.IndexOf(item);
+            var befElmtByMode = Datas.Count() - 1;
+            var actIndx = 0;
+            foreach (var gr in Datas)
+            {
+                if (gr.Mode == item.Mode && actIndx > actTotIndx)
+                    befElmtByMode = actIndx;
+                actIndx++;
+            }
+            var saveIt = Datas[actTotIndx];
+            Datas.RemoveAt(actTotIndx);
+            Datas.Insert(befElmtByMode, saveIt);
+        }
+
+        private void moveUp_Click(object sender, EventArgs e)
+        {
+            var node = treeView1.SelectedNode;
+            if (node is TreeNode)
+            {
+                var lvl = node.Level;
+                if (lvl == 1)
+                {
+                    var dg = Datas.GetDataGroup(node.Text) ?? null;
+                    if(dg is DataGroup)
+                    {
+                        moveGroupUp(dg);
+                        node.MoveUp();
+                    }
+                }
+            }
+        }
+
+        private void moveDown_Click(object sender, EventArgs e)
+        {
+            var node = treeView1.SelectedNode;
+            if (node is TreeNode)
+            {
+                var lvl = node.Level;
+                if (lvl == 1)
+                {
+                    var dg = Datas.GetDataGroup(node.Text) ?? null;
+                    if (dg is DataGroup)
+                    {
+                        moveGroupDown(dg);
+                        node.MoveDown();
+                    }
+                }
+            }
+        }
+
+        private void copy_Click(object sender, EventArgs e)
         {
             var node = treeView1.SelectedNode;
             if(node != null)
             {
-                var lvl = node.Level;
-                if(lvl == 1)
-                    addData.Enabled = true;
-                else
-                    addData.Enabled = false;
-
-                if (lvl == 1 || lvl == 3)
-                    edit.Enabled = true;
-                else
-                    edit.Enabled = false;
-
-                if (lvl == 1 || lvl == 2 || lvl == 3)
-                    delete.Enabled = true;
-                else
-                    delete.Enabled = false;
+                if (node.Level > 2)
+                    return;
+                CopyData cn = new CopyData();
+                if (node.Level == 0)
+                {
+                    cn.Level = 0;
+                    var mode = (DataGroupMode)Enum.Parse(typeof(DataGroupMode),node.Text.ToLower().FirstCharToUpper());
+                    cn.ListDataGroup = Datas.Where(d => d.Mode == mode).ToList();
+                }
+                else if (node.Level == 1)
+                {
+                    cn.Level = 1;
+                    cn.DataGroup = Datas.GetDataGroup(node.Text);
+                }
+                else if (node.Level == 2)
+                {
+                    cn.Level = 2;
+                    var dg = Datas.GetDataGroup(node.Parent.Text);
+                    cn.DataGroup = dg;
+                    cn.DataItem = dg.Items[Convert.ToInt32(node.Text)];
+                    var c = 0;
+                }
+                Clipboard.Clear();
+                Clipboard.SetDataObject(cn);
             }
         }
+
+        private void paste_Click(object sender, EventArgs e)
+        {
+            var clip = Clipboard.GetDataObject();
+            if (clip.GetDataPresent(typeof(CopyData)))
+            {
+                var copy = (CopyData)clip.GetData(typeof(CopyData));
+                if(copy != null)
+                {
+                    if (copy.Level == 0)
+                    {
+                        var listDgs = (List<DataGroup>)Convert.ChangeType(copy.ListDataGroup, typeof(List<DataGroup>));
+                        foreach (var g in listDgs)
+                        {
+                            var tmpg = Datas.GetDataGroup(g.Name);
+                            if (tmpg == null)
+                            {
+                                Datas.Add(g);
+                                continue;
+                            }
+                            else
+                            {
+                                foreach(var it in g.Items)
+                                {
+                                    var indx = g.Items.IndexOf(it);
+                                    var exist = indx < tmpg.Items.Count;
+                                    if (exist)
+                                    {
+                                        if(MessageBox.Show("Sovrascrivere elemento: " + g.Name + "[" + indx.ToString() + "]", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                                        {
+                                            tmpg.Items.RemoveAt(indx);
+                                            tmpg.Items.Insert(indx, it);
+                                        }
+                                    }
+                                    else
+                                        tmpg.Items.Add(it);
+                                }
+                            }
+                        }
+                    }
+                    else if (copy.Level == 1)
+                    {
+                        var dg = (DataGroup)Convert.ChangeType(copy.DataGroup, typeof(DataGroup));
+                        var tmpg = Datas.GetDataGroup(dg.Name);
+                        if (tmpg == null)
+                            Datas.Add(dg);
+                        else
+                        {
+                            foreach (var it in dg.Items)
+                            {
+                                var indx = dg.Items.IndexOf(it);
+                                var exist = indx < tmpg.Items.Count;
+                                if (exist)
+                                {
+                                    if (MessageBox.Show("Sovrascrivere elemento: " + dg.Name + "[" + indx.ToString() + "]", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                                    {
+                                        tmpg.Items.RemoveAt(indx);
+                                        tmpg.Items.Insert(indx, it);
+                                    }
+                                }
+                                else
+                                    tmpg.Items.Add(it);
+                            }
+                        }
+                    }
+                    else if (copy.Level == 2)
+                    {
+                        var dg = (DataGroup)Convert.ChangeType(copy.DataGroup, typeof(DataGroup));
+                        var di = (DataItem)Convert.ChangeType(copy.DataItem, typeof(DataItem));
+                        var tmpg = Datas.GetDataGroup(dg.Name);
+                        if (tmpg == null)
+                            Datas.Add(new DataGroup() { Mode = dg.Mode, Name = dg.Name, Items = new List<DataItem>() { di } });
+                        else
+                        {
+                            var indx = dg.Items.IndexOf(di);
+                            var exist = indx < tmpg.Items.Count;
+                            if (exist)
+                            {
+                                if (MessageBox.Show("Sovrascrivere elemento: " + dg.Name + "[" + indx.ToString() + "]", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                                {
+                                    tmpg.Items.RemoveAt(indx);
+                                    tmpg.Items.Insert(indx, di);
+                                }
+                            }
+                            else
+                                tmpg.Items.Add(di);
+                        }
+                    }
+                    treeviewLoad();
+                }
+            }
+        }
+
+        private void treeviewLoad()
+        {
+            treeView1.Nodes.Clear();
+            treeView1.BeginUpdate();
+            //load nodes
+            var nodesR = new List<TreeNode>();
+            var nodesW = new List<TreeNode>();
+            var nodesRW = new List<TreeNode>();
+            foreach (var it in Datas)
+            {
+                var snodes = new List<TreeNode>();
+                var c = 0;
+                foreach (var dataIt in it.Items)
+                {
+                    var subnodes = new List<TreeNode>();
+                    subnodes.Add(new TreeNode("Address: " + dataIt.Address));
+                    subnodes.Add(new TreeNode("Description: " + dataIt.Description));
+                    subnodes.Add(new TreeNode("Format: " + dataIt.Format));
+                    subnodes.Add(new TreeNode("Unit: " + dataIt.Unit));
+                    subnodes.Add(new TreeNode("Type: " + dataIt.Type));
+                    subnodes.Add(new TreeNode("Realtime: " + dataIt.Realtime.ToString()));
+                    subnodes.Add(new TreeNode("Logs: " + dataIt.Logs.ToString()));
+                    var node = new TreeNode(c.ToString(), subnodes.ToArray());
+                    node.ForeColor = defineColor(dataIt);
+                    snodes.Add(node);
+                    c++;
+                }
+                var nodeg = new TreeNode(it.Name, snodes.ToArray());
+                if (it.Mode == DataGroupMode.Read)
+                    nodesR.Add(nodeg);
+                else if (it.Mode == DataGroupMode.Write)
+                    nodesW.Add(nodeg);
+                else
+                    nodesRW.Add(nodeg);
+                //nodeg.ForeColor = defineColor(it);
+            }
+            var nodeR = new TreeNode("READ", nodesR.ToArray());
+            var nodeW = new TreeNode("WRITE", nodesRW.ToArray());
+            var nodeRW = new TreeNode("READ/WRITE", nodesW.ToArray());
+            treeView1.Nodes.Add(nodeR);
+            treeView1.Nodes.Add(nodeW);
+            treeView1.Nodes.Add(nodeRW);
+            foreach (TreeNode tn in treeView1.Nodes)
+            {
+                if (tn.Level == 0)
+                {
+                    tn.Expand();
+                }
+            }
+            treeView1.EndUpdate();
+        }
+    }
+
+    [Serializable]
+    public class CopyData
+    {
+        public int Level { get; set; }
+        public List<DataGroup> ListDataGroup { get; set; }
+        public DataGroup DataGroup { get; set; }
+        public DataItem DataItem { get; set; }
     }
 }

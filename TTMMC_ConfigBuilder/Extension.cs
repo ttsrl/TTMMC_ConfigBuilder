@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
 {
@@ -44,6 +45,7 @@ namespace TTMMC_ConfigBuilder
             return listToClone.Select(item => (T)item.Clone()).ToList();
         }
 
+
         public static string GetDescription<T>(this T e) where T : IConvertible
         {
             if (e is Enum)
@@ -81,6 +83,60 @@ namespace TTMMC_ConfigBuilder
                 return out_;
             }
             return null;
+        }
+
+        public static void MoveUp(this TreeNode node)
+        {
+            TreeNode parent = node.Parent;
+            if (parent != null)
+            {
+                int index = parent.Nodes.IndexOf(node);
+                if (index > 0)
+                {
+                    parent.Nodes.RemoveAt(index);
+                    parent.Nodes.Insert(index - 1, node);
+
+                    // bw : add this line to restore the originally selected node as selected
+                    node.TreeView.SelectedNode = node;
+                }
+            }
+        }
+
+        public static void MoveDown(this TreeNode node)
+        {
+            TreeNode parent = node.Parent;
+            if (parent != null)
+            {
+                int index = parent.Nodes.IndexOf(node);
+                if (index < parent.Nodes.Count - 1)
+                {
+                    parent.Nodes.RemoveAt(index);
+                    parent.Nodes.Insert(index + 1, node);
+
+                    // bw : add this line to restore the originally selected node as selected
+                    node.TreeView.SelectedNode = node;
+                }
+            }
+        }
+
+        public static TreeNode GetPreviusNode(this TreeNode node)
+        {
+            TreeNodeCollection nods = (node.Parent == null) ? node.TreeView.Nodes : node.Parent.Nodes;
+            int index = nods.IndexOf(node) - 1;
+            if (index < 0)
+                return nods[0].Parent;
+            else
+                return nods[index];
+        }
+
+        public static string FirstCharToUpper(this string input)
+        {
+            switch (input)
+            {
+                case null: throw new ArgumentNullException(nameof(input));
+                case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
+                default: return input.First().ToString().ToUpper() + input.Substring(1);
+            }
         }
 
     }

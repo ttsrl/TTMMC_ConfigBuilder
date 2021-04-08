@@ -130,6 +130,18 @@
     <Compile Include="inputSelect.Designer.cs">
       <DependentUpon>inputSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="editVPN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="editVPN.Designer.cs">
+      <DependentUpon>editVPN.cs</DependentUpon>
+    </Compile>
+    <Compile Include="inputVPN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputVPN.Designer.cs">
+      <DependentUpon>inputVPN.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModelJson.cs" />
     <Compile Include="inputTxt.cs">
       <SubType>Form</SubType>
@@ -137,11 +149,11 @@
     <Compile Include="inputTxt.Designer.cs">
       <DependentUpon>inputTxt.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewDB.cs">
+    <Compile Include="newDB.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewDB.Designer.cs">
-      <DependentUpon>NewDB.cs</DependentUpon>
+    <Compile Include="newDB.Designer.cs">
+      <DependentUpon>newDB.cs</DependentUpon>
     </Compile>
     <Compile Include="newMachine.cs">
       <SubType>Form</SubType>
@@ -190,8 +202,14 @@
     <EmbeddedResource Include="inputTxt.resx">
       <DependentUpon>inputTxt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewDB.resx">
-      <DependentUpon>NewDB.cs</DependentUpon>
+    <EmbeddedResource Include="editVPN.resx">
+      <DependentUpon>editVPN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputVPN.resx">
+      <DependentUpon>inputVPN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="newDB.resx">
+      <DependentUpon>newDB.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="newMachine.resx">
       <DependentUpon>newMachine.cs</DependentUpon>

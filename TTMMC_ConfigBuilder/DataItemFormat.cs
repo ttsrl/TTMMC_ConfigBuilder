@@ -106,6 +106,47 @@ namespace TTMMC_ConfigBuilder
                 return data.ToString();
         }
 
+        public static T GetObject<T>(string format, string value)
+        {
+            try
+            {
+                var di = Parse(format);
+                return di.GetObject<T>(value);
+            }
+            catch { throw new Exception("converting type error"); }
+        }
+
+        public T GetObject<T>(string value)
+        {
+            try
+            {
+                if (typeof(T) == typeof(ushort) || typeof(T) == typeof(short) || typeof(T) == typeof(uint) || typeof(T) == typeof(int) || typeof(T) == typeof(ulong) || typeof(T) == typeof(long))
+                {
+                    var d = thousandsD.GetDescription();
+                    var f = decimalsD.GetDescription();
+                    if (d != "")
+                        value = value.Replace(d, "");
+                    if (f != "")
+                        value = value.Replace(f, ",");
+                    var val = Convert.ToDouble(value) * Math.Pow(10, decimals);
+                    return (T)Convert.ChangeType(val, typeof(T));
+                }
+                else if (typeof(T) == typeof(float) || typeof(T) == typeof(double) || typeof(T) == typeof(decimal))
+                {
+                    var d = thousandsD.GetDescription();
+                    var f = decimalsD.GetDescription();
+                    if (d != "")
+                        value = value.Replace(d, "");
+                    if (f != "")
+                        value = value.Replace(f, ",");
+                    return (T)Convert.ChangeType(value, typeof(T));
+                }
+                else
+                    return (T)Convert.ChangeType(value, typeof(T));
+            }
+            catch (Exception ex) { throw new Exception("converting type error"); }
+        }
+
 
         private string setToDataInt(object data)
         {

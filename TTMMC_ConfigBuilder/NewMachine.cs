@@ -19,7 +19,7 @@ namespace TTMMC_ConfigBuilder
             InitializeComponent();
         }
 
-        private void NewMachine_Load(object sender, EventArgs e)
+        private void newMachine_Load(object sender, EventArgs e)
         {
             if (file_ is FileConfig)
             {
@@ -30,6 +30,8 @@ namespace TTMMC_ConfigBuilder
 
                 comboBox2.Items.AddRange(file_.Protocols.ToArray());
                 comboBox4.Items.AddRange(file_.Groups.ToArray());
+                comboBox5.Items.AddRange(Enum.GetNames(typeof(ReadMode)));
+                comboBox5.Items.RemoveAt(0);
                 lblId.Text = (file_.Machines.Count + 1).ToString();
 
                 Machine = new Machine();
@@ -51,7 +53,13 @@ namespace TTMMC_ConfigBuilder
                 return;
             }
 
-            if(comboBox3.SelectedItem.ToString() != "--")
+            if (comboBox5.Text == "Null" && comboBox3.Text == "--")
+            {
+                MessageBox.Show("Insert all data request", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (comboBox3.SelectedItem.ToString() != "--")
             {
                 Machine = new Machine
                 {
@@ -65,9 +73,12 @@ namespace TTMMC_ConfigBuilder
                     Port = "",
                     RootPath = "",
                     ShareEngine = file_.GetMachine(comboBox3.Text).Id,
+                    OnlineDataItem = textBox8.Text,
                     Image = (textBox5.Text == "") ? null : textBox5.Text,
                     Icon = (textBox6.Text == "") ? null : textBox6.Text,
-                    RefreshRealTimeDatasRead = Convert.ToInt32(numericUpDown2.Value),
+                    CallRealtimeDatasReadInterval = Convert.ToInt32(numericUpDown2.Value),
+                    ReadMode = ReadMode.Null,
+                    ReadingContinuousInterval = Convert.ToInt32(numericUpDown1.Value),
                     Datas = datas,
                     RecordingDetails = recordingDetails
                 };
@@ -86,9 +97,12 @@ namespace TTMMC_ConfigBuilder
                     Port = textBox4.Text,
                     RootPath = textBox7.Text,
                     ShareEngine = -1,
+                    OnlineDataItem = "",
                     Image = (textBox5.Text == "") ? null : textBox5.Text,
                     Icon = (textBox6.Text == "") ? null : textBox6.Text,
-                    RefreshRealTimeDatasRead = Convert.ToInt32(numericUpDown2.Value),
+                    CallRealtimeDatasReadInterval = Convert.ToInt32(numericUpDown2.Value),
+                    ReadMode = (ReadMode)Enum.Parse(typeof(ReadMode), comboBox5.SelectedItem.ToString()),
+                    ReadingContinuousInterval = Convert.ToInt32(numericUpDown1.Value),
                     Datas = datas,
                     RecordingDetails = recordingDetails
                 };
@@ -147,12 +161,18 @@ namespace TTMMC_ConfigBuilder
                 textBox3.Enabled = false;
                 textBox4.Text = "";
                 textBox4.Enabled = false;
+                textBox7.Text = "";
+                textBox7.Enabled = false;
+                comboBox5.SelectedIndex = -1;
+                comboBox5.Enabled = false;
             }
             else
             {
                 comboBox2.Enabled = true;
                 textBox3.Enabled = true;
                 textBox4.Enabled = true;
+                textBox7.Enabled = true;
+                comboBox5.Enabled = true;
             }
         }
 
@@ -163,8 +183,19 @@ namespace TTMMC_ConfigBuilder
             var ty = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString());
             comboBox3.Items.Clear();
             comboBox3.Items.Add("--");
-            comboBox3.Items.AddRange(file_.Machines.Where(m => m.Type == ty).Select(m => m.ReferenceName).ToArray());
+            comboBox3.Items.AddRange(file_.Machines.Where(m => m.Type == ty && m.ShareEngine == -1).Select(m => m.ReferenceName).ToArray());
             comboBox3.SelectedItem = "--";
+        }
+
+        private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox5.SelectedItem.ToString() == "Continuous")
+                numericUpDown1.Enabled = true;
+            else
+            {
+                numericUpDown1.Enabled = false;
+                numericUpDown1.Value = 1000;
+            }
         }
     }
 }
