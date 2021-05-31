@@ -1,7 +1,7 @@
 ﻿
 namespace TTMMC_ConfigBuilder
 {
-    partial class editVPN
+    partial class inputListVPN
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace TTMMC_ConfigBuilder
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(editVPN));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(inputListVPN));
             this.button1 = new System.Windows.Forms.Button();
             this.btt_add = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();

@@ -83,6 +83,16 @@ namespace TTMMC_ConfigBuilder
             catch { throw new Exception("parsing error"); };
         }
 
+        public static bool TryParse(string format, out DataItemFormat dif)
+        {
+            try
+            {
+                dif = Parse(format);
+                return true;
+            }
+            catch { dif = Empty; return false; };
+        }
+
         public static string SetToData(string format, object data)
         {
             try

@@ -74,6 +74,12 @@
     <Compile Include="info.Designer.cs">
       <DependentUpon>info.cs</DependentUpon>
     </Compile>
+    <Compile Include="inputListRecipes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputListRecipes.Designer.cs">
+      <DependentUpon>inputListRecipes.cs</DependentUpon>
+    </Compile>
     <Compile Include="inputLogarithmConfront.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,6 +111,12 @@
     <Compile Include="inputDataItemFormat.Designer.cs">
       <DependentUpon>inputDataItemFormat.cs</DependentUpon>
     </Compile>
+    <Compile Include="inputRecipe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputRecipe.Designer.cs">
+      <DependentUpon>inputRecipe.cs</DependentUpon>
+    </Compile>
     <Compile Include="inputRecording.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,11 +142,11 @@
     <Compile Include="inputSelect.Designer.cs">
       <DependentUpon>inputSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="editVPN.cs">
+    <Compile Include="inputListVPN.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="editVPN.Designer.cs">
-      <DependentUpon>editVPN.cs</DependentUpon>
+    <Compile Include="inputListVPN.Designer.cs">
+      <DependentUpon>inputListVPN.cs</DependentUpon>
     </Compile>
     <Compile Include="inputVPN.cs">
       <SubType>Form</SubType>
@@ -172,6 +184,9 @@
     <EmbeddedResource Include="info.resx">
       <DependentUpon>info.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="inputListRecipes.resx">
+      <DependentUpon>inputListRecipes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="inputLogarithmConfront.resx">
       <DependentUpon>inputLogarithmConfront.cs</DependentUpon>
     </EmbeddedResource>
@@ -186,6 +201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="inputDataItemFormat.resx">
       <DependentUpon>inputDataItemFormat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputRecipe.resx">
+      <DependentUpon>inputRecipe.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="inputRecording.resx">
       <DependentUpon>inputRecording.cs</DependentUpon>
@@ -202,8 +220,8 @@
     <EmbeddedResource Include="inputTxt.resx">
       <DependentUpon>inputTxt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="editVPN.resx">
-      <DependentUpon>editVPN.cs</DependentUpon>
+    <EmbeddedResource Include="inputListVPN.resx">
+      <DependentUpon>inputListVPN.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="inputVPN.resx">
       <DependentUpon>inputVPN.cs</DependentUpon>

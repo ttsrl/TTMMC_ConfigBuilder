@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace TTMMC_ConfigBuilder
@@ -48,16 +49,16 @@ namespace TTMMC_ConfigBuilder
     public enum DataType
     {
         AUTO,
+        BOOL,
         BYTE,
-        UBYTE,
-        SHORT,
-        USHORT,
-        INT,
-        UINT,
-        DINT,
-        UDINT,
-        REAL,
-        LREAL,
+        INT16,
+        UINT16,
+        INT32,
+        UINT32,
+        INT64,
+        UINT64,
+        FLOAT,
+        DOUBLE,
         STRING
     }
 
@@ -71,8 +72,9 @@ namespace TTMMC_ConfigBuilder
     public class ModelJson
     {
         public Dictionary<string, string> ConnectionStrings { get; set; }
-        public Dictionary<string, Machine> Machines { get; set; }
+        public List<Machine> Machines { get; set; }
         public List<VpnItem> Vpn { get; set; }
+        public List<RecipeLayout> RecipeLayouts { get; set; }
     }
 
     public class ModelJsonWithStandardOb
@@ -82,24 +84,26 @@ namespace TTMMC_ConfigBuilder
         public string AllowedHosts = "*";
 
         public Dictionary<string, string> ConnectionStrings { get; set; }
-        public Dictionary<string, Machine> Machines { get; set; }
+        public List<Machine> Machines { get; set; }
         public List<VpnItem> Vpn { get; set; }
+        public List<RecipeLayout> RecipeLayouts { get; set; }
     }
 
     public class Machine
     {
         private int refTime = 500;
         private int readTime = 1000;
-        private int shareEngine = -1;
+        private string shareEngine = null;
+        private string group = null;
         private List<DataGroup> datas = new List<DataGroup>();
         private RecordingDetails recDetails = new RecordingDetails();
 
-        public int Id { get; set; }
         public MachineType Type { get; set; }
-        public string ReferenceName { get; set; }
+        public string Name { get; set; }
+        public string Label { get; set; }
         public string Description { get; set; }
-        public string Group { get; set; }
-        public int ShareEngine { get => shareEngine; set => shareEngine = value; }
+        public string Group { get => group; set => group = value; }
+        public string ShareEngine { get => shareEngine; set => shareEngine = value; }
         public ReadMode ReadMode { get; set; }
         public string Protocol { get; set; }
         public string Address { get; set; }
@@ -159,16 +163,55 @@ namespace TTMMC_ConfigBuilder
     }
 
     [Serializable]
+    public class RecipeLayout : ICloneable
+    {
+        private List<string> machs = new List<string>();
+
+        public string Name { get; set; }
+        public string Label { get; set; }
+        public List<string> Machines { get => machs; set => machs = value; }
+
+        public RecipeLayout() { }
+
+        public RecipeLayout(string name, string label, IEnumerable<string> machines)
+        {
+            Name = name;
+            Label = label;
+            Machines = machines.ToList();
+        }
+
+        public RecipeLayout(string name, string label, params string[] machines)
+        {
+            Name = name;
+            Label = label;
+            Machines = new List<string>(machines);
+        }
+
+        public object Clone()
+        {
+            var clone = (RecipeLayout)this.MemberwiseClone();
+            var formatter = new BinaryFormatter();
+            using (var stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, this.Machines);
+                stream.Seek(0, SeekOrigin.Begin);
+                clone.Machines = (List<string>)formatter.Deserialize(stream);
+            }
+            return clone;
+        }
+    }
+
+    [Serializable]
     public class VpnItem : ICloneable
     {
-        public string ReferenceName { get; set; }
+        public string Name { get; set; }
         public string Ip { get; set; }
 
         public VpnItem() { }
 
-        public VpnItem(string refName, string ip)
+        public VpnItem(string name, string ip)
         {
-            ReferenceName = refName;
+            Name = name;
             Ip = ip;
         }
 
@@ -265,21 +308,33 @@ namespace TTMMC_ConfigBuilder
     [Serializable]
     public class RecordingDetails : ICloneable
     {
+
+        public enum RecordingType
+        {
+            Continuous,
+            Confront
+        }
+
         private int refTime = 5000;
+        private int conTime = 30000;
         private int vCount = 1;
         private LogarithmConfront rc = null;
         private LogarithmConfront fc = null;
+        private RecordingType type = RecordingType.Continuous;
 
         public LogarithmConfront RecordingConfront { get => rc; set => rc = value; }
         public LogarithmConfront FinishConfront { get => fc; set => fc = value; }
         public int CheckTime { get => refTime; set { refTime = (value < 1000) ? 1000 : value; } }
         public int ConfrontsValidationCounter { get => vCount; set { vCount = (value < 1) ? 1 : value; } }
+        public RecordingType Type { get => type; set => type = value; }
+        public int ContinuousTime { get => conTime; set => conTime = value; }
 
         public object Clone()
         {
             var clone = (RecordingDetails)this.MemberwiseClone();
             return clone;
         }
+
     }
 
     [Serializable]
@@ -381,7 +436,6 @@ namespace TTMMC_ConfigBuilder
 
     }
 
-
     public class Logging
     {
         private LogLevel ll = new LogLevel();
@@ -395,4 +449,5 @@ namespace TTMMC_ConfigBuilder
         [JsonProperty("Microsoft.Hosting.Lifetime")]
         public string MicrosoftH = "Information";
     }
+
 }

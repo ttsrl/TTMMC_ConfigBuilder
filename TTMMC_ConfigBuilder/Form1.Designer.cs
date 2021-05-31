@@ -47,11 +47,12 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.machineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.vPNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protocolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recipesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.vPNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.open = new System.Windows.Forms.OpenFileDialog();
@@ -86,6 +87,7 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.machineDetails = new System.Windows.Forms.GroupBox();
+            this.editName = new System.Windows.Forms.LinkLabel();
             this.editContRead = new System.Windows.Forms.LinkLabel();
             this.lblContRead = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
@@ -122,7 +124,7 @@
             this.editProtocol = new System.Windows.Forms.LinkLabel();
             this.editType = new System.Windows.Forms.LinkLabel();
             this.editDesc = new System.Windows.Forms.LinkLabel();
-            this.editName = new System.Windows.Forms.LinkLabel();
+            this.editLabel = new System.Windows.Forms.LinkLabel();
             this.lblImg = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.lblPort = new System.Windows.Forms.Label();
@@ -135,9 +137,9 @@
             this.label11 = new System.Windows.Forms.Label();
             this.lblDesc = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.lblNm = new System.Windows.Forms.Label();
+            this.lblLbl = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.lblId = new System.Windows.Forms.Label();
+            this.lblName = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.saver = new System.ComponentModel.BackgroundWorker();
             this.import = new System.Windows.Forms.OpenFileDialog();
@@ -145,6 +147,7 @@
             this.moveDown = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.menuStripList.SuspendLayout();
             this.databaseDetails.SuspendLayout();
@@ -255,9 +258,7 @@
             this.groupToolStripMenuItem,
             this.toolStripSeparator3,
             this.databaseToolStripMenuItem,
-            this.machineToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.vPNToolStripMenuItem});
+            this.machineToolStripMenuItem});
             this.addToolStripMenuItem.Enabled = false;
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
             this.addToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
@@ -296,23 +297,15 @@
             this.machineToolStripMenuItem.Text = "Machine";
             this.machineToolStripMenuItem.Click += new System.EventHandler(this.MachineToolStripMenuItem_Click);
             // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(119, 6);
-            // 
-            // vPNToolStripMenuItem
-            // 
-            this.vPNToolStripMenuItem.Name = "vPNToolStripMenuItem";
-            this.vPNToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-            this.vPNToolStripMenuItem.Text = "VPN";
-            this.vPNToolStripMenuItem.Click += new System.EventHandler(this.VPNToolStripMenuItem_Click_1);
-            // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.protocolsToolStripMenuItem,
-            this.groupsToolStripMenuItem});
+            this.groupsToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.recipesToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.vPNToolStripMenuItem});
             this.editToolStripMenuItem.Enabled = false;
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
@@ -321,16 +314,35 @@
             // protocolsToolStripMenuItem
             // 
             this.protocolsToolStripMenuItem.Name = "protocolsToolStripMenuItem";
-            this.protocolsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.protocolsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.protocolsToolStripMenuItem.Text = "Protocols";
             this.protocolsToolStripMenuItem.Click += new System.EventHandler(this.ProtocolsToolStripMenuItem_Click);
             // 
             // groupsToolStripMenuItem
             // 
             this.groupsToolStripMenuItem.Name = "groupsToolStripMenuItem";
-            this.groupsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.groupsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.groupsToolStripMenuItem.Text = "Groups";
             this.groupsToolStripMenuItem.Click += new System.EventHandler(this.GroupsToolStripMenuItem_Click);
+            // 
+            // recipesToolStripMenuItem
+            // 
+            this.recipesToolStripMenuItem.Name = "recipesToolStripMenuItem";
+            this.recipesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.recipesToolStripMenuItem.Text = "Recipes";
+            this.recipesToolStripMenuItem.Click += new System.EventHandler(this.recipesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            // 
+            // vPNToolStripMenuItem
+            // 
+            this.vPNToolStripMenuItem.Name = "vPNToolStripMenuItem";
+            this.vPNToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.vPNToolStripMenuItem.Text = "VPN";
+            this.vPNToolStripMenuItem.Click += new System.EventHandler(this.VPNToolStripMenuItem_Click_1);
             // 
             // toolStripMenuItem1
             // 
@@ -643,6 +655,7 @@
             // 
             // machineDetails
             // 
+            this.machineDetails.Controls.Add(this.editName);
             this.machineDetails.Controls.Add(this.editContRead);
             this.machineDetails.Controls.Add(this.lblContRead);
             this.machineDetails.Controls.Add(this.label26);
@@ -679,7 +692,7 @@
             this.machineDetails.Controls.Add(this.editProtocol);
             this.machineDetails.Controls.Add(this.editType);
             this.machineDetails.Controls.Add(this.editDesc);
-            this.machineDetails.Controls.Add(this.editName);
+            this.machineDetails.Controls.Add(this.editLabel);
             this.machineDetails.Controls.Add(this.lblImg);
             this.machineDetails.Controls.Add(this.label15);
             this.machineDetails.Controls.Add(this.lblPort);
@@ -692,9 +705,9 @@
             this.machineDetails.Controls.Add(this.label11);
             this.machineDetails.Controls.Add(this.lblDesc);
             this.machineDetails.Controls.Add(this.label10);
-            this.machineDetails.Controls.Add(this.lblNm);
+            this.machineDetails.Controls.Add(this.lblLbl);
             this.machineDetails.Controls.Add(this.label9);
-            this.machineDetails.Controls.Add(this.lblId);
+            this.machineDetails.Controls.Add(this.lblName);
             this.machineDetails.Controls.Add(this.label2);
             this.machineDetails.Location = new System.Drawing.Point(527, 48);
             this.machineDetails.Name = "machineDetails";
@@ -703,6 +716,18 @@
             this.machineDetails.TabStop = false;
             this.machineDetails.Text = "  Machine Details  ";
             this.machineDetails.Visible = false;
+            // 
+            // editName
+            // 
+            this.editName.AutoSize = true;
+            this.editName.Location = new System.Drawing.Point(360, 27);
+            this.editName.Name = "editName";
+            this.editName.Size = new System.Drawing.Size(25, 13);
+            this.editName.TabIndex = 60;
+            this.editName.TabStop = true;
+            this.editName.Text = "Edit";
+            this.editName.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
             // 
             // editContRead
             // 
@@ -1096,17 +1121,17 @@
             this.editDesc.VisitedLinkColor = System.Drawing.Color.Blue;
             this.editDesc.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
             // 
-            // editName
+            // editLabel
             // 
-            this.editName.AutoSize = true;
-            this.editName.Location = new System.Drawing.Point(360, 51);
-            this.editName.Name = "editName";
-            this.editName.Size = new System.Drawing.Size(25, 13);
-            this.editName.TabIndex = 17;
-            this.editName.TabStop = true;
-            this.editName.Text = "Edit";
-            this.editName.VisitedLinkColor = System.Drawing.Color.Blue;
-            this.editName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
+            this.editLabel.AutoSize = true;
+            this.editLabel.Location = new System.Drawing.Point(360, 51);
+            this.editLabel.Name = "editLabel";
+            this.editLabel.Size = new System.Drawing.Size(25, 13);
+            this.editLabel.TabIndex = 17;
+            this.editLabel.TabStop = true;
+            this.editLabel.Text = "Edit";
+            this.editLabel.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.editLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.edit_LinkClicked);
             // 
             // lblImg
             // 
@@ -1228,14 +1253,14 @@
             this.label10.TabIndex = 4;
             this.label10.Text = "Description:";
             // 
-            // lblNm
+            // lblLbl
             // 
-            this.lblNm.Location = new System.Drawing.Point(169, 50);
-            this.lblNm.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblNm.Name = "lblNm";
-            this.lblNm.Size = new System.Drawing.Size(180, 13);
-            this.lblNm.TabIndex = 3;
-            this.lblNm.Text = "Nome:";
+            this.lblLbl.Location = new System.Drawing.Point(169, 50);
+            this.lblLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblLbl.Name = "lblLbl";
+            this.lblLbl.Size = new System.Drawing.Size(180, 13);
+            this.lblLbl.TabIndex = 3;
+            this.lblLbl.Text = "Nome:";
             // 
             // label9
             // 
@@ -1244,18 +1269,18 @@
             this.label9.Location = new System.Drawing.Point(27, 50);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(43, 13);
+            this.label9.Size = new System.Drawing.Size(42, 13);
             this.label9.TabIndex = 2;
-            this.label9.Text = "Name:";
+            this.label9.Text = "Label:";
             // 
-            // lblId
+            // lblName
             // 
-            this.lblId.Location = new System.Drawing.Point(169, 27);
-            this.lblId.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblId.Name = "lblId";
-            this.lblId.Size = new System.Drawing.Size(180, 13);
-            this.lblId.TabIndex = 1;
-            this.lblId.Text = "Nome:";
+            this.lblName.Location = new System.Drawing.Point(169, 27);
+            this.lblName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(180, 13);
+            this.lblName.TabIndex = 1;
+            this.lblName.Text = "Nome:";
             // 
             // label2
             // 
@@ -1264,9 +1289,9 @@
             this.label2.Location = new System.Drawing.Point(27, 27);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(22, 13);
+            this.label2.Size = new System.Drawing.Size(43, 13);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Id:";
+            this.label2.Text = "Name:";
             // 
             // saver
             // 
@@ -1331,6 +1356,11 @@
             this.label3.Size = new System.Drawing.Size(56, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "Machines:";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // Form1
             // 
@@ -1405,8 +1435,8 @@
         private System.Windows.Forms.GroupBox machineDetails;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblId;
-        private System.Windows.Forms.Label lblNm;
+        private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.Label lblLbl;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblDesc;
         private System.Windows.Forms.Label label10;
@@ -1428,7 +1458,7 @@
         private System.Windows.Forms.LinkLabel editProtocol;
         private System.Windows.Forms.LinkLabel editType;
         private System.Windows.Forms.LinkLabel editDesc;
-        private System.Windows.Forms.LinkLabel editName;
+        private System.Windows.Forms.LinkLabel editLabel;
         private System.Windows.Forms.LinkLabel editDatas;
         private System.Windows.Forms.Label lblCountDatas;
         private System.Windows.Forms.Label label16;
@@ -1481,10 +1511,13 @@
         private System.Windows.Forms.LinkLabel editContRead;
         private System.Windows.Forms.Label lblContRead;
         private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem vPNToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem includeStandardObjToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel editName;
+        private System.Windows.Forms.ToolStripMenuItem recipesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem vPNToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
 

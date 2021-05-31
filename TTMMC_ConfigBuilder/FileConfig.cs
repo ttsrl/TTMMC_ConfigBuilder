@@ -13,6 +13,7 @@ namespace TTMMC_ConfigBuilder
         private Dictionary<string, DB> dbs = new Dictionary<string, DB>();
         private string _name;
         private List<VpnItem> vpn = new List<VpnItem>();
+        private List<RecipeLayout> recps = new List<RecipeLayout>();
 
         public string Name { get => _name; set => _name = value.Replace(".json", ""); }
         public List<string> Protocols { get => protocols; }
@@ -20,6 +21,7 @@ namespace TTMMC_ConfigBuilder
         public List<Machine> Machines { get => machines; }
         public Dictionary<string, DB> DBs { get => dbs; }
         public List<VpnItem> Vpn { get => vpn; set => vpn = value; }
+        public List<RecipeLayout> Recipes { get => recps; set => recps = value; }
 
 
         public FileConfig(string name)
@@ -89,13 +91,13 @@ namespace TTMMC_ConfigBuilder
 
         public bool AddMachine(Machine machine)
         {
-            if (string.IsNullOrEmpty(machine.Group) || ( machine.ShareEngine == -1 && (string.IsNullOrEmpty(machine.Protocol) || string.IsNullOrEmpty(machine.Address) || string.IsNullOrEmpty(machine.Port))))
+            if (string.IsNullOrEmpty(machine.ShareEngine) && (string.IsNullOrEmpty(machine.Protocol) || string.IsNullOrEmpty(machine.Address) || string.IsNullOrEmpty(machine.Port)))
                 return false;
-            var gr = groups.Where(g => g == (machine.Group ?? "")).FirstOrDefault();
-            if (gr == null)
+            if (!string.IsNullOrEmpty(machine.Group))
             {
-                AddGroup(machine.Group);
-                gr = GetGroup(machine.Group);
+                var gr = groups.Where(g => g == machine.Group).FirstOrDefault();
+                if (gr == null)
+                    AddGroup(machine.Group);
             }
             var pr = protocols.Where(p => p == machine.Protocol).FirstOrDefault();
             if (pr == null)
@@ -103,7 +105,7 @@ namespace TTMMC_ConfigBuilder
                 AddProtocol(machine.Protocol);
                 pr = GetProtocol(machine.Protocol);
             }
-            if (gr != null && pr != null)
+            if (pr != null)
             {
                 machines.Add(machine);
                 return true;
@@ -123,8 +125,6 @@ namespace TTMMC_ConfigBuilder
                     return false;
                 machines.Remove(ma);
                 machines.Insert(indx - 1, ma);
-                ma.Id = ma.Id - 1;
-                machines[indx].Id = machines[indx].Id + 1;
                 return true;
             }
             catch { return false; }
@@ -142,8 +142,6 @@ namespace TTMMC_ConfigBuilder
                     return false;
                 machines.Remove(ma);
                 machines.Insert(indx + 1, ma);
-                ma.Id = ma.Id + 1;
-                machines[indx].Id = machines[indx].Id - 1;
                 return true;
             }
             catch { return false; }
@@ -153,7 +151,7 @@ namespace TTMMC_ConfigBuilder
         {
             foreach (var m in machines)
             {
-                if (m.ReferenceName == name)
+                if (m.Name == name)
                 {
                     machines.Remove(m);
                     return true;
@@ -199,7 +197,7 @@ namespace TTMMC_ConfigBuilder
                     return false;
                 foreach (var m in machines)
                 {
-                    if (m.Group == name)
+                    if (m.Group == prot)
                         m.Group = null;
                 }
                 groups.Remove(prot);
@@ -234,11 +232,6 @@ namespace TTMMC_ConfigBuilder
                 var prot = GetGroup(name);
                 if (prot == null)
                     return false;
-                foreach (var m in machines)
-                {
-                    if (m.Group == name)
-                        m.Group = newName;
-                }
                 var indx = groups.IndexOf(name);
                 groups[indx] = newName;
                 return true;
@@ -280,7 +273,7 @@ namespace TTMMC_ConfigBuilder
         {
             foreach (var m in machines)
             {
-                if (m.ReferenceName == name)
+                if (m.Name == name)
                     return m;
             }
             return null;
@@ -289,12 +282,6 @@ namespace TTMMC_ConfigBuilder
         public Machine GetMachine(int index)
         {
             return (index < machines.Count) ? machines[index] : null;
-        }
-
-        public Machine GetMachineById(int id)
-        {
-            var mt = machines.Where(m => m.Id == id).FirstOrDefault();
-            return mt;
         }
 
         public DB GetDB(string name)

@@ -8,7 +8,7 @@ namespace TTMMC_ConfigBuilder
         private bool relt = true;
         private bool logs = true;
 
-        public bool DataRead { get; set; }
+        public DataGroupMode DataMode { get; set; }
 
         public string Description { get; set; }
         public string Address { get; set; }
@@ -32,10 +32,10 @@ namespace TTMMC_ConfigBuilder
             textBox4.Text = Unit;
             comboBox1.Items.AddRange(Enum.GetNames(typeof(DataType)));
             comboBox1.SelectedIndex = 0;
-            if (!DataRead)
+            if (DataMode == DataGroupMode.Write)
             {
                 checkBox3.Checked = checkBox3.Enabled = false;
-                checkBox4.Checked = checkBox3.Enabled = false;
+                checkBox4.Checked = checkBox4.Enabled = false;
             }
             else
             {

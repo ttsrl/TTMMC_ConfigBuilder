@@ -29,10 +29,10 @@ namespace TTMMC_ConfigBuilder
                 }
 
                 comboBox2.Items.AddRange(file_.Protocols.ToArray());
+                comboBox4.Items.Add("--");
                 comboBox4.Items.AddRange(file_.Groups.ToArray());
                 comboBox5.Items.AddRange(Enum.GetNames(typeof(ReadMode)));
                 comboBox5.Items.RemoveAt(0);
-                lblId.Text = (file_.Machines.Count + 1).ToString();
 
                 Machine = new Machine();
                 datas = new List<DataGroup>();
@@ -42,7 +42,7 @@ namespace TTMMC_ConfigBuilder
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text == "" || textBox2.Text == "" || comboBox1.Text == "")
+            if (textBox1.Text == "" || textBox2.Text == "" || comboBox1.Text == "" || comboBox4.Text == "")
             {
                 MessageBox.Show("Insert all data request", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -63,16 +63,16 @@ namespace TTMMC_ConfigBuilder
             {
                 Machine = new Machine
                 {
-                    Id = file_.Machines.Count + 1,
-                    ReferenceName = textBox1.Text,
-                    Description = textBox2.Text,
+                    Name = textBox1.Text,
+                    Label = textBox2.Text,
+                    Description = textBox9.Text,
                     Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString()),
-                    Group = file_.GetGroup(comboBox4.SelectedItem.ToString()),
+                    Group = comboBox4.SelectedItem.ToString() == "--"  ? null : file_.Groups.Where(g => g == comboBox4.SelectedItem.ToString()).FirstOrDefault(),
                     Protocol = "",
                     Address = "",
                     Port = "",
                     RootPath = "",
-                    ShareEngine = file_.GetMachine(comboBox3.Text).Id,
+                    ShareEngine = file_.GetMachine(comboBox3.Text).Name,
                     OnlineDataItem = textBox8.Text,
                     Image = (textBox5.Text == "") ? null : textBox5.Text,
                     Icon = (textBox6.Text == "") ? null : textBox6.Text,
@@ -87,16 +87,16 @@ namespace TTMMC_ConfigBuilder
             {
                 Machine = new Machine
                 {
-                    Id = file_.Machines.Count + 1,
-                    ReferenceName = textBox1.Text,
-                    Description = textBox2.Text,
+                    Name = textBox1.Text,
+                    Label = textBox2.Text,
+                    Description = textBox9.Text,
                     Type = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString()),
-                    Group = file_.GetGroup(comboBox4.SelectedItem.ToString()),
+                    Group = comboBox4.SelectedItem.ToString() == "--" ? null : file_.Groups.Where(g => g == comboBox4.SelectedItem.ToString()).FirstOrDefault(),
                     Protocol = file_.GetProtocol(comboBox2.SelectedItem.ToString()),
                     Address = textBox3.Text,
                     Port = textBox4.Text,
                     RootPath = textBox7.Text,
-                    ShareEngine = -1,
+                    ShareEngine = null,
                     OnlineDataItem = "",
                     Image = (textBox5.Text == "") ? null : textBox5.Text,
                     Icon = (textBox6.Text == "") ? null : textBox6.Text,
@@ -183,7 +183,7 @@ namespace TTMMC_ConfigBuilder
             var ty = (MachineType)Enum.Parse(typeof(MachineType), comboBox1.SelectedItem.ToString());
             comboBox3.Items.Clear();
             comboBox3.Items.Add("--");
-            comboBox3.Items.AddRange(file_.Machines.Where(m => m.Type == ty && m.ShareEngine == -1).Select(m => m.ReferenceName).ToArray());
+            comboBox3.Items.AddRange(file_.Machines.Where(m => m.Type == ty && string.IsNullOrEmpty(m.ShareEngine)).Select(m => m.Name).ToArray());
             comboBox3.SelectedItem = "--";
         }
 

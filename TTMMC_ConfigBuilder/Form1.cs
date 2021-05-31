@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using TTMMC_ConfigBuilder.Properties;
 
@@ -57,31 +58,45 @@ namespace TTMMC_ConfigBuilder
                 file.Close();
                 if (!string.IsNullOrEmpty(read))
                 {
-                    var json = JsonConvert.DeserializeObject<ModelJson>(read);
-                    file_ = new FileConfig(import.SafeFileName);
-                    //load data
-                    foreach (var it in json.ConnectionStrings)
+                    try
                     {
-                        file_.AddDatabase(it.Key, it.Value);
+                        var json = JsonConvert.DeserializeObject<ModelJson>(read);
+                        file_ = new FileConfig(import.SafeFileName);
+                        foreach (var it in json.ConnectionStrings)
+                        {
+                            file_.AddDatabase(it.Key, it.Value);
+                        }
+                        foreach (var m in json.Machines)
+                        {
+                            file_.AddMachine(m);
+                        }
+                        file_.Recipes = json.RecipeLayouts;
+                        file_.Vpn = json.Vpn;
+                        //disegno liste
+                        reloadLabel();
+                        reloadListBox1();
+                        reloadListBox2();
+                        //sistemo elementi gui
+                        newToolStripMenuItem.Enabled = false;
+                        addToolStripMenuItem.Enabled = true;
+                        editToolStripMenuItem.Enabled = true;
+                        openToolStripMenuItem.Enabled = false;
+                        saveToolStripMenuItem.Enabled = true;
+                        closeToolStripMenuItem.Enabled = true;
+                        listBox1.Enabled = true;
+                        listBox2.Enabled = true;
+                        moveUp.Enabled = true;
+                        moveDown.Enabled = true;
                     }
-                    foreach (var m in json.Machines)
+                    catch(Exception ex)
                     {
-                        file_.AddMachine(m.Value);
+                        MessageBox.Show(ex.ToString());
+                        file_ = null;
+                        reloadLabel();
+                        reloadListBox1();
+                        reloadListBox2();
+                        MessageBox.Show("Error loading file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); 
                     }
-                    file_.Vpn = json.Vpn;
-                    newToolStripMenuItem.Enabled = false;
-                    addToolStripMenuItem.Enabled = true;
-                    editToolStripMenuItem.Enabled = true;
-                    openToolStripMenuItem.Enabled = false;
-                    saveToolStripMenuItem.Enabled = true;
-                    closeToolStripMenuItem.Enabled = true;
-                    listBox1.Enabled = true;
-                    listBox2.Enabled = true;
-                    moveUp.Enabled = true;
-                    moveDown.Enabled = true;
-                    reloadLabel();
-                    reloadListBox1();
-                    reloadListBox2();
                 }
             }
         }
@@ -160,7 +175,7 @@ namespace TTMMC_ConfigBuilder
             var frm = new newMachine();
             if(frm.ShowDialog() == DialogResult.OK)
             {
-                if (frm.Machine.ShareEngine == -1)
+                if (string.IsNullOrEmpty(frm.Machine.ShareEngine))
                 {
                     var adrss = frm.Machine.Address;
                     adrss = adrss.Replace("opc.tcp://", "");
@@ -235,6 +250,37 @@ namespace TTMMC_ConfigBuilder
             f.ShowDialog();
         }
 
+
+        private void includeStandardObjToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.Default.includeStandardOb = includeStandardObjToolStripMenuItem.Checked;
+            Settings.Default.Save();
+            Settings.Default.Reload();
+        }
+
+        private void recipesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var frm = new inputListRecipes();
+            frm.Items = file_.Machines.Select(m => m.Name).ToList();
+            if (file_.Recipes != null)
+                frm.List = file_.Recipes.Clone().ToList();
+            if (frm.ShowDialog() == DialogResult.OK)
+                file_.Recipes = frm.List;
+        }
+
+        private void VPNToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            var frm = new inputListVPN();
+            var objs = new List<string>();
+            objs.AddRange(file_.DBs.Select(it => it.Key));
+            objs.AddRange(file_.Machines.Where(it => string.IsNullOrEmpty(it.ShareEngine)).Select(it => it.Name));
+            frm.Objects = objs;
+            if (file_.Vpn != null)
+                frm.List = file_.Vpn.Clone().ToList();
+            if (frm.ShowDialog() == DialogResult.OK)
+                file_.Vpn = frm.List;
+        }
+
         #endregion
 
         #region LISTS
@@ -271,13 +317,13 @@ namespace TTMMC_ConfigBuilder
                 var machine = file_.GetMachine(curItem);
                 if (machine is Machine)
                 {
-                    lblId.Text = machine.Id.ToString();
-                    lblNm.Text = machine.ReferenceName;
+                    lblName.Text = machine.Name;
+                    lblLbl.Text = machine.Label;
                     lblDesc.Text = machine.Description;
                     lblType.Text = Enum.GetName(typeof(MachineType), machine.Type);
                     lblProtocol.Text = string.IsNullOrEmpty(machine.Protocol) ? "--" : machine.Protocol;
-                    lblGroup.Text = string.IsNullOrEmpty(machine.Group) ? "--" : machine.Group;
-                    lblShare.Text = machine.ShareEngine == -1 ? "--" : file_.GetMachineById(machine.ShareEngine).ReferenceName;
+                    lblGroup.Text = string.IsNullOrEmpty(machine.Group) ? "--" : file_.GetGroup(machine.Group);
+                    lblShare.Text = string.IsNullOrEmpty(machine.ShareEngine) ? "--" : file_.GetMachine(machine.ShareEngine).Name;
                     lblAddress.Text = string.IsNullOrEmpty(machine.Address) ? "--" : machine.Address;
                     lblPort.Text = string.IsNullOrEmpty(machine.Port) ? "--" : machine.Port;
                     lblRoot.Text = string.IsNullOrEmpty(machine.RootPath) ? "--" : machine.RootPath;
@@ -292,7 +338,7 @@ namespace TTMMC_ConfigBuilder
                     lblRecording.Text = "";
                     databaseDetails.Visible = false;
                     machineDetails.Visible = true;
-                    if(machine.ShareEngine == -1)
+                    if(string.IsNullOrEmpty(machine.ShareEngine))
                     {
                         editAddress.Enabled = true;
                         editPort.Enabled = true;
@@ -398,10 +444,20 @@ namespace TTMMC_ConfigBuilder
                     if (nm == "editName")
                     {
                         frmInputTxt.LblTxt = "Name:";
-                        frmInputTxt.Value = machine.ReferenceName;
+                        frmInputTxt.Value = machine.Name;
                         if (frmInputTxt.ShowDialog() == DialogResult.OK)
                         {
-                            machine.ReferenceName = frmInputTxt.Value;
+                            machine.Name = frmInputTxt.Value;
+                            listBox2.Items[listBox2.SelectedIndex] = frmInputTxt.Value;
+                        }
+                    }
+                    else if (nm == "editLabel")
+                    {
+                        frmInputTxt.LblTxt = "Label:";
+                        frmInputTxt.Value = machine.Label;
+                        if (frmInputTxt.ShowDialog() == DialogResult.OK)
+                        {
+                            machine.Label = frmInputTxt.Value;
                             listBox2.Items[listBox2.SelectedIndex] = frmInputTxt.Value;
                         }
                     }
@@ -423,23 +479,25 @@ namespace TTMMC_ConfigBuilder
                     else if (nm == "editGroup")
                     {
                         frmSelect.LblTxt = "Group:";
-                        frmSelect.List = file_.Groups.ToList();
-                        frmSelect.Value = machine.Group;
+                        var list = file_.Groups.ToList();
+                        list.Insert(0, "--");
+                        frmSelect.List = list;
+                        frmSelect.Value = string.IsNullOrEmpty(machine.Group) ? "--" : file_.GetGroup(machine.Group);
                         if (frmSelect.ShowDialog() == DialogResult.OK)
-                            machine.Group = file_.GetGroup(frmSelect.Value);
+                            machine.Group = file_.Groups.Where(g => g == frmSelect.Value).FirstOrDefault();
                     }
                     else if (nm == "editShare")
                     {
                         frmSelect.LblTxt = "ShareEngine:";
                         var l = new List<string>();
                         l.Add("--");
-                        l.AddRange(file_.Machines.Where(m => m.Type == machine.Type).Select(m => m.ReferenceName).ToList());
-                        l.Remove(machine.ReferenceName);
+                        l.AddRange(file_.Machines.Where(m => m.Type == machine.Type).Select(m => m.Name).ToList());
+                        l.Remove(machine.Name);
                         frmSelect.List = l;
-                        frmSelect.Value = (machine.ShareEngine == -1) ? "--" : file_.GetMachine(machine.ShareEngine).ReferenceName;
+                        frmSelect.Value = string.IsNullOrEmpty(machine.ShareEngine) ? "--" : file_.GetMachine(machine.ShareEngine).Name;
                         if (frmSelect.ShowDialog() == DialogResult.OK)
                         {
-                            machine.ShareEngine = (frmSelect.Value == "--") ? -1 : file_.GetMachine(frmSelect.Value).Id;
+                            machine.ShareEngine = (frmSelect.Value == "--") ? null : file_.GetMachine(frmSelect.Value).Name;
                             machine.Protocol = "";
                             machine.Address = "";
                             machine.Port = "";
@@ -453,7 +511,7 @@ namespace TTMMC_ConfigBuilder
                         var modes = Enum.GetNames(typeof(ReadMode)).ToList();
                         modes.RemoveAt(0);
                         frmSelect.List = modes;
-                        frmSelect.Value = Enum.GetName(typeof(MachineType), machine.ReadMode);
+                        frmSelect.Value = Enum.GetName(typeof(ReadMode), machine.ReadMode);
                         if (frmSelect.ShowDialog() == DialogResult.OK)
                         {
                             machine.ReadMode = (ReadMode)Enum.Parse(typeof(ReadMode), frmSelect.Value);
@@ -528,7 +586,7 @@ namespace TTMMC_ConfigBuilder
                     else if (nm == "editDatas")
                     {
                         var cloneDataRead = machine.Datas.Clone().ToList();
-                        frmTreview.Text = "Edit Datas - " + machine.ReferenceName;
+                        frmTreview.Text = "Edit Datas - " + machine.Name;
                         frmTreview.Datas = cloneDataRead;
                         if (frmTreview.ShowDialog() == DialogResult.OK)
                             machine.Datas = frmTreview.Datas;
@@ -611,17 +669,16 @@ namespace TTMMC_ConfigBuilder
                     var cns = "Data Source=" + db.Value.IP + ";Initial Catalog=" + db.Value.Database + ";Persist Security Info=" + db.Value.PersistSecurityInfo.ToString() + ";User ID=" + db.Value.Username + ";Password=" + db.Value.Password;
                     dbs.Add(db.Key, cns);
                 }
-                var machines = new Dictionary<string, Machine>();
-                var c = 0;
+                var machines = new List<Machine>();
                 foreach (var it in file_.Machines)
                 {
                     var nm = new Machine
                     {
-                        Id = it.Id,
-                        Address = it.Address,
+                        Name = it.Name,
+                        Label = it.Label,
                         Description = it.Description,
-                        ReferenceName = it.ReferenceName,
                         Group = it.Group,
+                        Address = it.Address,
                         Port = it.Port,
                         Protocol = it.Protocol,
                         ShareEngine = it.ShareEngine,
@@ -636,8 +693,7 @@ namespace TTMMC_ConfigBuilder
                         RecordingDetails = it.RecordingDetails,
                         Datas = it.Datas
                     };
-                    machines.Add(c.ToString(), nm);
-                    c++;
+                    machines.Add(nm);
                 }
                 object model = null;
                 if (includeStandardObjToolStripMenuItem.Checked)
@@ -646,7 +702,8 @@ namespace TTMMC_ConfigBuilder
                     {
                         ConnectionStrings = dbs,
                         Machines = machines,
-                        Vpn = file_.Vpn
+                        Vpn = file_.Vpn,
+                        RecipeLayouts = file_.Recipes
                     };
                 }
                 else
@@ -655,12 +712,14 @@ namespace TTMMC_ConfigBuilder
                     {
                         ConnectionStrings = dbs,
                         Machines = machines,
-                        Vpn = file_.Vpn
+                        Vpn = file_.Vpn,
+                        RecipeLayouts = file_.Recipes
                     };
                 }
                 var json = JsonConvert.SerializeObject(model, Formatting.Indented);
                 var stw = new StreamWriter(export.FileName);
-                stw.Write("//#################################\r\n//##  TTMMC - ConfigurationFile  ##\r\n//##     ConfigBuider v. 2.0     ##\r\n//##      " + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "       ##\r\n//#################################");
+                var version = new Version(Assembly.GetEntryAssembly().GetName().Version.Major, Assembly.GetEntryAssembly().GetName().Version.Minor);
+                stw.Write("//#################################\r\n//##  TTMMC - ConfigurationFile  ##\r\n//##     ConfigBuider v. " + String.Format("{0}.{1}", version.Major, version.Minor) + "     ##\r\n//##      " + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "       ##\r\n//#################################");
                 stw.Write("\r\n\r\n\r\n");
                 stw.Write(json);
                 stw.Close();
@@ -733,7 +792,7 @@ namespace TTMMC_ConfigBuilder
             if (file_ == null)
                 return;
             var list = new List<string>();
-            list.AddRange(file_.Machines.Select(m => m.ReferenceName));
+            list.AddRange(file_.Machines.Select(m => m.Name));
             listBox2.Items.AddRange(list.ToArray());
         }
 
@@ -748,26 +807,6 @@ namespace TTMMC_ConfigBuilder
             tsslNElem.Text = (file_.Machines.Count + file_.DBs.Count).ToString();
             tsslNProt.Text = file_.Protocols.Count.ToString();
             tsslNGroup.Text = file_.Groups.Count.ToString();
-        }
-
-        private void VPNToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-            var frm = new editVPN();
-            var objs = new List<string>();
-            objs.AddRange(file_.DBs.Select(it => it.Key));
-            objs.AddRange(file_.Machines.Where(it => it.ShareEngine == -1).Select(it => it.ReferenceName));
-            frm.Objects = objs;
-            if(file_.Vpn != null)
-            frm.List = file_.Vpn.Clone().ToList();
-            if (frm.ShowDialog() == DialogResult.OK)
-                file_.Vpn = frm.List;
-        }
-
-        private void includeStandardObjToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Settings.Default.includeStandardOb = includeStandardObjToolStripMenuItem.Checked;
-            Settings.Default.Save();
-            Settings.Default.Reload();
         }
     }
 }

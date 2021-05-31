@@ -36,6 +36,11 @@ namespace TTMMC_ConfigBuilder
             {
                 if (List[index] == inputTxt.Value)
                     return;
+                if (string.IsNullOrEmpty(inputTxt.Value))
+                {
+                    MessageBox.Show("Element not valid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 if (List.Contains(inputTxt.Value))
                 {
                     MessageBox.Show("Element with this name already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -63,6 +68,11 @@ namespace TTMMC_ConfigBuilder
             frm.Text = "Add Object";
             if (frm.ShowDialog() == DialogResult.OK)
             {
+                if (string.IsNullOrEmpty(frm.Value))
+                {
+                    MessageBox.Show("Element not valid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 if (List.Contains(frm.Value))
                 {
                     MessageBox.Show("Element with this name already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

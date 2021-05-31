@@ -24,11 +24,21 @@ namespace TTMMC_ConfigBuilder
         private void inputSelect_Load(object sender, EventArgs e)
         {
             label1.Text = LblTxt ?? "Nome:";
-            foreach(var it in List)
+            if (List != null && List.Count > 0)
             {
-                comboBox1.Items.Add(it);
+                foreach (var it in List)
+                {
+                    comboBox1.Items.Add(it);
+                }
             }
-            comboBox1.SelectedItem = Value;
+
+            if (!comboBox1.Items.Contains("--"))
+                comboBox1.Items.Insert(0, "--");
+
+            if (comboBox1.Items.Count > 1 && Value != null)
+                comboBox1.SelectedItem = Value;
+            else
+                comboBox1.SelectedItem = "--";
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -38,14 +48,14 @@ namespace TTMMC_ConfigBuilder
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (comboBox1.Text != "")
+            if (comboBox1.Text != "" && comboBox1.Text != "--")
             {
                 Value = comboBox1.Text;
                 this.DialogResult = DialogResult.OK;
             }
             else
             {
-                MessageBox.Show("Inserisci tutti i dati richiesti", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Insert all data requested.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

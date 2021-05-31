@@ -274,7 +274,7 @@ namespace TTMMC_ConfigBuilder
                 {
                     var group = Datas.GetDataGroup(node.Text);
                     var frm = new inputDataItem();
-                    frm.DataRead = group.Mode.HasFlag(DataGroupMode.Read);
+                    frm.DataMode = group.Mode;
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
                         treeView1.BeginUpdate();
@@ -613,8 +613,8 @@ namespace TTMMC_ConfigBuilder
                 //nodeg.ForeColor = defineColor(it);
             }
             var nodeR = new TreeNode("READ", nodesR.ToArray());
-            var nodeW = new TreeNode("WRITE", nodesRW.ToArray());
-            var nodeRW = new TreeNode("READ/WRITE", nodesW.ToArray());
+            var nodeW = new TreeNode("WRITE", nodesW.ToArray());
+            var nodeRW = new TreeNode("READ/WRITE", nodesRW.ToArray());
             treeView1.Nodes.Add(nodeR);
             treeView1.Nodes.Add(nodeW);
             treeView1.Nodes.Add(nodeRW);

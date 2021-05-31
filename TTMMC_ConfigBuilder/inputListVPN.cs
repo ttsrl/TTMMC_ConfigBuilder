@@ -6,12 +6,12 @@ using System.Windows.Forms;
 
 namespace TTMMC_ConfigBuilder
 {
-    public partial class editVPN : Form
+    public partial class inputListVPN : Form
     {
         public List<string> Objects { get; set; }
         public List<VpnItem> List { get; set; }
 
-        public editVPN()
+        public inputListVPN()
         {
             InitializeComponent();
         }
@@ -40,7 +40,7 @@ namespace TTMMC_ConfigBuilder
             if (Objects != null && Objects.Count > 0)
             {
                 var cl = Objects.Clone().ToList();
-                foreach (var it in List.Select(l => l.ReferenceName))
+                foreach (var it in List.Select(l => l.Name))
                 {
                     cl.Remove(it);
                 }
@@ -48,7 +48,7 @@ namespace TTMMC_ConfigBuilder
             }
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                List.Add(new VpnItem(frm.ReferenceName, frm.Value));
+                List.Add(new VpnItem(frm.Name, frm.Value));
                 reloadList();
             }
         }
@@ -58,7 +58,7 @@ namespace TTMMC_ConfigBuilder
             var item = listBox1.SelectedItem;
             if (item != null)
             {
-                var listIt = List.Where(i => i.ReferenceName == item.ToString()).FirstOrDefault();
+                var listIt = List.Where(i => i.Name == item.ToString()).FirstOrDefault();
                 var frm = new inputTxt();
                 frm.LblTxt = "Value: ";
                 frm.Value = listIt.Ip;
@@ -75,7 +75,7 @@ namespace TTMMC_ConfigBuilder
             var item = listBox1.SelectedItem;
             if (item != null)
             {
-                var listIt = List.Where(i => i.ReferenceName == item.ToString()).FirstOrDefault();
+                var listIt = List.Where(i => i.Name == item.ToString()).FirstOrDefault();
                 if (listIt != null)
                 {
                     List.Remove(listIt);
@@ -87,7 +87,7 @@ namespace TTMMC_ConfigBuilder
         private void reloadList()
         {
             listBox1.Items.Clear();
-            listBox1.Items.AddRange(List.Select(it => it.ReferenceName).ToArray());
+            listBox1.Items.AddRange(List.Select(it => it.Name).ToArray());
         }
 
     }

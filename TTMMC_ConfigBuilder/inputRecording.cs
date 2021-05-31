@@ -22,6 +22,8 @@ namespace TTMMC_ConfigBuilder
                 DialogResult = DialogResult.Cancel;
             numericUpDown1.Value = recording.CheckTime;
             numericUpDown2.Value = recording.ConfrontsValidationCounter;
+            radioButton2.Checked = recording.Type == RecordingDetails.RecordingType.Confront;
+            numericUpDown3.Value = recording.ContinuousTime;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -58,5 +60,21 @@ namespace TTMMC_ConfigBuilder
             }
         }
 
+        private void radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                recording.Type = RecordingDetails.RecordingType.Continuous;
+                groupBox1.Enabled = true;
+                groupBox2.Enabled = false;
+            }
+            else
+            {
+                recording.Type = RecordingDetails.RecordingType.Confront;
+                groupBox1.Enabled = false;
+                groupBox2.Enabled = true;
+            }
+
+        }
     }
 }
