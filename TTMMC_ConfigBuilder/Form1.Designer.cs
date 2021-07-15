@@ -50,6 +50,7 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protocolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.recipesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.vPNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,7 +148,6 @@
             this.moveDown = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.menuStripList.SuspendLayout();
             this.databaseDetails.SuspendLayout();
@@ -314,33 +314,38 @@
             // protocolsToolStripMenuItem
             // 
             this.protocolsToolStripMenuItem.Name = "protocolsToolStripMenuItem";
-            this.protocolsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.protocolsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.protocolsToolStripMenuItem.Text = "Protocols";
             this.protocolsToolStripMenuItem.Click += new System.EventHandler(this.ProtocolsToolStripMenuItem_Click);
             // 
             // groupsToolStripMenuItem
             // 
             this.groupsToolStripMenuItem.Name = "groupsToolStripMenuItem";
-            this.groupsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.groupsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.groupsToolStripMenuItem.Text = "Groups";
             this.groupsToolStripMenuItem.Click += new System.EventHandler(this.GroupsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(121, 6);
             // 
             // recipesToolStripMenuItem
             // 
             this.recipesToolStripMenuItem.Name = "recipesToolStripMenuItem";
-            this.recipesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.recipesToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.recipesToolStripMenuItem.Text = "Recipes";
             this.recipesToolStripMenuItem.Click += new System.EventHandler(this.recipesToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(121, 6);
             // 
             // vPNToolStripMenuItem
             // 
             this.vPNToolStripMenuItem.Name = "vPNToolStripMenuItem";
-            this.vPNToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.vPNToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.vPNToolStripMenuItem.Text = "VPN";
             this.vPNToolStripMenuItem.Click += new System.EventHandler(this.VPNToolStripMenuItem_Click_1);
             // 
@@ -1356,11 +1361,6 @@
             this.label3.Size = new System.Drawing.Size(56, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "Machines:";
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // Form1
             // 

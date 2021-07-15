@@ -32,16 +32,8 @@ namespace TTMMC_ConfigBuilder
             textBox4.Text = Unit;
             comboBox1.Items.AddRange(Enum.GetNames(typeof(DataType)));
             comboBox1.SelectedIndex = 0;
-            if (DataMode == DataGroupMode.Write)
-            {
-                checkBox3.Checked = checkBox3.Enabled = false;
-                checkBox4.Checked = checkBox4.Enabled = false;
-            }
-            else
-            {
-                checkBox3.Checked = Realtime;
-                checkBox4.Checked = Logs;
-            }
+            checkBox3.Checked = Realtime;
+            checkBox4.Checked = Logs;
         }
 
         private void button1_Click(object sender, EventArgs e)

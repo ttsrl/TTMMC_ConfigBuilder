@@ -46,22 +46,12 @@ namespace TTMMC_ConfigBuilder
             {
                 if (elm.Level == 1)
                 {
-                    var existOld = Datas.ContainsDataGroup(_nmEditLbl);
-                    if (existOld)
+                    var exist = Datas.ContainsDataGroup(_nmEditLbl);
+                    if (exist)
                     {
-                        var existk = Datas.ContainsDataGroup(e.Label);
-                        var index = treeView1.Nodes.IndexOf(elm);
-                        if (!existk || Datas.ElementAt(index).Name == e.Label)
-                        {
-                            var it = existOld ? Datas.GetDataGroup(_nmEditLbl) : null;
-                            if(it != null)
-                            {
-                                it.Name = e.Label;
-                                elm.Text = e.Label;
-                            }
-                        }
-                        else
-                            MessageBox.Show("Nome elemento già presente nella lista", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        var it = Datas.GetDataGroup(_nmEditLbl);
+                        it.Name = e.Label;
+                        elm.Text = e.Label;
                     }
                     else
                         MessageBox.Show("Oggetto non trovato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -76,23 +66,19 @@ namespace TTMMC_ConfigBuilder
             {
                 if (elm.Level == 1)
                 {
-                    var existOld = Datas.ContainsDataGroup(elm.Text);
-                    if (existOld)
+                    var it = Datas.GetDataGroup(elm.Text);
+                    if (it != null)
                     {
                         var frm = new inputTxt();
                         frm.Value = elm.Text;
                         if (frm.ShowDialog() == DialogResult.OK)
                         {
-                            var it = existOld ? Datas.GetDataGroup(elm.Text) : null;
-                            if (it != null)
-                            {
-                                it.Name = frm.Value;
-                                elm.Text = frm.Value;
-                            }
+                            it.Name = frm.Value;
+                            elm.Text = frm.Value;
                         }
                     }
                     else
-                        MessageBox.Show("Impossibile trovare l' elemento selezionato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Oggetto non trovato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else if (elm.Level == 3)
                 {
@@ -169,7 +155,6 @@ namespace TTMMC_ConfigBuilder
                             item.Logs = inv;
                             elm.Text = "Logs: " + item.Logs.ToString();
                         }
-                        elm.Parent.Parent.ForeColor = defineColor(item);
                     }
                     else
                         MessageBox.Show("Impossibile trovare l' elemento selezionato", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -203,7 +188,7 @@ namespace TTMMC_ConfigBuilder
                 else
                     copy.Enabled = false;
 
-                if (lvl == 1)
+                if (lvl == 1 || lvl == 2)
                 {
                     moveUp.Enabled = true;
                     moveDown.Enabled = true;
@@ -251,17 +236,11 @@ namespace TTMMC_ConfigBuilder
                 frm.Mode = (modeNode.Text == "READ") ? DataGroupMode.Read : ((modeNode.Text == "WRITE") ? DataGroupMode.Write : DataGroupMode.ReadAndWrite);
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                var exist = Datas.ContainsDataGroup(frm.GroupName);
-                if (!exist)
-                {
-                    var nodeM = (frm.Mode == DataGroupMode.Read) ? treeView1.Nodes[0] : ((frm.Mode == DataGroupMode.Write) ? treeView1.Nodes[1] : treeView1.Nodes[2]);
-                    var node = nodeM.Nodes.Add(frm.GroupName);
-                    treeView1.SelectedNode = node;
-                    Datas.Add(new DataGroup { Name = frm.GroupName, Mode = frm.Mode });
-                    addData_Click(sender, new EventArgs());
-                }
-                else
-                    MessageBox.Show("Nome elemento già presente nella lista", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                var nodeM = (frm.Mode == DataGroupMode.Read) ? treeView1.Nodes[0] : ((frm.Mode == DataGroupMode.Write) ? treeView1.Nodes[1] : treeView1.Nodes[2]);
+                var node = nodeM.Nodes.Add(frm.GroupName);
+                treeView1.SelectedNode = node;
+                Datas.Add(new DataGroup { Name = frm.GroupName, Mode = frm.Mode });
+                addData_Click(sender, new EventArgs());
             }
         }
 
@@ -301,8 +280,6 @@ namespace TTMMC_ConfigBuilder
                         di.Realtime = frm.Realtime;
                         di.Logs = frm.Logs;
                         group.Items.Add(di);
-                        node.Nodes[index].ForeColor = defineColor(di);
-                        //node.Nodes[index].Parent.ForeColor = defineColor(group);
                     }
                 }
             }
@@ -369,15 +346,6 @@ namespace TTMMC_ConfigBuilder
             DialogResult = DialogResult.OK;
         }
 
-        private Color defineColor(DataItem item)
-        {
-            if (!item.Logs)
-                return Color.Red;
-            if (!item.Realtime)
-                return Color.Orange;
-            return Color.Black;
-        }
-
         private void moveGroupUp(DataGroup item)
         {
             if (item == null)
@@ -416,6 +384,26 @@ namespace TTMMC_ConfigBuilder
             Datas.Insert(befElmtByMode, saveIt);
         }
 
+        private void moveItemUp(DataGroup group, int index)
+        {
+            var newIndex = index + 1;
+            if (newIndex > group.Items.Count - 1)
+                newIndex = group.Items.Count - 1;
+            var saveIt = group.Items[index];
+            group.Items.RemoveAt(index);
+            group.Items.Insert(newIndex, saveIt);
+        }
+
+        private void moveItemDown(DataGroup group, int index)
+        {
+            var newIndex = index - 1;
+            if (newIndex < 0)
+                newIndex = 0;
+            var saveIt = group.Items[index];
+            group.Items.RemoveAt(index);
+            group.Items.Insert(newIndex, saveIt);
+        }
+
         private void moveUp_Click(object sender, EventArgs e)
         {
             var node = treeView1.SelectedNode;
@@ -429,6 +417,17 @@ namespace TTMMC_ConfigBuilder
                     {
                         moveGroupUp(dg);
                         node.MoveUp();
+                    }
+                }
+                else if (lvl == 2)
+                {
+                    var dg = Datas.GetDataGroup(node.Parent.Text) ?? null;
+                    if (dg is DataGroup)
+                    {
+                        var index = node.Parent.Nodes.IndexOf(node);
+                        moveItemUp(dg, index);
+                        node.MoveUp();
+                        renameItems(node.Parent);
                     }
                 }
             }
@@ -448,6 +447,31 @@ namespace TTMMC_ConfigBuilder
                         moveGroupDown(dg);
                         node.MoveDown();
                     }
+                }
+                else if (lvl == 2)
+                {
+                    var dg = Datas.GetDataGroup(node.Parent.Text) ?? null;
+                    if (dg is DataGroup)
+                    {
+                        var index = node.Parent.Nodes.IndexOf(node);
+                        moveItemDown(dg, index);
+                        node.MoveDown();
+                        renameItems(node.Parent);
+                    }
+                }
+            }
+        }
+
+        private void renameItems(TreeNode node)
+        {
+            if (node is TreeNode)
+            {
+                var items = node.Nodes;
+                var c = 0;
+                foreach (TreeNode it in items)
+                {
+                    it.Text = c.ToString();
+                    c++;
                 }
             }
         }
@@ -599,7 +623,6 @@ namespace TTMMC_ConfigBuilder
                     subnodes.Add(new TreeNode("Realtime: " + dataIt.Realtime.ToString()));
                     subnodes.Add(new TreeNode("Logs: " + dataIt.Logs.ToString()));
                     var node = new TreeNode(c.ToString(), subnodes.ToArray());
-                    node.ForeColor = defineColor(dataIt);
                     snodes.Add(node);
                     c++;
                 }
@@ -610,7 +633,6 @@ namespace TTMMC_ConfigBuilder
                     nodesW.Add(nodeg);
                 else
                     nodesRW.Add(nodeg);
-                //nodeg.ForeColor = defineColor(it);
             }
             var nodeR = new TreeNode("READ", nodesR.ToArray());
             var nodeW = new TreeNode("WRITE", nodesW.ToArray());
@@ -627,6 +649,7 @@ namespace TTMMC_ConfigBuilder
             }
             treeView1.EndUpdate();
         }
+
     }
 
     [Serializable]

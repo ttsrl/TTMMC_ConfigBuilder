@@ -55,7 +55,7 @@ namespace TTMMC_ConfigBuilder
             var item = listBox1.SelectedItem;
             if (item != null)
             {
-                var listIt = List.Where(i => i.Label == item.ToString()).FirstOrDefault();
+                var listIt = List.Where(i => i.Name == item.ToString()).FirstOrDefault();
                 var frm = new inputRecipe();
                 frm.Items = Items.Where(it => List.Select(l => l.Machines).Where(l => l.Contains(it)).Count() == 0).ToList();
                 frm.Recipe = (RecipeLayout)listIt.Clone();
@@ -72,7 +72,7 @@ namespace TTMMC_ConfigBuilder
             var item = listBox1.SelectedItem;
             if (item != null)
             {
-                var listIt = List.Where(i => i.Label == item.ToString()).FirstOrDefault();
+                var listIt = List.Where(i => i.Name == item.ToString()).FirstOrDefault();
                 if (listIt != null)
                 {
                     List.Remove(listIt);
@@ -92,7 +92,7 @@ namespace TTMMC_ConfigBuilder
             var item = listBox1.SelectedItem;
             if (item != null)
             {
-                var elm = List.Where(it => it.Label == listBox1.SelectedItem.ToString()).FirstOrDefault();
+                var elm = List.Where(it => it.Name == listBox1.SelectedItem.ToString()).FirstOrDefault();
                 var indx = List.IndexOf(elm);
                 if (indx == 0)
                     return;
@@ -108,7 +108,7 @@ namespace TTMMC_ConfigBuilder
             var item = listBox1.SelectedItem;
             if (item != null)
             {
-                var elm = List.Where(it => it.Label == listBox1.SelectedItem.ToString()).FirstOrDefault();
+                var elm = List.Where(it => it.Name == listBox1.SelectedItem.ToString()).FirstOrDefault();
                 var indx = List.IndexOf(elm);
                 if (indx == List.Count - 1)
                     return;
